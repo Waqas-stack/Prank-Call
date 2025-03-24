@@ -12,8 +12,10 @@ import com.o9tech.prankcall.Screen.Callscreen.CallScreen
 import com.o9tech.prankcall.Screen.ChooseTheme.ChooseThemeScreen
 import com.o9tech.prankcall.Screen.FakeMessage.FakeMessageScreen
 import com.o9tech.prankcall.Screen.HomeScreen
+import com.o9tech.prankcall.Screen.IncomingCall.IncommingCallScreen
 import com.o9tech.prankcall.Screen.Languages.LanguageScreen
 import com.o9tech.prankcall.Screen.Search.SearchScreen
+import com.o9tech.prankcall.Screen.SetCall.SetCallScreen
 import com.o9tech.prankcall.Screen.SetVideoCall.SetVideoCallScreen
 import com.o9tech.prankcall.Screen.SettingsSc.SettingsScreen
 import com.o9tech.prankcall.Screen.Videocalling.FakeVideoCallScreen
@@ -51,7 +53,7 @@ fun Navigation(){
             )
         }
         composable(Routes.AddCharacter) {
-            AddCharacterSCreen()
+            AddCharacterSCreen(navController)
         }
         composable(Routes.SetVideoCall) {
             SetVideoCallScreen(navController)
@@ -60,24 +62,43 @@ fun Navigation(){
             FakeVideoCallScreen()
         }
         composable(Routes.ChooseThemeScreen) {
-            ChooseThemeScreen()
+            ChooseThemeScreen(navController)
         }
         composable(Routes.CallEndedScreen) {
             CallEndedScreen(
+                navController,
                 profileImage = R.drawable.fake1,
 //                onReturn = { Toast.makeText(context, "Return Clicked", Toast.LENGTH_SHORT).show() },
                 onReturn = { navController.navigate(Routes.VideoCallingScreen)},
-                onCallAgain = { Toast.makeText(context, "Call Again Clicked", Toast.LENGTH_SHORT).show() }
+//                onCallAgain = { Toast.makeText(context, "Call Again Clicked", Toast.LENGTH_SHORT).show() }
+                onCallAgain = { navController.navigate(Routes.SetCallScreen)}
             )
         }
         composable(Routes.VideoCallingScreen) {
             VideoCallingScreen(
+                navController,
                 callerImage = R.drawable.fake1,
                 callerName = "Jisoo",
                 onToggleVideo = { /* Handle Video Toggle */ },
                 onToggleMic = { /* Handle Mic Toggle */ },
                 onToggleSpeaker = { /* Handle Speaker Toggle */ },
                 onEndCall = { /* Handle Call End */ }
+            )
+        }
+
+        composable(Routes.SetCallScreen) {
+            SetCallScreen(navController)
+        }
+        composable(Routes.IncommingCallScreen) {
+            IncommingCallScreen(
+                navController,
+                profileImage = R.drawable.fake1,
+                onReturn = {
+//                    navController.navigate(Routes.CallEndedScreen)
+                           },
+                onCallAgain = {
+//                    navController.navigate(Routes.VideoCallingScreen)
+                }
             )
         }
 

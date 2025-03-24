@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.o9tech.prankcall.R
-import com.o9tech.prankcall.ui.theme.grey
 import com.o9tech.prankcall.ui.theme.settingsclr
 
 
@@ -71,18 +70,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.o9tech.prankcall.ui.theme.white
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun ChooseThemeScreen() {
+fun ChooseThemeScreen(navController: NavHostController?) {
+
+    val safeNavController = navController ?: rememberNavController()
+
+
     var selectedTheme by remember { mutableStateOf<ThemeItem?>(null) }
 
     val themes = listOf(
@@ -105,7 +109,9 @@ fun ChooseThemeScreen() {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        safeNavController.popBackStack()
+                    }) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrowleft),
                             contentDescription = "back",

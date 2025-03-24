@@ -6,7 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,8 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,7 +47,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -59,31 +55,26 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.Orange40
-import com.o9tech.prankcall.ui.theme.PurpleGrey80
 import com.o9tech.prankcall.ui.theme.grey
 import com.o9tech.prankcall.ui.theme.profilecircle
 import com.o9tech.prankcall.ui.theme.settingsclr
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 
-import androidx.compose.ui.unit.*
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun AddCharacterSCreen() {
+fun AddCharacterSCreen(navController: NavHostController?) {
+
+    val safeNavController = navController ?: rememberNavController()
+
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     var charname by remember { mutableStateOf("") }
@@ -100,7 +91,9 @@ fun AddCharacterSCreen() {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = {  }) {
+                    IconButton(onClick = {
+                        safeNavController.popBackStack()
+                    }) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrowleft),
                             contentDescription = "back",

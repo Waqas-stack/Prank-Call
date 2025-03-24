@@ -17,3 +17,6 @@ val black = Color(0xFF3A3A38)
 val blue = Color(0xFF00BEFE)
 val profilecircle = Color(0xFFEEE9E9)
 val tabbg = Color(0xFFDDDDDD)
+val setcallbg = Color(0xFFE5F5FF)
+val setcall = Color(0xFF3299CC)
+

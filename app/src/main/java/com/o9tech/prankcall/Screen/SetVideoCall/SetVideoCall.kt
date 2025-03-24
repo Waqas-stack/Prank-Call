@@ -107,7 +107,6 @@ fun SetVideoCallScreen(navController: NavHostController?) {
 
     Scaffold(
         topBar = {
-
             TopAppBar(
                 title = {
                     Text(

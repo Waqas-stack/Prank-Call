@@ -119,6 +119,7 @@ fun SearchScreen(navController: NavHostController?) {
 
                 ) {
                     Text(text = "Search Screen", fontSize = 20.sp)
+
                 }
             }
         }

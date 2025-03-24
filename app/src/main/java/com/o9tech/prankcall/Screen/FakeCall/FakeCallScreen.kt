@@ -3,6 +3,7 @@ package com.o9tech.prankcall.Screen.FakeCall
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 
 @Preview(showBackground = true)
@@ -27,6 +29,16 @@ fun FakeCallScreen() {
             TopAppBar(
                 title = {
                     Text(text = "Fake Call")
+                },
+                navigationIcon = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painter = painterResource(id = com.o9tech.prankcall.R.drawable.arrowleft),
+                            contentDescription = "Back",
+                            tint = com.o9tech.prankcall.ui.theme.grey,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
             )
         },
@@ -55,13 +67,13 @@ fun fake() {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back navigation */ }) {
+                    IconButton(onClick = {}) {
                         Icon(
-//                            painter = painterResource(id = R.drawable.arrowleft),
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
+
                 },
                 title = {
                     Text(text = "Fake Call")

@@ -16,6 +16,8 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.o9tech.prankcall.R
 import coil.compose.rememberAsyncImagePainter
 
@@ -24,11 +26,14 @@ import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun CallEndedScreen(
+    navController: NavHostController?,
     profileImage: Int,
     onReturn: () -> Unit,
     onCallAgain: () -> Unit
 ) {
-   Scaffold (
+    val safeNavController = navController ?: rememberNavController()
+
+    Scaffold (
        content = {
            Surface(
                modifier = Modifier
@@ -48,7 +53,9 @@ fun CallEndedScreen(
                ) {
                    IconButton(
                        modifier = Modifier.align(Alignment.TopStart).padding(16.dp),
-                       onClick = {}) {
+                       onClick = {
+                           safeNavController.popBackStack()
+                       }) {
                        Icon(
                            painter = painterResource(id = R.drawable.arrowleft),
                            contentDescription = "Back",
@@ -184,8 +191,8 @@ fun CircularButton(icon: Int, text: String, backgroundColor: Color, onClick: () 
 @Composable
 fun PreviewCallEndedScreen() {
     CallEndedScreen(
+        navController = rememberNavController(),
         profileImage = R.drawable.fake1,
-        onReturn = {},
-        onCallAgain = {}
-    )
+        onReturn = {}
+    ) {}
 }

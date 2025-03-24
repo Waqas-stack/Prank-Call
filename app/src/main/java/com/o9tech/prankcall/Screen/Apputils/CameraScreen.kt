@@ -51,11 +51,17 @@ fun CameraPreviewBox() {
         Box(
             modifier = Modifier
                 .size(140.dp)
+
+
+
 //            modifier = Modifier.padding(vertical = 50.dp)
 //            modifier = Modifier
 //                .size(100.dp)
 //                .background(Color.Black, shape = CircleShape),
 //            contentAlignment = Alignment.Center
+
+
+
         ) {
             Spacer(modifier = Modifier.height(40.dp))
             AndroidView(
@@ -63,7 +69,8 @@ fun CameraPreviewBox() {
                     val previewView = PreviewView(ctx).apply {
                         layoutParams = FrameLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+//                            ViewGroup.LayoutParams.MATCH_PARENT
                         )
                     }
                     startCamera(ctx, previewView, cameraExecutor)

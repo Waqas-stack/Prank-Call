@@ -108,6 +108,7 @@ fun LanguageScreen(navController: NavHostController?) {
                         .fillMaxSize().background(white)
                         .padding(10.dp)
                 ) {
+
                     items(languages.size) { index ->
                         val language = languages[index]
                         Card(

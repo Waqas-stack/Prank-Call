@@ -80,7 +80,9 @@ fun FakeMessageScreen(navController: NavHostController?) {
                 },
                 actions = {
                     IconButton(onClick = {  }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "search")
+                        Icon(imageVector = Icons.Default.Search,
+                            contentDescription = "search"
+                        )
                     }
                 },
                 navigationIcon = {

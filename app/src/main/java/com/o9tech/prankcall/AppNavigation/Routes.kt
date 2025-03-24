@@ -14,4 +14,6 @@ object Routes {
     var ChooseThemeScreen="ChooseThemeScreen"
     var CallEndedScreen="CallEndedScreen"
     var VideoCallingScreen="VideoCallingScreen"
+    var SetCallScreen="SetCallScreen"
+    var IncommingCallScreen="IncommingCallScreen"
 }

@@ -2,8 +2,6 @@ package com.o9tech.prankcall.Screen.videocallingscreen
 
 import androidx.compose.runtime.Composable
 
-import android.Manifest
-import android.net.Uri
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.camera.core.*
@@ -18,12 +16,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -31,13 +30,16 @@ import com.o9tech.prankcall.R
 
 @Composable
 fun VideoCallingScreen(
-    callerImage: Int, // Profile Image
+    navController: NavHostController?, // Profile Image
+    callerImage: Int,
     callerName: String,
     onToggleVideo: () -> Unit,
     onToggleMic: () -> Unit,
     onToggleSpeaker: () -> Unit,
     onEndCall: () -> Unit
 ) {
+    val safeNavController = navController ?: rememberNavController()
+
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     var preview by remember { mutableStateOf<Preview?>(null) }
@@ -129,10 +131,12 @@ fun VideoCallingScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            CircularButton(icon = R.drawable.videocall, onClick = onToggleVideo)
-                            CircularButton(icon = R.drawable.videocall, onClick = onToggleMic)
-                            CircularButton(icon = R.drawable.phone, onClick = onToggleSpeaker)
-                            CircularButton(icon = R.drawable.phone, onClick = onEndCall, backgroundColor = Color.Red)
+                            CircularButton(icon = R.drawable.videocall, onClick = {})
+                            CircularButton(icon = R.drawable.mic, onClick = onToggleMic)
+                            CircularButton(icon = R.drawable.volume_down, onClick = onToggleSpeaker)
+                            CircularButton(icon = R.drawable.call, onClick = {
+                                safeNavController.popBackStack()
+                            }, backgroundColor = Color.Red)
                         }
                     }
                 }
