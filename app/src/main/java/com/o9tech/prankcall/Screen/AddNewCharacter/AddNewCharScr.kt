@@ -1,6 +1,8 @@
 package com.o9tech.prankcall.Screen.AddNewCharacter
 
+import android.Manifest
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -35,9 +37,11 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,25 +70,32 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.huhx.picker.model.AssetInfo
+import com.huhx.picker.model.AssetPickerConfig
+import com.huhx.picker.model.RequestType
+import com.huhx.picker.support.PickerPermissions
+import com.huhx.picker.view.AssetPicker
+import com.o9tech.prankcall.viewModel.MainViewModel
+
+import kotlinx.coroutines.launch
+import java.io.File
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+
 @Composable
-fun AddCharacterSCreen(navController: NavHostController?) {
+fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainViewModel) {
 
     val safeNavController = navController ?: rememberNavController()
+    val scope = rememberCoroutineScope()
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
     val context = LocalContext.current
     var charname by remember { mutableStateOf("") }
 
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        selectedImageUri = uri // Set selected image URI
-    }
+
+//    var pickedImageUri: List<AssetInfo> = remember { listOf() }
 
 
     Scaffold(
@@ -142,10 +153,14 @@ fun AddCharacterSCreen(navController: NavHostController?) {
                                    .size(100.dp)
                                    .background(color = Color.LightGray, shape = CircleShape)
                            )
+                           val selectedImages by mainViewModel.selectedImages.collectAsState()
 
-                           if (selectedImageUri != null) {
+
+                           if (selectedImages.firstOrNull() != null) {
+                               val painter = rememberAsyncImagePainter(model = File(selectedImages.first().filepath))
+
                                Image(
-                                   painter = rememberAsyncImagePainter(selectedImageUri),
+                                   painter = rememberAsyncImagePainter(selectedImages.first().uriString),
                                    contentDescription = "Profile Picture",
                                    modifier = Modifier
                                        .size(100.dp)
@@ -169,7 +184,9 @@ fun AddCharacterSCreen(navController: NavHostController?) {
 
                           IconButton(
                               onClick = {
-                                  imagePickerLauncher.launch("image/*")
+                                  safeNavController.navigate("asset_picker")
+
+
                               },
                               modifier = Modifier
                                   .align(Alignment.BottomEnd)
@@ -244,38 +261,101 @@ fun AddCharacterSCreen(navController: NavHostController?) {
                     Spacer(modifier = Modifier.height(15.dp))
                     Box(
                         modifier = Modifier
-                            .size(120.dp).clip(RoundedCornerShape(4.dp))
-                            .dashedBorder(2.dp, settingsclr, 8.dp).clickable{
-
+                            .size(120.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .dashedBorder(2.dp, settingsclr, 8.dp)
+                            .clickable {
+                                safeNavController.navigate("video_picker")
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            // 🔹 Icon
-                            Icon(
-//                                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your icon
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Icon",
-                                tint = settingsclr,
-                                modifier = Modifier.size(24.dp)
-                            )
+                        val selectedVideos by mainViewModel.selectedVideos.collectAsState()
 
-                            Spacer(modifier = Modifier.height(8.dp))
 
-                            // 🔹 Text
-                            Text(
-                                text = "Upload Video",
-                                fontSize = 12.sp,
-                                color = Color.Black
+                        if (selectedVideos.firstOrNull() != null) {
+                            // Assuming the first video has a thumbnail or you want to display a placeholder image
+                            val videoPath = selectedVideos.first().filepath
+                            val videoUri = Uri.fromFile(File(videoPath)) // Convert path to URI if needed
+
+                            Log.d("Video", "Videosuro: $videoUri")
+
+                            // Display video thumbnail (replace with video thumbnail logic)
+                            Image(
+                                painter = rememberAsyncImagePainter(model = videoUri),
+                                contentDescription = "Video Thumbnail",
+                                modifier = Modifier
+                                    .size(120.dp) // Fill the box with the thumbnail size
+                                    .clip(RoundedCornerShape(4.dp)), // Clip the image with the same shape as the Box
+                                contentScale = ContentScale.Fit
                             )
+                        } else {
+                            // Default icon for no video selected
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Icon",
+                                    tint = settingsclr,
+                                    modifier = Modifier.size(24.dp)
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                // Text
+                                Text(
+                                    text = "Upload Video",
+                                    fontSize = 12.sp,
+                                    color = Color.Black
+                                )
+                            }
                         }
                     }
+
+//                    Box(
+//                        modifier = Modifier
+//                            .size(120.dp).clip(RoundedCornerShape(4.dp))
+//                            .dashedBorder(2.dp, settingsclr, 8.dp).clickable{
+//
+//                                safeNavController.navigate("video_picker")
+//                            },
+//                        contentAlignment = Alignment.Center
+//                    ) {
+//                        val selectedImages by mainViewModel.selectedVideos.collectAsState()
+//                        Column(
+//                            horizontalAlignment = Alignment.CenterHorizontally
+//                        ) {
+//                            // 🔹 Icon
+//                            Icon(
+////                                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your icon
+//                                imageVector = Icons.Default.Add,
+//                                contentDescription = "Icon",
+//                                tint = settingsclr,
+//                                modifier = Modifier.size(24.dp)
+//                            )
+//
+//                            Spacer(modifier = Modifier.height(8.dp))
+//
+//                            // 🔹 Text
+//                            Text(
+//                                text = "Upload Video",
+//                                fontSize = 12.sp,
+//                                color = Color.Black
+//                            )
+//                        }
+//                    }
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = {},
+                        onClick = {
+                            if (charname.isNotEmpty()) {
+                                scope.launch {
+//                                mainViewModel.saveUser(charname)
+                                mainViewModel.insertUserDetails(charname)
+                                navController?.popBackStack()
+                                }
+                            }
+                        },
 //                        enabled = TODO(),
 //                        shape = TODO(),
 //                        colors = TODO(),
@@ -312,3 +392,43 @@ fun Modifier.dashedBorder(strokeWidth: Dp, color: Color, dashLength: Dp): Modifi
             )
         }
     )
+
+
+
+
+@Composable
+fun ImagePicker(
+    onPicked: (List<AssetInfo>) -> Unit,
+    onClose: (List<AssetInfo>) -> Unit,
+) {
+    PickerPermissions(permissions = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
+        AssetPicker(
+            assetPickerConfig = AssetPickerConfig(maxAssets = 1, gridCount = 3, requestType = RequestType.IMAGE),
+            onPicked = onPicked,
+            onClose = onClose
+        )
+    }
+}
+
+
+@Composable
+fun VideoPicker(
+    onPicked: (List<AssetInfo>) -> Unit,
+    onClose: (List<AssetInfo>) -> Unit,
+) {
+    PickerPermissions(permissions = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
+        AssetPicker(
+            assetPickerConfig = AssetPickerConfig(maxAssets = 1, gridCount = 3, requestType = RequestType.VIDEO),
+            onPicked = onPicked,
+            onClose = onClose
+        )
+    }
+}
+
+
+
+
+
+
+
+

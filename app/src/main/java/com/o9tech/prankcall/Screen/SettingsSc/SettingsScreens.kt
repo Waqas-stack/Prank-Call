@@ -197,7 +197,7 @@ fun SettingsScreen(navController: NavHostController?) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        safeNavController.navigate(Routes.CallScreen)
+                                        safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
                                     }
                                     .padding(vertical = 5.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,

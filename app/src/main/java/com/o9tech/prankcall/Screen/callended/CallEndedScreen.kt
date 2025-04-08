@@ -1,38 +1,54 @@
 package com.o9tech.prankcall.Screen.callended
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.o9tech.prankcall.R
 import coil.compose.rememberAsyncImagePainter
-
-
+import com.o9tech.prankcall.Screen.SettingsSc.CustomRateUsDialog
 
 
 @Composable
 fun CallEndedScreen(
     navController: NavHostController?,
-    profileImage: Int,
+    profileImage: String,
     onReturn: () -> Unit,
     onCallAgain: () -> Unit
 ) {
     val safeNavController = navController ?: rememberNavController()
 
+    val drawableId = LocalContext.current.resources.getIdentifier(
+        profileImage.substringAfter("drawable://"), // Extract drawable name
+        "drawable",
+        LocalContext.current.packageName
+    )
     Scaffold (
        content = {
            Surface(
@@ -46,7 +62,9 @@ fun CallEndedScreen(
                        .fillMaxSize()
                        .background(Color.Black)
                        .paint(
-                           painter = rememberAsyncImagePainter(profileImage),
+                           if (drawableId != 0)
+                               painterResource(id = drawableId) else rememberAsyncImagePainter(profileImage),
+//                           painter = rememberAsyncImagePainter(profileImage),
                            contentScale = ContentScale.Crop,
                            alpha = 0.22f
                        )
@@ -76,14 +94,26 @@ fun CallEndedScreen(
                            Box(
                                contentAlignment = Alignment.Center
                            ) {
+                               if (drawableId != 0) {
                                Image(
-                                   painter = rememberAsyncImagePainter(profileImage),
+//                                   painter = rememberAsyncImagePainter(profileImage),
+                                   painter = painterResource(id = drawableId),
                                    contentDescription = "Profile Picture",
                                    modifier = Modifier
                                        .size(90.dp)
                                        .clip(CircleShape)
                                        .border(4.dp, Color.White, CircleShape)
-                               )
+                               )}else{
+                                   AsyncImage(
+//                                    model = profileImage,
+                                       model = profileImage,
+                                       contentDescription = "Profile Picture",
+                                       modifier = Modifier
+                                           .size(90.dp)
+                                           .clip(CircleShape)
+                                           .border(4.dp, Color.White, CircleShape)
+                                   )
+                               }
                                Box(
                                    modifier = Modifier
                                        .size(100.dp)
@@ -95,7 +125,7 @@ fun CallEndedScreen(
                            Text(
                                text = "Call ended",
                                fontSize = 22.sp,
-                               fontWeight = FontWeight.Bold,
+                               fontWeight = FontWeight.W400,
                                color = Color.White
                            )
                            Text(
@@ -110,23 +140,35 @@ fun CallEndedScreen(
                        ){
                            Text(
                                text = "How was the quality of your call?",
-                               fontSize = 16.sp,
+                               fontSize = 14.sp,
                                color = Color.White.copy(alpha = 0.8f)
                            )
-                           RatingStars()
+//                           RatingStasrs(
+//                               initialRating = 3, // Default rating
+//                               onRatingChanged = { newRating ->
+//                                   println("New Rating: $newRating") // Handle rating change
+//                               }
+//                           )
+                           RatingStarsWithDialog()
                        }
                        Row(
                            modifier = Modifier.fillMaxWidth(),
                            horizontalArrangement = Arrangement.SpaceEvenly
                        ) {
                            CircularButton(
-                               icon = R.drawable.phone,
+                               icon = R.drawable.baseline_call_end_24,
                                text = "Return",
                                backgroundColor = Color.Gray,
                                onClick = onReturn
                            )
 
-                           CircularButton(
+//                           CircularButton(
+//                               icon = R.drawable.videocall,
+//                               text = "Call again",
+//                               backgroundColor = Color(0xFFFF9800),
+//                               onClick = onCallAgain
+//                           )
+                           CircularButtonWithWave(
                                icon = R.drawable.videocall,
                                text = "Call again",
                                backgroundColor = Color(0xFFFF9800),
@@ -155,12 +197,47 @@ fun RatingStars() {
     }
 }
 
+
+
+
+@Composable
+fun RatingStasrs(
+    maxStars: Int = 5,
+    initialRating: Int = 0,
+    onRatingChanged: (Int) -> Unit
+) {
+    var rating by remember { mutableStateOf(initialRating) }
+
+    Row(horizontalArrangement = Arrangement.Center) {
+        repeat(maxStars) { index ->
+            Icon(
+                imageVector = if (index < rating) Icons.Filled.Star else Icons.Outlined.Star,
+                contentDescription = null,
+                tint = if (index < rating) Color(0xFFFFD700) else Color.Gray, // Gold for filled, Gray for empty
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable {
+                        rating = index + 1
+                        onRatingChanged(rating)
+                    }
+            )
+        }
+    }
+}
+
+
+
+
+
+
+
 @Composable
 fun CircularButton(icon: Int, text: String, backgroundColor: Color, onClick: () -> Unit) {
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
-                .size(80.dp)
+                .size(60.dp)
                 .clip(CircleShape)
                 .background(backgroundColor)
                 .clickable { onClick() },
@@ -170,7 +247,7 @@ fun CircularButton(icon: Int, text: String, backgroundColor: Color, onClick: () 
                 painter = painterResource(id = icon),
                 contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(30.dp)
             )
         }
 
@@ -184,6 +261,188 @@ fun CircularButton(icon: Int, text: String, backgroundColor: Color, onClick: () 
     }
 }
 
+@Composable
+fun CircularButtonWithWave(
+    icon: Int,
+    text: String,
+    backgroundColor: Color,
+    onClick: () -> Unit
+) {
+    val infiniteTransition = rememberInfiniteTransition()
+
+    // Animated scale for the expanding wave effect
+    val waveScale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    // Animated alpha for the fading effect
+    val waveAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    Box(contentAlignment = Alignment.Center) {
+        // Circular wave animation (background pulse)
+        Canvas(
+            modifier = Modifier
+                .size(80.dp) // Adjust size for the wave effect
+                .graphicsLayer(scaleX = waveScale, scaleY = waveScale, alpha = waveAlpha)
+        ) {
+            drawCircle(color = Color.White.copy(alpha = 0.3f))
+        }
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape)
+                    .background(backgroundColor)
+                    .clickable { onClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = text,
+                fontSize = 14.sp,
+                color = Color.White.copy(alpha = 0.8f)
+            )
+        }
+    }
+}
+
+@Composable
+fun RatingStarsWithDialog() {
+    var showDialog by remember { mutableStateOf(false) }
+    var selectedRating by remember { mutableStateOf(0) }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//        Text(text = "Tap to Rate", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+
+        // Rating Stars
+        Row(horizontalArrangement = Arrangement.Center) {
+            repeat(5) { index ->
+                Icon(
+                    imageVector = if (index < selectedRating) Icons.Filled.Star else Icons.Outlined.Star,
+                    contentDescription = null,
+                    tint = if (index < selectedRating) Color(0xFFFFD700) else Color.Gray,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .clickable {
+                            selectedRating = index + 1
+                            showDialog = true
+                        }
+                )
+            }
+        }
+
+        // Show Custom Rate Us Dialog
+        CustomRateUsDialog(
+            showDialog = showDialog,
+            onDismiss = { showDialog = false },
+            onSubmit = { rating ->
+                selectedRating = rating
+                showDialog = false
+                println("User rated: $rating stars")
+            }
+        )
+    }
+}
+
+
+
+
+
+//@Composable
+//fun CustomRateUsDialog(
+//    showDialog: Boolean,
+//    onDismiss: () -> Unit,
+//    onSubmit: (Int) -> Unit,
+//) {
+//    if (showDialog) {
+//        Dialog(onDismissRequest = onDismiss) {
+//            Card(
+//                shape = RoundedCornerShape(16.dp),
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                colors = CardDefaults.cardColors(
+//                    containerColor = white
+//                ),
+//                elevation = CardDefaults.cardElevation(
+//                    defaultElevation = 10.dp
+//                )
+//            ) {
+//                Column(
+//                    modifier = Modifier
+//                        .padding(10.dp)
+//                        .fillMaxWidth(),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(text = "😊", fontSize = 48.sp)
+//                    Text(
+//                        text = "Thanks for using Prank App",
+//                        fontSize = 20.sp,
+//                        fontWeight = FontWeight.Bold,
+//                        textAlign = TextAlign.Center,
+//                        modifier = Modifier.padding(top = 8.dp)
+//                    )
+//                    Text(
+//                        text = "It would be greatly appreciated if you rate us",
+//                        fontSize = 16.sp,
+//                        color = Color.Gray,
+//                        textAlign = TextAlign.Center,
+//                        modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)
+//                    )
+//                    var selectedRating by rememberSaveable { mutableStateOf(0) }
+//                    Row(horizontalArrangement = Arrangement.Center) {
+//                        (1..5).forEach { star ->
+//                            IconButton(onClick = { selectedRating = star }) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Star,
+//                                    contentDescription = "Rating Star",
+//                                    tint = if (star <= selectedRating) settingsclr else grey,
+//                                    modifier = Modifier.size(40.dp)
+//                                )
+//                            }
+//                        }
+//                    }
+//                    Button(
+//
+//                        onClick = { onSubmit(selectedRating) },
+//                        modifier = Modifier
+//                            .width(200.dp)
+//                            .padding(top = 12.dp),
+//                        shape = RoundedCornerShape(10.dp),
+//                        colors = ButtonDefaults.buttonColors(
+//                            containerColor = blue,
+//                            contentColor = Color.White
+//                        )
+//                    ) {
+//                        Text(text = "Rate Now", fontSize = 16.sp)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
 
 
 
@@ -192,7 +451,7 @@ fun CircularButton(icon: Int, text: String, backgroundColor: Color, onClick: () 
 fun PreviewCallEndedScreen() {
     CallEndedScreen(
         navController = rememberNavController(),
-        profileImage = R.drawable.fake1,
+        profileImage = "drawable://fake1",
         onReturn = {}
     ) {}
 }

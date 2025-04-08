@@ -45,6 +45,7 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -52,6 +53,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,24 +76,24 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.ui.theme.Orange40
 import com.o9tech.prankcall.ui.theme.grey
 import com.o9tech.prankcall.ui.theme.profilecircle
 import com.o9tech.prankcall.ui.theme.settingsclr
-import com.o9tech.prankcall.ui.theme.tabbg
+import com.o9tech.prankcall.ui.theme.textfrilssetvideocall
 import com.o9tech.prankcall.ui.theme.white
 
 
-@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SetVideoCallScreen(navController: NavHostController?) {
+fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: String,videoPath: String) {
     val safeNavController = navController ?: rememberNavController()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
-    var entername by remember { mutableStateOf("") }
+    var entername by remember { mutableStateOf(name) }
     var showDialog by remember { mutableStateOf(false) }
     var showDialogcall by remember { mutableStateOf(false) }
 
@@ -105,6 +107,12 @@ fun SetVideoCallScreen(navController: NavHostController?) {
         selectedImageUri = uri // Set selected image URI
     }
 
+    val drawableId = LocalContext.current.resources.getIdentifier(
+        flag.substringAfter("drawable://"), // Extract drawable name
+        "drawable",
+        LocalContext.current.packageName
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -114,12 +122,15 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
-                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+//                        style = MaterialTheme.typography.titleMedium,
                         color = Orange40
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        safeNavController.popBackStack()
+                    }) {
                         Icon(
                             painter = painterResource(id = com.o9tech.prankcall.R.drawable.arrowleft),
                             contentDescription = "back",
@@ -127,7 +138,10 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                             modifier = Modifier.padding(start = 10.dp)
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                )
             )
         },
         content = {
@@ -139,6 +153,7 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(color = Color.White)
                         .padding(16.dp)
                 ) {
                     Row(
@@ -155,8 +170,9 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                             Box(
                                 modifier = Modifier
                                     .size(100.dp)
-                                    .background(color = Color.LightGray, shape = CircleShape)
+                                    .background(color = textfrilssetvideocall, shape = CircleShape)
                             )
+
                             if (selectedImageUri != null) {
                                 Image(
                                     painter = rememberAsyncImagePainter(selectedImageUri),
@@ -167,41 +183,47 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
-                                Image(
-                                    imageVector = Icons.Default.Person,
-//                               painter = painterResource(id = R.drawable.uk), // Replace with your image
-                                    contentDescription = "Profile Picture",
-                                    modifier = Modifier
-                                        .size(50.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
+
+
+                                if (drawableId != 0) {
+                                    Image(
+                                        painter = painterResource(id = drawableId),
+                                        contentDescription = "Profile Picture",
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .clip(CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } else {
+                                    AsyncImage(
+                                        model = flag,
+                                        contentDescription = "Profile Picture",
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .clip(CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
                             }
+
                             IconButton(
                                 onClick = {
                                     imagePickerLauncher.launch("image/*")
                                 },
                                 modifier = Modifier
                                     .align(Alignment.BottomEnd)
-                                    .offset(
-//                                       x = 1.dp,
-                                        x = (-5).dp,
-                                        y = (-15).dp
-                                    )
-                                    .background(
-//                                       color = Color.Blue,
-                                        color = profilecircle,
-                                        shape = CircleShape
-                                    ).padding(8.dp)
+                                    .offset(x = (-5).dp, y = (-15).dp)
+                                    .background(color = profilecircle, shape = CircleShape)
+                                    .padding(8.dp)
                                     .size(17.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
                                     contentDescription = "Upload Icon",
                                     tint = settingsclr,
-
-                                    )
+                                )
                             }
+
                         }
 //                       ProfileImageUploader(onAddImageClick = { /* Handle add image click */ })
                     }
@@ -214,7 +236,7 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                     ) {
                         TabRow(
                             selectedTabIndex = selectedTabIndex,
-                            containerColor = tabbg,
+                            containerColor = textfrilssetvideocall,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(40.dp),
@@ -233,7 +255,7 @@ fun SetVideoCallScreen(navController: NavHostController?) {
 
                             tabTitles.forEachIndexed { index, title ->
                                 Tab(
-                                    modifier = Modifier.background(if (selectedTabIndex == index) settingsclr else Color.LightGray),
+                                    modifier = Modifier.background(if (selectedTabIndex == index) settingsclr else textfrilssetvideocall),
 //                                    icon = {
 //                                        Icon(
 //                                            imageVector = Icons.Default.Person,
@@ -306,8 +328,8 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                         maxLines = 1,
                         shape = RoundedCornerShape(16.dp),
                         colors = TextFieldDefaults.colors(
-                            focusedContainerColor = grey,
-                            unfocusedContainerColor = grey,
+                            focusedContainerColor = textfrilssetvideocall,
+                            unfocusedContainerColor = textfrilssetvideocall,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
                         ),
@@ -324,12 +346,13 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                             .fillMaxWidth()
                             .clip(shape = RoundedCornerShape(10.dp))
                             .height(60.dp)
-                            .background(grey),
+                            .background(textfrilssetvideocall),
 
                         ) {
                         Row(
                             modifier = Modifier
-                                .fillMaxSize().clickable{
+                                .fillMaxSize()
+                                .clickable {
                                     safeNavController.navigate(Routes.ChooseThemeScreen)
 
                                 }
@@ -378,7 +401,7 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                             .fillMaxWidth()
                             .clip(shape = RoundedCornerShape(10.dp))
                             .height(60.dp)
-                            .background(grey),
+                            .background(textfrilssetvideocall),
 
                         ) {
                         Row(
@@ -429,12 +452,13 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                     Spacer(modifier = Modifier.height(10.dp))
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth().clickable{
+                            .fillMaxWidth()
+                            .clickable {
                                 showDialogcall = true
                             }
                             .clip(shape = RoundedCornerShape(10.dp))
                             .height(60.dp)
-                            .background(grey),
+                            .background(textfrilssetvideocall),
 
                         ) {
                         Row(
@@ -481,27 +505,48 @@ fun SetVideoCallScreen(navController: NavHostController?) {
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            safeNavController.navigate(Routes.FakeVideoCall)
+
+                            Log.d("selectedTabIndex ","${selectedTabIndex}")
+//                            safeNavController.navigate(Routes.FakeVideoCall)
+                            when (selectedTabIndex) {
+                                0 -> {
+
+                                    val videospath = Uri.encode(videoPath)
+//                                    safeNavController.navigate(Routes.VideoCallingScreen)
+//                                    Log.d("Passpath", "SetVideoCallScreen: ${videospath}")
+
+//                                    safeNavController.navigate(Routes.FakeVideoCall)
+//                                    safeNavController.navigate(Routes.IncommingCallScreen)
+//                                    safeNavController.navigate("IncommingCallScreen/$name/${Uri.encode(flag)}")
+
+                                    val encodedPicPath = Uri.encode(flag)
+
+                                    safeNavController.navigate("IncommingCallScreen/$name/$encodedPicPath/$videospath")
+
+
+                                }else -> {
+                                val encodedPicPath = Uri.encode(flag)
+
+                                safeNavController.navigate("VideoCallingScreen/$name/$encodedPicPath")
+
+                            }
+                            }
 
                         },
-//                        enabled = TODO(),
-//                        shape = TODO(),
-//                        colors = TODO(),
-//                        elevation = TODO(),
-                        border = BorderStroke(1.dp, Color.Red),
-//                        contentPadding = TODO(),
-//                        interactionSource = TODO()
+//
+                        border = BorderStroke(1.dp, settingsclr),
+//
                     ) {
                         Row {
                             Icon(
 //                               imageVector = Icons.Default.KeyboardArrowRight,
                                 painter = painterResource(id = com.o9tech.prankcall.R.drawable.videocall),
-                                tint = Color.Red,
+                                tint = settingsclr,
                                 modifier = Modifier.size(24.dp),
                                 contentDescription = "Character Name"
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(text = "Video Call", color = Color.Red)
+                            Text(text = "Video Call", color = settingsclr)
                         }
 
                     }
@@ -562,7 +607,9 @@ fun CustomRateUsDialogs(
                     )
                     Divider()
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -581,7 +628,9 @@ fun CustomRateUsDialogs(
 
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -600,7 +649,9 @@ fun CustomRateUsDialogs(
 
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(text = "10s")
@@ -618,7 +669,9 @@ fun CustomRateUsDialogs(
 
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween)
                     {
@@ -637,7 +690,9 @@ fun CustomRateUsDialogs(
 
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween)
                     {
@@ -728,8 +783,12 @@ fun CustomCallSettings(
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Divider()
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -744,14 +803,26 @@ fun CustomCallSettings(
                             Text(text = "Sound")
                         }
                         Switch(
-                            modifier = Modifier,
+                            modifier = Modifier.size(20.dp,15.dp),
                             checked = sound.value,
-                            onCheckedChange = { sound.value = it }
+                            onCheckedChange = { sound.value = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = white,
+                                checkedTrackColor = settingsclr,
+                                uncheckedThumbColor = white,
+                                uncheckedTrackColor = Color.LightGray,
+                                uncheckedBorderColor = Color.Transparent,
+                                checkedBorderColor = Color.Transparent
+                            ),
                         )
 
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -765,14 +836,25 @@ fun CustomCallSettings(
                           Text(text = "Vibration")
                       }
                         Switch(
-                            modifier = Modifier,
+                            modifier = Modifier.size(20.dp,15.dp),
                             checked = vibration.value,
-                            onCheckedChange = { vibration.value = it }
+                            onCheckedChange = { vibration.value = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = white,
+                                checkedTrackColor = settingsclr,
+                                uncheckedThumbColor = white,
+                                uncheckedTrackColor = Color.LightGray,
+                                uncheckedBorderColor = Color.Transparent,
+                                checkedBorderColor = Color.Transparent
+                            ),
                         )
 
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -786,9 +868,17 @@ fun CustomCallSettings(
                             Text(text = "Flash")
                         }
                         Switch(
-                            modifier = Modifier,
+                            modifier = Modifier.size(20.dp,15.dp),
                             checked = flash.value,
-                            onCheckedChange = { flash.value = it }
+                            onCheckedChange = { flash.value = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = white,
+                                checkedTrackColor = settingsclr,
+                                uncheckedThumbColor = white,
+                                uncheckedTrackColor = Color.LightGray,
+                                uncheckedBorderColor = Color.Transparent,
+                                checkedBorderColor = Color.Transparent
+                            ),
                         )
 
                     }
@@ -797,3 +887,14 @@ fun CustomCallSettings(
             }
         }
     }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSetVideoCallScreen() {
+    SetVideoCallScreen(
+        navController = rememberNavController(), // Mock NavController for preview
+        name = "John Doe", // Provide a sample name for the preview
+        flag = "drawable://img_home_messi" ,
+        videoPath = "path/to/video.mp4"
+    )
+}

@@ -16,4 +16,8 @@ object Routes {
     var VideoCallingScreen="VideoCallingScreen"
     var SetCallScreen="SetCallScreen"
     var IncommingCallScreen="IncommingCallScreen"
+    var FakeVideoScreen="FakeVideoScreen"
+    var FakeAudioScreen="FakeAudioScreen"
+    var OverlappingBoxWithRoundedCorners="OverlappingBoxWithRoundedCorners"
+    var AddCharacterMsg="AddCharacterMsg"
 }

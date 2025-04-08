@@ -66,6 +66,7 @@ fun CameraPreviewBox() {
             Spacer(modifier = Modifier.height(40.dp))
             AndroidView(
                 factory = { ctx ->
+
                     val previewView = PreviewView(ctx).apply {
                         layoutParams = FrameLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
