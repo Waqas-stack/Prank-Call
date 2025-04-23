@@ -74,7 +74,6 @@ import java.io.File
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
 fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewModel) {
 
@@ -90,7 +89,7 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        selectedImageUri = uri // Set selected image URI
+        selectedImageUri = uri
     }
 
 
@@ -168,7 +167,6 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                             } else {
                                 Image(
                                     imageVector = Icons.Default.Person,
-//                               painter = painterResource(id = R.drawable.uk), // Replace with your image
                                     contentDescription = "Profile Picture",
                                     modifier = Modifier
                                         .size(50.dp)
@@ -182,19 +180,16 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
 
                             IconButton(
                                 onClick = {
-//                                    imagePickerLauncher.launch("image/*")
                                     safeNavController.navigate("fake_message_asset_picker")
 
                                 },
                                 modifier = Modifier
                                     .align(Alignment.BottomEnd)
                                     .offset(
-//                                       x = 1.dp,
                                         x = (-5).dp,
                                         y = (-15).dp
                                     )
                                     .background(
-//                                       color = Color.Blue,
                                         color = profilecircle,
                                         shape = CircleShape
                                     )
@@ -209,16 +204,7 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                                     )
                             }
                         }
-//                       ProfileImageUploader(onAddImageClick = { /* Handle add image click */ })
                     }
-//                    Text(
-//                        "Character's name",
-//                        maxLines = 1,
-//                        overflow = TextOverflow.Ellipsis,
-//                        modifier = Modifier.padding(start = 6.dp),
-//                        style = MaterialTheme.typography.titleMedium,
-//                        color = Orange40
-//                    )
                     Spacer(modifier = Modifier.height(10.dp))
                     TextField(
                         leadingIcon = {
@@ -237,8 +223,6 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                             cursorColor = Color.Black,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-//                            focusedTextColor = Color.White,
-//                            unfocusedTextColor = Color.White,
                         ),
                         value = charname,
                         onValueChange = {
@@ -248,45 +232,6 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-//                    Text(
-//                        "Video call ",
-//                        maxLines = 1,
-//                        overflow = TextOverflow.Ellipsis,
-//                        modifier = Modifier.padding(start = 6.dp),
-//                        style = MaterialTheme.typography.titleMedium,
-//                        color = Orange40
-//                    )
-//                    Spacer(modifier = Modifier.height(15.dp))
-//                    Box(
-//                        modifier = Modifier
-//                            .size(120.dp).clip(RoundedCornerShape(4.dp))
-//                            .dashedBorder(2.dp, settingsclr, 8.dp).clickable{
-//
-//                            },
-//                        contentAlignment = Alignment.Center
-//                    ) {
-//                        Column(
-//                            horizontalAlignment = Alignment.CenterHorizontally
-//                        ) {
-//                            // 🔹 Icon
-//                            Icon(
-////                                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your icon
-//                                imageVector = Icons.Default.Add,
-//                                contentDescription = "Icon",
-//                                tint = settingsclr,
-//                                modifier = Modifier.size(24.dp)
-//                            )
-//
-//                            Spacer(modifier = Modifier.height(8.dp))
-//
-//                            // 🔹 Text
-//                            Text(
-//                                text = "Upload Video",
-//                                fontSize = 12.sp,
-//                                color = Color.Black
-//                            )
-//                        }
-//                    }
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
@@ -298,13 +243,7 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                                 }
                             }
                         },
-//                        enabled = TODO(),
-//                        shape = TODO(),
-//                        colors = TODO(),
-//                        elevation = TODO(),
                         border = BorderStroke(1.dp, Color.Red),
-//                        contentPadding = TODO(),
-//                        interactionSource = TODO()
                     ) {
                         Text(text = "Save",color = Color.Red)
 

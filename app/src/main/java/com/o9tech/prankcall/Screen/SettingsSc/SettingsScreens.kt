@@ -165,16 +165,10 @@ fun SettingsScreen(navController: NavHostController?) {
                                     Text(text = "Languages", fontSize = 16.sp)
                                 }
                                 Row(
-//                                horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(text = "English", fontSize = 16.sp)
                                     Spacer(modifier = Modifier.width(10.dp))
-//                                Icon(
-//                                    imageVector = Icons.Default.CheckCircle,
-//                                    contentDescription = "",
-//                                    tint = settingsclr
-//                                )
                                     Box(
                                         contentAlignment = Alignment.Center,
                                         modifier = Modifier
@@ -215,7 +209,6 @@ fun SettingsScreen(navController: NavHostController?) {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = "",
-//                                tint = settingsclr
                                 )
                             }
                             Row(
@@ -244,7 +237,6 @@ fun SettingsScreen(navController: NavHostController?) {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = "",
-//                                tint = settingsclr
                                 )
                             }
                             Row(
@@ -269,7 +261,6 @@ fun SettingsScreen(navController: NavHostController?) {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = "",
-//                                tint = settingsclr
                                 )
                             }
                             Row(
@@ -294,7 +285,6 @@ fun SettingsScreen(navController: NavHostController?) {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = "",
-//                                tint = settingsclr
                                 )
                             }
                         }
@@ -397,7 +387,6 @@ fun CustomRateUsDialog(
         }
     }
 }
-
 
 
 

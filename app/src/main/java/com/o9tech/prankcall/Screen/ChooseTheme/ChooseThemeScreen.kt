@@ -80,7 +80,6 @@ import com.o9tech.prankcall.ui.theme.white
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
 fun ChooseThemeScreen(navController: NavHostController?) {
 
@@ -166,11 +165,10 @@ fun ThemeBox(theme: ThemeItem,isSelected: Boolean, onThemeSelected: () -> Unit) 
             .background(
                 theme.boxColor,
                 shape = RoundedCornerShape(16.dp)
-            ) // 🔹 Box Background Color
+            )
             .clickable { onThemeSelected() }
             .padding(12.dp)
     ) {
-        // 🔹 Top-Right Icon
         Icon(
             painter = painterResource(id = R.drawable.videocall),
 
@@ -181,7 +179,6 @@ fun ThemeBox(theme: ThemeItem,isSelected: Boolean, onThemeSelected: () -> Unit) 
                 .size(24.dp)
         )
 
-        // 🔹 Center Circle with Icon
         Box(
             modifier = Modifier
                 .size(80.dp)
@@ -190,7 +187,6 @@ fun ThemeBox(theme: ThemeItem,isSelected: Boolean, onThemeSelected: () -> Unit) 
             contentAlignment = Alignment.Center
         ) {
             Icon(
-//                painter = painterResource(id = R.drawable.videocall),
                 painter = painterResource(id = if (isSelected) R.drawable.done else R.drawable.videocall),
                 contentDescription = null,
                 tint = Color.White,
@@ -206,5 +202,4 @@ fun ThemeBox(theme: ThemeItem,isSelected: Boolean, onThemeSelected: () -> Unit) 
     }
 }
 
-// ✅ Theme Item Data Class
 data class ThemeItem(val boxColor: Color, val circleColor: Color, val topIcon: Int)

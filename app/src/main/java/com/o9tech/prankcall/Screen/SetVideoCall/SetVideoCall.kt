@@ -89,7 +89,12 @@ import com.o9tech.prankcall.ui.theme.white
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: String,videoPath: String) {
+fun SetVideoCallScreen(
+    navController: NavHostController?,
+    name: String,
+    flag: String,
+    videoPath: String,
+) {
     val safeNavController = navController ?: rememberNavController()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
@@ -104,11 +109,11 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        selectedImageUri = uri // Set selected image URI
+        selectedImageUri = uri
     }
 
     val drawableId = LocalContext.current.resources.getIdentifier(
-        flag.substringAfter("drawable://"), // Extract drawable name
+        flag.substringAfter("drawable://"),
         "drawable",
         LocalContext.current.packageName
     )
@@ -123,7 +128,6 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
                         fontWeight = FontWeight.Bold,
-//                        style = MaterialTheme.typography.titleMedium,
                         color = Orange40
                     )
                 },
@@ -225,7 +229,6 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                             }
 
                         }
-//                       ProfileImageUploader(onAddImageClick = { /* Handle add image click */ })
                     }
 
                     Box(
@@ -250,31 +253,17 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                                 )
                             },
                             divider = {},
-//
                         ) {
 
                             tabTitles.forEachIndexed { index, title ->
                                 Tab(
                                     modifier = Modifier.background(if (selectedTabIndex == index) settingsclr else textfrilssetvideocall),
-//                                    icon = {
-//                                        Icon(
-//                                            imageVector = Icons.Default.Person,
-//                                            tint = Orange40,
-//                                            contentDescription = "Character Name"
-//                                        )
-//                                    },
                                     selected = selectedTabIndex == index,
                                     onClick = { selectedTabIndex = index },
-//                                    onClick = {
-////                                        coroutineScope.launch {
-//////                                            pagerState.animateScrollToPage(index)
-////                                        }
-//                                    },
                                     text = {
                                         Row {
                                             Icon(
                                                 imageVector = Icons.Default.Call,
-//                                                tint = Orange40,
                                                 tint = if (selectedTabIndex == index) Color.White else Orange40,
                                                 contentDescription = "Character Name"
                                             )
@@ -293,16 +282,6 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                             }
                         }
                     }
-
-//                    Row (
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.Center
-//                    ){
-//                        Button(onClick = {}) { }
-//                        Button(onClick = {}) { }
-//                    }
                     Spacer(modifier = Modifier.height(10.dp))
 
                     TextField(
@@ -375,7 +354,7 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                                         fontWeight = FontWeight.W600,
                                         fontSize = 16.sp
                                     )
-                                    Text(text = "Default", fontSize = 12.sp,color = Color.DarkGray)
+                                    Text(text = "Default", fontSize = 12.sp, color = Color.DarkGray)
                                 }
                             }
                             Row(
@@ -429,18 +408,12 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                                         fontWeight = FontWeight.W600,
                                         fontSize = 16.sp
                                     )
-                                    Text(text = "Now",fontSize = 12.sp,color = Color.DarkGray)
+                                    Text(text = "Now", fontSize = 12.sp, color = Color.DarkGray)
                                 }
                             }
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Person,
-//                                    tint = Orange40,
-//                                    contentDescription = "Character Name"
-//                                )
-//                                Spacer(modifier = Modifier.padding(10.dp))
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     tint = Color.DarkGray,
@@ -487,12 +460,7 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Person,
-//                                    tint = Orange40,
-//                                    contentDescription = "Character Name"
-//                                )
-//                                Spacer(modifier = Modifier.padding(10.dp))
+
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     tint = Color.DarkGray,
@@ -506,40 +474,33 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
 
-                            Log.d("selectedTabIndex ","${selectedTabIndex}")
-//                            safeNavController.navigate(Routes.FakeVideoCall)
+                            Log.d("selectedTabIndex ", "${selectedTabIndex}")
                             when (selectedTabIndex) {
                                 0 -> {
 
                                     val videospath = Uri.encode(videoPath)
-//                                    safeNavController.navigate(Routes.VideoCallingScreen)
-//                                    Log.d("Passpath", "SetVideoCallScreen: ${videospath}")
-
-//                                    safeNavController.navigate(Routes.FakeVideoCall)
-//                                    safeNavController.navigate(Routes.IncommingCallScreen)
-//                                    safeNavController.navigate("IncommingCallScreen/$name/${Uri.encode(flag)}")
 
                                     val encodedPicPath = Uri.encode(flag)
 
                                     safeNavController.navigate("IncommingCallScreen/$name/$encodedPicPath/$videospath")
 
 
-                                }else -> {
-                                val encodedPicPath = Uri.encode(flag)
+                                }
 
-                                safeNavController.navigate("VideoCallingScreen/$name/$encodedPicPath")
+                                else -> {
+                                    val encodedPicPath = Uri.encode(flag)
 
-                            }
+                                    safeNavController.navigate("VideoCallingScreen/$name/$encodedPicPath")
+
+                                }
                             }
 
                         },
-//
                         border = BorderStroke(1.dp, settingsclr),
-//
                     ) {
                         Row {
                             Icon(
-//                               imageVector = Icons.Default.KeyboardArrowRight,
+
                                 painter = painterResource(id = com.o9tech.prankcall.R.drawable.videocall),
                                 tint = settingsclr,
                                 modifier = Modifier.size(24.dp),
@@ -561,10 +522,6 @@ fun SetVideoCallScreen(navController: NavHostController?, name: String, flag: St
                     CustomCallSettings(
                         showDialog = showDialogcall,
                         onDismiss = { showDialogcall = false },
-//                        onSubmit = { rating ->
-//                            Log.d("RateUs", "User rated: $rating stars")
-//                            showDialogcall = false
-//                        }
                     )
                 }
             }
@@ -613,12 +570,11 @@ fun CustomRateUsDialogs(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Now",fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(text = "Now", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         RadioButton(
                             selected = true,
-                            onClick = { /*TODO*/ },
+                            onClick = { },
                             colors = RadioButtonDefaults.colors(
-//                                    selectedColor = settingsclr,
                                 selectedColor = Orange40,
                                 unselectedColor = Color.Gray,
                                 disabledSelectedColor = Color.LightGray,
@@ -639,7 +595,6 @@ fun CustomRateUsDialogs(
                             selected = false,
                             onClick = { /*TODO*/ },
                             colors = RadioButtonDefaults.colors(
-//                                    selectedColor = settingsclr,
                                 selectedColor = Orange40,
                                 unselectedColor = Color.Gray,
                                 disabledSelectedColor = Color.LightGray,
@@ -653,13 +608,13 @@ fun CustomRateUsDialogs(
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(text = "10s")
                         RadioButton(
                             selected = false,
                             onClick = { /*TODO*/ },
                             colors = RadioButtonDefaults.colors(
-//                                    selectedColor = settingsclr,
                                 selectedColor = Orange40,
                                 unselectedColor = Color.Gray,
                                 disabledSelectedColor = Color.LightGray,
@@ -673,14 +628,14 @@ fun CustomRateUsDialogs(
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween)
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    )
                     {
                         Text(text = "15s")
                         RadioButton(
                             selected = false,
                             onClick = { /*TODO*/ },
                             colors = RadioButtonDefaults.colors(
-//                                    selectedColor = settingsclr,
                                 selectedColor = Orange40,
                                 unselectedColor = Color.Gray,
                                 disabledSelectedColor = Color.LightGray,
@@ -694,14 +649,14 @@ fun CustomRateUsDialogs(
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween)
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    )
                     {
                         Text(text = "20s")
                         RadioButton(
                             selected = false,
                             onClick = { /*TODO*/ },
                             colors = RadioButtonDefaults.colors(
-//                                    selectedColor = settingsclr,
                                 selectedColor = Orange40,
                                 unselectedColor = Color.Gray,
                                 disabledSelectedColor = Color.LightGray,
@@ -726,7 +681,7 @@ fun CustomRateUsDialogs(
                         }
                         Spacer(modifier = Modifier.width(10.dp))
                         Button(
-                            onClick = { onDismiss()},
+                            onClick = { onDismiss() },
                             modifier = Modifier
                                 .width(150.dp)
                                 .padding(top = 12.dp),
@@ -744,8 +699,6 @@ fun CustomRateUsDialogs(
         }
     }
 }
-
-
 
 
 @Composable
@@ -803,7 +756,7 @@ fun CustomCallSettings(
                             Text(text = "Sound")
                         }
                         Switch(
-                            modifier = Modifier.size(20.dp,15.dp),
+                            modifier = Modifier.size(20.dp, 15.dp),
                             checked = sound.value,
                             onCheckedChange = { sound.value = it },
                             colors = SwitchDefaults.colors(
@@ -826,17 +779,17 @@ fun CustomCallSettings(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                      Row {
-                          Icon(
-                              imageVector = Icons.Default.Delete,
-                              tint = Orange40,
-                              contentDescription = "Character Name"
-                          )
-                          Spacer(modifier = Modifier.width(10.dp))
-                          Text(text = "Vibration")
-                      }
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                tint = Orange40,
+                                contentDescription = "Character Name"
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(text = "Vibration")
+                        }
                         Switch(
-                            modifier = Modifier.size(20.dp,15.dp),
+                            modifier = Modifier.size(20.dp, 15.dp),
                             checked = vibration.value,
                             onCheckedChange = { vibration.value = it },
                             colors = SwitchDefaults.colors(
@@ -868,7 +821,7 @@ fun CustomCallSettings(
                             Text(text = "Flash")
                         }
                         Switch(
-                            modifier = Modifier.size(20.dp,15.dp),
+                            modifier = Modifier.size(20.dp, 15.dp),
                             checked = flash.value,
                             onCheckedChange = { flash.value = it },
                             colors = SwitchDefaults.colors(
@@ -882,19 +835,19 @@ fun CustomCallSettings(
                         )
 
                     }
-                    }
                 }
             }
         }
     }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewSetVideoCallScreen() {
     SetVideoCallScreen(
-        navController = rememberNavController(), // Mock NavController for preview
-        name = "John Doe", // Provide a sample name for the preview
-        flag = "drawable://img_home_messi" ,
+        navController = rememberNavController(),
+        name = "John Doe",
+        flag = "drawable://img_home_messi",
         videoPath = "path/to/video.mp4"
     )
 }

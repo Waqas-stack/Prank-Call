@@ -50,7 +50,7 @@ fun VideoCallingScreen(
     val cameraExecutor: ExecutorService = remember { Executors.newSingleThreadExecutor() }
 
     val drawableId = LocalContext.current.resources.getIdentifier(
-        callerImage.substringAfter("drawable://"), // Extract drawable name
+        callerImage.substringAfter("drawable://"),
         "drawable",
         LocalContext.current.packageName
     )
@@ -63,8 +63,6 @@ fun VideoCallingScreen(
                     .padding(it)
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    // 🔹 Selfie Camera Feed as Background
-
                     AndroidView(
                         factory = { ctx ->
                             val previewView = PreviewView(ctx).apply {
@@ -98,26 +96,14 @@ fun VideoCallingScreen(
                         },
                         modifier = Modifier.fillMaxSize()
                     )
-
-
-                    // 🔹 Caller Profile Image
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(top = 50.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-//                        Image(
-//                            painter = rememberAsyncImagePainter(callerImage),
-//                            contentDescription = "Caller Profile",
-//                            modifier = Modifier
-//                                .size(90.dp)
-//                                .clip(CircleShape)
-//                                .border(4.dp, Color.White, CircleShape)
-//                        )
                         if (drawableId != 0){
                             Image(
-//                                   painter = rememberAsyncImagePainter(profileImage),
                                 painter = painterResource(id = drawableId),
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier
@@ -127,7 +113,6 @@ fun VideoCallingScreen(
                                 contentScale = ContentScale.Crop
                             )}else{
                         AsyncImage(
-//                                    model = profileImage,
                             model = callerImage,
                             contentDescription = "Caller",
                             modifier = Modifier
@@ -169,7 +154,6 @@ fun VideoCallingScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-//                            CircularButton(icon = R.drawable.videocall, onClick = {})
                             ToggleCircularButton(
                                 iconOn = R.drawable.videocall,
                                 iconOff = R.drawable.videocam_off,
@@ -180,8 +164,6 @@ fun VideoCallingScreen(
                                 iconOff = R.drawable.mic_off,
                                 onToggle = { isOn -> println("Toggled: $isOn") }
                             )
-//                            CircularButton(icon = R.drawable.mic, onClick = onToggleMic)
-//                            CircularButton(icon = R.drawable.volume_down, onClick = onToggleSpeaker)
                             ToggleCircularButton(
                                 iconOn = R.drawable.volume_down,
                                 iconOff = R.drawable.volume_off,
@@ -194,8 +176,6 @@ fun VideoCallingScreen(
                                     safeNavController.popBackStack()
                                     val encodedPicPath = Uri.encode(callerImage)
                                     safeNavController.navigate("CallEndedScreen/$encodedPicPath")
-//                                    safeNavController.popBackStack()
-//                                    safeNavController.navigate(Routes.CallEndedScreen )
                                 },
                             )
                         }
@@ -206,7 +186,6 @@ fun VideoCallingScreen(
     )
 }
 
-// ✅ Custom Circular Button
 @Composable
 fun CircularButton(icon: Int, onClick: () -> Unit, backgroundColor: Color = Color.Black) {
 

@@ -95,9 +95,6 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
 
 
 
-//    var pickedImageUri: List<AssetInfo> = remember { listOf() }
-
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -170,7 +167,6 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                            } else {
                                Image(
                                    imageVector = Icons.Default.Person,
-//                               painter = painterResource(id = R.drawable.uk), // Replace with your image
                                    contentDescription = "Profile Picture",
                                    modifier = Modifier
                                        .size(50.dp)
@@ -191,12 +187,10 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                               modifier = Modifier
                                   .align(Alignment.BottomEnd)
                                   .offset(
-//                                       x = 1.dp,
                                       x = (-5).dp,
                                       y = (-15).dp
                                   )
                                   .background(
-//                                       color = Color.Blue,
                                       color = profilecircle,
                                       shape = CircleShape
                                   )
@@ -211,7 +205,6 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                               )
                           }
                        }
-//                       ProfileImageUploader(onAddImageClick = { /* Handle add image click */ })
                    }
                     Text(
                         "Character's name",
@@ -239,8 +232,6 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                             cursorColor = Color.Black,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-//                            focusedTextColor = Color.White,
-//                            unfocusedTextColor = Color.White,
                             ),
                         value = charname,
                         onValueChange = {
@@ -273,23 +264,19 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
 
 
                         if (selectedVideos.firstOrNull() != null) {
-                            // Assuming the first video has a thumbnail or you want to display a placeholder image
                             val videoPath = selectedVideos.first().filepath
-                            val videoUri = Uri.fromFile(File(videoPath)) // Convert path to URI if needed
+                            val videoUri = Uri.fromFile(File(videoPath))
 
                             Log.d("Video", "Videosuro: $videoUri")
-
-                            // Display video thumbnail (replace with video thumbnail logic)
                             Image(
                                 painter = rememberAsyncImagePainter(model = videoUri),
                                 contentDescription = "Video Thumbnail",
                                 modifier = Modifier
-                                    .size(120.dp) // Fill the box with the thumbnail size
-                                    .clip(RoundedCornerShape(4.dp)), // Clip the image with the same shape as the Box
+                                    .size(120.dp)
+                                    .clip(RoundedCornerShape(4.dp)),
                                 contentScale = ContentScale.Fit
                             )
                         } else {
-                            // Default icon for no video selected
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
@@ -299,10 +286,7 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                                     tint = settingsclr,
                                     modifier = Modifier.size(24.dp)
                                 )
-
                                 Spacer(modifier = Modifier.height(8.dp))
-
-                                // Text
                                 Text(
                                     text = "Upload Video",
                                     fontSize = 12.sp,
@@ -311,58 +295,19 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                             }
                         }
                     }
-
-//                    Box(
-//                        modifier = Modifier
-//                            .size(120.dp).clip(RoundedCornerShape(4.dp))
-//                            .dashedBorder(2.dp, settingsclr, 8.dp).clickable{
-//
-//                                safeNavController.navigate("video_picker")
-//                            },
-//                        contentAlignment = Alignment.Center
-//                    ) {
-//                        val selectedImages by mainViewModel.selectedVideos.collectAsState()
-//                        Column(
-//                            horizontalAlignment = Alignment.CenterHorizontally
-//                        ) {
-//                            // 🔹 Icon
-//                            Icon(
-////                                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your icon
-//                                imageVector = Icons.Default.Add,
-//                                contentDescription = "Icon",
-//                                tint = settingsclr,
-//                                modifier = Modifier.size(24.dp)
-//                            )
-//
-//                            Spacer(modifier = Modifier.height(8.dp))
-//
-//                            // 🔹 Text
-//                            Text(
-//                                text = "Upload Video",
-//                                fontSize = 12.sp,
-//                                color = Color.Black
-//                            )
-//                        }
-//                    }
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             if (charname.isNotEmpty()) {
                                 scope.launch {
-//                                mainViewModel.saveUser(charname)
                                 mainViewModel.insertUserDetails(charname)
                                 navController?.popBackStack()
                                 }
                             }
                         },
-//                        enabled = TODO(),
-//                        shape = TODO(),
-//                        colors = TODO(),
-//                        elevation = TODO(),
                         border = BorderStroke(1.dp, Color.Red),
-//                        contentPadding = TODO(),
-//                        interactionSource = TODO()
+
                     ) {
                         Text(text = "Save",color = Color.Red)
 

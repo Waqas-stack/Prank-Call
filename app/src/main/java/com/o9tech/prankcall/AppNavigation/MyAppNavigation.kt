@@ -15,12 +15,15 @@ import com.o9tech.prankcall.Screen.AddCharacterMsg.AddCharacterMsg
 import com.o9tech.prankcall.Screen.AddNewCharacter.AddCharacterSCreen
 import com.o9tech.prankcall.Screen.AddNewCharacter.ImagePicker
 import com.o9tech.prankcall.Screen.AddNewCharacter.VideoPicker
+import com.o9tech.prankcall.Screen.AudioCallEnded.AudioCallEndedScreen
+import com.o9tech.prankcall.Screen.AudioCalling.AudioCallingScreen
 import com.o9tech.prankcall.Screen.Callscreen.CallScreen
 import com.o9tech.prankcall.Screen.ChooseTheme.ChooseThemeScreen
 import com.o9tech.prankcall.Screen.FakeMessage.FakeMessageScreen
 import com.o9tech.prankcall.Screen.FakeVideos.FakeVideoScreen
 import com.o9tech.prankcall.Screen.HomeScreen
 import com.o9tech.prankcall.Screen.IncomingCall.IncommingCallScreen
+import com.o9tech.prankcall.Screen.IncommingAudioCallScreen.IncommingAudioCall
 import com.o9tech.prankcall.Screen.Languages.LanguageScreen
 import com.o9tech.prankcall.Screen.Search.SearchScreen
 import com.o9tech.prankcall.Screen.SetCall.SetCallScreen
@@ -36,7 +39,7 @@ import com.o9tech.prankcall.viewModel.MainViewModel
 
 @Composable
 fun Navigation() {
-    val context = LocalContext.current // Get context in Compose
+    val context = LocalContext.current
 
     val navController = rememberNavController()
     val mainViewModel: MainViewModel = viewModel()
@@ -83,13 +86,6 @@ fun Navigation() {
         }
 
 
-
-
-
-//        composable(Routes.FakeVideoCall) {
-//            FakeVideoCallScreen(mainViewModel)
-//        }
-
         composable("FakeVideoCall/{videoPath}/{pic}") { backStackEntry ->
             val encodedPath = backStackEntry.arguments?.getString("videoPath") ?: ""
             val videoPath = Uri.decode(encodedPath)
@@ -109,22 +105,6 @@ fun Navigation() {
         composable(Routes.ChooseThemeScreen) {
             ChooseThemeScreen(navController)
         }
-//        composable(Routes.CallEndedScreen) {
-//            CallEndedScreen(
-//                navController,
-//                profileImage = R.drawable.fake1,
-////                onReturn = { Toast.makeText(context, "Return Clicked", Toast.LENGTH_SHORT).show() },
-//                onReturn = {
-//                    navController.popBackStack()
-////                    navController.navigate(Routes.VideoCallingScreen)
-//                           },
-////                onCallAgain = { Toast.makeText(context, "Call Again Clicked", Toast.LENGTH_SHORT).show() }
-//                onCallAgain = {
-//                    navController.navigate(Routes.SetCallScreen)
-//                }
-//            )
-//        }
-
         composable("CallEndedScreen/{profileImage}") { backStackEntry ->
             val profileImage = backStackEntry.arguments?.getString("profileImage") ?: ""
             val decodedPic = Uri.decode(profileImage)
@@ -137,54 +117,39 @@ fun Navigation() {
                 },
                 onCallAgain = {
                     navController.popBackStack()
-//                    navController.navigate("SetCallScreen")
                 }
             )
         }
 
 
 
-//        composable(Routes.VideoCallingScreen) {
-//            VideoCallingScreen(
-//                navController,
-//                callerImage = "https://example.com/caller_image.jpg",
-//                callerName = "Jisoo",
-//                onToggleVideo = { /* Handle Video Toggle */ },
-//                onToggleMic = { /* Handle Mic Toggle */ },
-//                onToggleSpeaker = { /* Handle Speaker Toggle */ },
-//                onEndCall = { /* Handle Call End */ }
-//            )
-//        }
-
-
         composable("VideoCallingScreen/{name}/{pic}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val pic = backStackEntry.arguments?.getString("pic") ?: ""
-
-            // Decode the encoded picture path
             val decodedPic = Uri.decode(pic)
-
-            // Use the values in your composable
             VideoCallingScreen(
                 navController,
                 callerName = name,
                 callerImage = decodedPic,
-                onToggleVideo = { /* Handle Video Toggle */ },
-                onToggleMic = { /* Handle Mic Toggle */ },
-                onToggleSpeaker = { /* Handle Speaker Toggle */ },
-                onEndCall = { /* Handle Call End */ })
+                onToggleVideo = {},
+                onToggleMic = {  },
+                onToggleSpeaker = {  },
+                onEndCall = {  })
         }
 
         composable(
-            "SetCallScreen/{name}/{flag}",
+            "SetCallScreen/{name}/{flag}/{audioPath}",
             arguments = listOf(
                 navArgument("name") { type = NavType.StringType },
-                navArgument("flag") { type = NavType.IntType }
+                navArgument("flag") { type = NavType.IntType },
+                navArgument("audioPath") { type = NavType.StringType },
             )
         ) { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val flag = backStackEntry.arguments?.getInt("flag") ?: 0
-            SetCallScreen(navController, name, flag)
+            val audioPath = Uri.decode(backStackEntry.arguments?.getString("audioPath") ?: "")
+
+            SetCallScreen(navController, name, flag,audioPath)
         }
         composable("asset_picker") {
             ImagePicker(
@@ -228,41 +193,11 @@ fun Navigation() {
             )
         }
 
-
-//        composable("IncommingCallScreen/{name}/{drawableId}")
-//        { backStackEntry ->
-//            val name = backStackEntry.arguments?.getString("name") ?: "Unknown"
-//            val drawableId = backStackEntry.arguments?.getString("drawableId")?.toIntOrNull() ?: R.drawable.ic_launcher_background
-//
-//            IncommingCallScreen(navController, callerName = name, profileImage = drawableId.toString(), onCallAgain = {})
-//        }
-
-
-//        composable(
-//            "IncommingCallScreen/{name}/{flag}",
-//            arguments = listOf(
-//                navArgument("name") { type = NavType.StringType },
-//                navArgument("flag") { type = NavType.StringType }
-//            )
-//        ) { backStackEntry ->
-//            val name = backStackEntry.arguments?.getString("name") ?: "Unknown"
-//            val pic = backStackEntry.arguments?.getString("pic") ?: ""
-//            IncommingCallScreen(navController , callerName = name, profileImage = pic, onCallAgain = {})
-////            IncommingCallScreen(navController, callerName = name, profileImage = drawableId.toString(), onCallAgain = {})
-//
-//
-//        }
-
-
         composable("IncommingCallScreen/{name}/{pic}/{path}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val pic = backStackEntry.arguments?.getString("pic") ?: ""
             val path = backStackEntry.arguments?.getString("path") ?: ""
-
-            // Decode the encoded picture path
             val decodedPic = Uri.decode(pic)
-
-            // Use the values in your composable
             IncommingCallScreen(
                 navController,
                 callerName = name,
@@ -279,39 +214,71 @@ fun Navigation() {
             FakeAudioScreen(navController)
         }
         composable(Routes.OverlappingBoxWithRoundedCorners) {
-            OverlappingBoxWithRoundedCorners(navController, mainViewModel)
+            OverlappingBoxWithRoundedCorners(navController )
         }
         composable(Routes.AddCharacterMsg) {
             AddCharacterMsg(navController, mainViewModel)
         }
+        composable("IncommingAudioCall/{name}/{flag}/{audioPath}", arguments = listOf(
+            navArgument("name") { type = NavType.StringType },
+            navArgument("flag") { type = NavType.IntType },
+            navArgument("audioPath") { type = NavType.StringType },
+        )) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val flag = backStackEntry.arguments?.getInt("flag") ?: 0
+            val audioPath = Uri.decode(backStackEntry.arguments?.getString("audioPath") ?: "")
+            IncommingAudioCall(
+                navController,
+                audioPath,
+                profileImage = flag,
+                onCallAgain = {},
+                callerName = name,
+            )
+        }
 
 
 
+            composable("AudioCallingScreen/{name}/{flag}/{audioPath}", arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("flag") { type = NavType.IntType },
+                navArgument("audioPath") { type = NavType.StringType },
 
-//        composable("VideoCallingScreen/{name}/{pic}/{videoPath}") { backStackEntry ->
-//            // Extract arguments from the navigation back stack entry
-//            val name = backStackEntry.arguments?.getString("name") ?: ""
-//            val pic = backStackEntry.arguments?.getString("pic") ?: ""
-//            val videoPath = backStackEntry.arguments?.getString("videoPath") ?: ""
-//
-//            // Decode the encoded picture path and video path
-//            val decodedPic = Uri.decode(pic)
-//            val decodedVideoPath = Uri.decode(videoPath)
-//
-//            // Now pass the decoded values to the VideoCallingScreen composable
-//            VideoCallingScreen(
-//                navController,
-//                callerName = name,
-//                callerImage = decodedPic, // This will be the decoded image path
-//                videoPath = decodedVideoPath, // This is the decoded video path
-//                onToggleVideo = { /* Handle Video Toggle */ },
-//                onToggleMic = { /* Handle Mic Toggle */ },
-//                onToggleSpeaker = { /* Handle Speaker Toggle */ },
-//                onEndCall = { /* Handle Call End */ }
-//            )
-//        }
+                )) { backStackEntry ->
+                val name = backStackEntry.arguments?.getString("name") ?: ""
+                val flag = backStackEntry.arguments?.getInt("flag") ?: 0
+                val audioPath = Uri.decode(backStackEntry.arguments?.getString("audioPath") ?: "")
+
+                AudioCallingScreen(
+                    navController,
+                    audioPath,
+                    profileImage = flag,
+                    onCallAgain = {},
+                    callerName = name,
+                )
+
+        }
 
 
+
+        composable("AudioCallEndedScreen/{name}/{flag}", arguments = listOf(
+            navArgument("name") { type = NavType.StringType },
+            navArgument("flag") { type = NavType.IntType }
+        )) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val flag = backStackEntry.arguments?.getInt("flag") ?: 0
+            AudioCallEndedScreen(
+                navController,
+                profileImage = flag,
+                onCallAgain = {
+                    navController.popBackStack()
+                },
+                onReturn = {
+                    navController.popBackStack()
+                },
+                callername = name,
+            )
+
+        }
 
     }
 }

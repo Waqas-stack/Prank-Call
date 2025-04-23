@@ -64,7 +64,6 @@ import com.o9tech.prankcall.ui.theme.profilecircle
 @Composable
 fun HomeScreen(navController: NavHostController?, mainViewModel: MainViewModel) {
     val safeNavController = navController ?: rememberNavController()
-//    val gradientColors = listOf(Color.Yellow, Color.Green, Color.Cyan)
     val user =mainViewModel.allUsers.collectAsState()
     HomeScreenDesign(
 
@@ -138,47 +137,30 @@ fun HomeScreenDesign(
 
                     }) {
                         Icon(
-//                                imageVector = Icons.Default.Star,
                             painter = painterResource(id = R.drawable.diamond),
                             contentDescription = "Back",
-//                            tint = settingsclr,
                             tint = Color.Unspecified,
                             modifier = Modifier.size(34.dp)
-
                         )
                     }
                     IconButton(onClick = {
                         onSettingClick()
                     }) {
                         Icon(
-//                                imageVector = Icons.Default.Settings,
                             painter = painterResource(id = R.drawable.ic_settings),
                             contentDescription = "Back",
                             tint =settingsclr,
                             modifier = Modifier.size(34.dp)
                         )
                     }
-
                 }
-//                        Text(
-//                            text = "Prank APP",
-//                            fontWeight = FontWeight.ExtraBold,
-//                            fontSize = 28.sp,
-//                            style = TextStyle(
-//                                brush = Brush.linearGradient(gradientColors) // Apply Gradient Effect
-//                            )
-//                        )
                 Image(
-//                                        painter = painterResource(id = R.drawable.ic_launcher_background),
                     painter = painterResource(id = R.drawable.img_frank_app),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
-
                     )
                 Text(text = "Fake Video Call & chat", fontSize = 15.sp, color = Orange40, fontWeight = FontWeight.W400)
-
             }
-
         },
         content = {
             Surface(
@@ -197,7 +179,6 @@ fun HomeScreenDesign(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-//                        Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Back")
                         Icon(
                             painter = painterResource(id = R.drawable.ic_fake_video_call),
                             contentDescription = "Back",
@@ -231,29 +212,24 @@ fun HomeScreenDesign(
                                 Box(
                                     contentAlignment = Alignment.Center,
                                     modifier = Modifier
-                                        .size(70.dp) // Adjust size as needed
+                                        .size(70.dp)
                                         .clip(CircleShape)
                                         .clickable {
                                             onVideoClick()
-//                                            safeNavController.navigate(Routes.FakeMessage)
-//                                            safeNavController.navigate(Routes.FakeVideoScreen)
-
                                         }
-                                        .background(profilecircle) // Placeholder background
+                                        .background(profilecircle)
                                 ) {
                                     Image(
-//                                        painter = painterResource(id = R.drawable.ic_launcher_background),
                                         painter = painterResource(id = language.flag),
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
-                                            .size(70.dp) // Ensure it fits inside the circle
+                                            .size(70.dp)
                                             .clip(CircleShape)
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-//                                    text = "waqas",
                                     text = language.name,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.W600,
@@ -271,7 +247,6 @@ fun HomeScreenDesign(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-//                        Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Back")
                         Icon(
                             painter = painterResource(id = R.drawable.chat),
                             contentDescription = "Chat",
@@ -305,14 +280,10 @@ fun HomeScreenDesign(
                                         .clip(CircleShape)
                                         .clickable {
                                             onMessageClick()
-//                                            safeNavController.navigate(Routes.SetVideoCall)
-
-//                                            safeNavController.navigate(Routes.FakeMessage)
                                         }
                                         .background(profilecircle)
                                 ) {
                                     Image(
-//                                        painter = painterResource(id = R.drawable.ic_launcher_background),
                                         painter = painterResource(id = language.flag),
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
@@ -323,7 +294,6 @@ fun HomeScreenDesign(
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-//                                    text = "waqas",
                                     text = language.name,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.W600,
@@ -341,7 +311,6 @@ fun HomeScreenDesign(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-//                        Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Back")
                         Icon(
                             painter = painterResource(id = R.drawable.phone),
                             contentDescription = "call",
@@ -376,14 +345,10 @@ fun HomeScreenDesign(
                                         .clip(CircleShape)
                                         .clickable {
                                             onAudioCallClick()
-//                                            safeNavController.navigate(Routes.CallEndedScreen)
-
-//                                            safeNavController.navigate(Routes.FakeAudioScreen)
                                         }
                                         .background(profilecircle)
                                 ) {
                                     Image(
-//                                        painter = painterResource(id = R.drawable.ic_launcher_background),
                                         painter = painterResource(id = language.flag),
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
@@ -394,7 +359,6 @@ fun HomeScreenDesign(
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-//                                    text = "waqas",
                                     text = language.name,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.W600,

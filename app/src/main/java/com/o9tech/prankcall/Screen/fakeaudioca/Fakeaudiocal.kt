@@ -1,5 +1,7 @@
 package com.o9tech.prankcall.Screen.fakeaudioca
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.o9tech.prankcall.AppNavigation.Routes
+import com.o9tech.prankcall.DataModel.AudiocallData
 import com.o9tech.prankcall.DataModel.FakeMessage
 import com.o9tech.prankcall.DataModel.LanguageItem
 import com.o9tech.prankcall.R
@@ -54,42 +57,17 @@ import com.o9tech.prankcall.ui.theme.setcall
 fun FakeAudioScreen(navController: NavHostController?) {
     val safeNavController = navController ?: rememberNavController()
 
-//    val fakeMessage = listOf(
-//
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("Smith", R.drawable.fake2),
-//        FakeMessage("jhon", R.drawable.fake3),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("elisha", R.drawable.fake5),
-//        FakeMessage("Nawaz", R.drawable.fake6),
-//        FakeMessage("deph", R.drawable.fake7),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("United States", R.drawable.usa),
-//        FakeMessage("Canada", R.drawable.canada),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//        FakeMessage("UAE", R.drawable.dubai),
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//    )
-    val fakeMessage = listOf(
-        LanguageItem("Iu", R.drawable.img_home_iu),
-//        LanguageItem("French", R.drawable.germany),
-//        LanguageItem("Chinese", R.drawable.china),
-//        LanguageItem("Hindi", R.drawable.india),
-//        LanguageItem("Australian", R.drawable.australia),
-//        LanguageItem("Spanish", R.drawable.germany),
-//        LanguageItem("Saudi Arabia", R.drawable.saudiarabia),
-//        LanguageItem("United States", R.drawable.usa),
-//        LanguageItem("German", R.drawable.germany),
-//        LanguageItem("Canada", R.drawable.canada),
-//        LanguageItem("Turkey", R.drawable.turkey),
-        LanguageItem("messi", R.drawable.img_home_messi),
-        LanguageItem("jimin", R.drawable.img_get_started_jimin),
-        LanguageItem("CardiB", R.drawable.img_home_carrdi),
-        LanguageItem("cha", R.drawable.img_get_started_cha_eunwoo),
+    val fakeAudio = listOf(
+        AudiocallData("Iu", R.drawable.img_home_iu, "audiocall1.mp3"),
+        AudiocallData("messi", R.drawable.img_home_messi, "audiocall2.mp3"),
+        AudiocallData("jimin", R.drawable.img_get_started_jimin, "audiocall3.mp3"),
+        AudiocallData("CardiB", R.drawable.img_home_carrdi, "audiocall4.mp3"),
+        AudiocallData("cha", R.drawable.img_get_started_cha_eunwoo, "audiocall5.mp3"),
     )
+
+
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -100,7 +78,6 @@ fun FakeAudioScreen(navController: NavHostController?) {
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 6.dp),
-//                        style = MaterialTheme.typography.titleMedium,
                         color = setcall
                     )
                 },
@@ -108,7 +85,8 @@ fun FakeAudioScreen(navController: NavHostController?) {
                     IconButton(onClick = {
                         safeNavController.navigate(Routes.Search)
                     }) {
-                        Icon(imageVector = Icons.Default.Search,
+                        Icon(
+                            imageVector = Icons.Default.Search,
                             contentDescription = "search",
                             modifier = Modifier.size(34.dp)
                         )
@@ -124,7 +102,6 @@ fun FakeAudioScreen(navController: NavHostController?) {
                                 .size(34.dp)
                                 .padding(start = 6.dp)
                         )
-//                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -140,14 +117,16 @@ fun FakeAudioScreen(navController: NavHostController?) {
                     .padding(it)
             ) {
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(3), // 3 columns
-                    modifier = Modifier.fillMaxSize().background(color = Color.White).padding(5.dp),
+                    columns = GridCells.Fixed(3),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Color.White)
+                        .padding(5.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                    items(fakeMessage.size) { item ->
-                        val item = fakeMessage[item]
-//                        CircularImageWithText(imageRes = item.first, text = item.second)
+                    items(fakeAudio.size) { item ->
+                        val item = fakeAudio[item]
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(8.dp)
@@ -155,21 +134,23 @@ fun FakeAudioScreen(navController: NavHostController?) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .size(100.dp) // Circle size
-                                    .clip(CircleShape).clickable{
-//                                        safeNavController.navigate(Routes.SetCallScreen)
-                                        safeNavController.navigate("SetCallScreen/${item.name}/${item.flag}")
+                                    .size(100.dp)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        Log.d("Sendpath", "FakeAudioScreen: ${item.audioPath}")
+                                        val encodedPath = Uri.encode(item.audioPath)
+                                        safeNavController.navigate("SetCallScreen/${item.name}/${item.flag}/$encodedPath")
 
 
                                     }
-                                    .background(Color.LightGray) // Placeholder background
+                                    .background(Color.LightGray)
                             ) {
                                 Image(
                                     painter = painterResource(id = item.flag),
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
-                                        .size(100.dp) // Fits inside the circle
+                                        .size(100.dp)
                                         .clip(CircleShape)
                                 )
                             }

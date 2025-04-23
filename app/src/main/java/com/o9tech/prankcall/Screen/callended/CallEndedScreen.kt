@@ -64,7 +64,6 @@ fun CallEndedScreen(
                        .paint(
                            if (drawableId != 0)
                                painterResource(id = drawableId) else rememberAsyncImagePainter(profileImage),
-//                           painter = rememberAsyncImagePainter(profileImage),
                            contentScale = ContentScale.Crop,
                            alpha = 0.22f
                        )
@@ -96,7 +95,6 @@ fun CallEndedScreen(
                            ) {
                                if (drawableId != 0) {
                                Image(
-//                                   painter = rememberAsyncImagePainter(profileImage),
                                    painter = painterResource(id = drawableId),
                                    contentDescription = "Profile Picture",
                                    modifier = Modifier
@@ -105,7 +103,6 @@ fun CallEndedScreen(
                                        .border(4.dp, Color.White, CircleShape)
                                )}else{
                                    AsyncImage(
-//                                    model = profileImage,
                                        model = profileImage,
                                        contentDescription = "Profile Picture",
                                        modifier = Modifier
@@ -143,12 +140,6 @@ fun CallEndedScreen(
                                fontSize = 14.sp,
                                color = Color.White.copy(alpha = 0.8f)
                            )
-//                           RatingStasrs(
-//                               initialRating = 3, // Default rating
-//                               onRatingChanged = { newRating ->
-//                                   println("New Rating: $newRating") // Handle rating change
-//                               }
-//                           )
                            RatingStarsWithDialog()
                        }
                        Row(
@@ -162,12 +153,6 @@ fun CallEndedScreen(
                                onClick = onReturn
                            )
 
-//                           CircularButton(
-//                               icon = R.drawable.videocall,
-//                               text = "Call again",
-//                               backgroundColor = Color(0xFFFF9800),
-//                               onClick = onCallAgain
-//                           )
                            CircularButtonWithWave(
                                icon = R.drawable.videocall,
                                text = "Call again",
@@ -365,86 +350,6 @@ fun RatingStarsWithDialog() {
         )
     }
 }
-
-
-
-
-
-//@Composable
-//fun CustomRateUsDialog(
-//    showDialog: Boolean,
-//    onDismiss: () -> Unit,
-//    onSubmit: (Int) -> Unit,
-//) {
-//    if (showDialog) {
-//        Dialog(onDismissRequest = onDismiss) {
-//            Card(
-//                shape = RoundedCornerShape(16.dp),
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                colors = CardDefaults.cardColors(
-//                    containerColor = white
-//                ),
-//                elevation = CardDefaults.cardElevation(
-//                    defaultElevation = 10.dp
-//                )
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .padding(10.dp)
-//                        .fillMaxWidth(),
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    Text(text = "😊", fontSize = 48.sp)
-//                    Text(
-//                        text = "Thanks for using Prank App",
-//                        fontSize = 20.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        textAlign = TextAlign.Center,
-//                        modifier = Modifier.padding(top = 8.dp)
-//                    )
-//                    Text(
-//                        text = "It would be greatly appreciated if you rate us",
-//                        fontSize = 16.sp,
-//                        color = Color.Gray,
-//                        textAlign = TextAlign.Center,
-//                        modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)
-//                    )
-//                    var selectedRating by rememberSaveable { mutableStateOf(0) }
-//                    Row(horizontalArrangement = Arrangement.Center) {
-//                        (1..5).forEach { star ->
-//                            IconButton(onClick = { selectedRating = star }) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Star,
-//                                    contentDescription = "Rating Star",
-//                                    tint = if (star <= selectedRating) settingsclr else grey,
-//                                    modifier = Modifier.size(40.dp)
-//                                )
-//                            }
-//                        }
-//                    }
-//                    Button(
-//
-//                        onClick = { onSubmit(selectedRating) },
-//                        modifier = Modifier
-//                            .width(200.dp)
-//                            .padding(top = 12.dp),
-//                        shape = RoundedCornerShape(10.dp),
-//                        colors = ButtonDefaults.buttonColors(
-//                            containerColor = blue,
-//                            contentColor = Color.White
-//                        )
-//                    ) {
-//                        Text(text = "Rate Now", fontSize = 16.sp)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

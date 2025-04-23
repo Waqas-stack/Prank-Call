@@ -1,8 +1,9 @@
 package com.o9tech.prankcall.Screen.Videocalling
 
 
-
+import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.compose.BackHandler
@@ -38,495 +39,223 @@ import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.Screen.Apputils.CameraPreviewBox
 import com.o9tech.prankcall.viewModel.MainViewModel
 import java.io.File
+import java.io.FileOutputStream
 
 
 @OptIn(UnstableApi::class)
-@Preview(showBackground = true)
 @Composable
 fun FakeVideoCallScreen(
     mainViewModel: MainViewModel,
     videoPath: String,
     navController: NavHostController,
-    profileImage: String
+    profileImage: String,
 ) {
     val context = LocalContext.current
 
-//    val videos by mainViewModel.videoList.collectAsState()
+
+    fun copyAssetToCache(context: Context, fileName: String): File {
+        val cacheFile = File(context.cacheDir, fileName)
+        if (!cacheFile.exists()) {
+            context.assets.open(fileName).use { input ->
+                FileOutputStream(cacheFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+        return cacheFile
+    }
+
+
+//    val exoPlayer = remember {
+//        ExoPlayer.Builder(context).build().apply {
+//            val path = copyAssetToCache(context, videoPath)
+////            copyAssetToCache(context, "call2.mp4")
+////            copyAssetToCache(context, "prank.mp4")
+//            Log.d("videopathisthis", "FakeVideoCallScreen: ${path}")
+////            val uri = Uri.fromFile(File(videoPath))
+//            val uri = Uri.fromFile(path)
 //
-//    LaunchedEffect(Unit) {
-//        Log.d("vieosarrived", "FakeVideoCallScreen: ${videoPath}")
-//        mainViewModel.insertAssetVideos()
-//    }
-
-
-    // ExoPlayer Setup
-//    val exoPlayer = remember {
-//        ExoPlayer.Builder(context).build().apply {
-//            val videoUri = Uri.parse("android.resource://${context.packageName}/${R.raw.prank}") // Add a sample video in raw folder
-//            setMediaItem(MediaItem.fromUri(videoUri))
+//            val mediaItem = MediaItem.fromUri(uri)
+//            setMediaItem(mediaItem)
+//            repeatMode = Player.REPEAT_MODE_ONE
 //            prepare()
 //            playWhenReady = true
 //        }
 //    }
 
+
+
 //    val exoPlayer = remember {
 //        ExoPlayer.Builder(context).build().apply {
-//            val videoUri = Uri.parse("android.resource://${context.packageName}/${R.raw.prank}")
-//            setMediaItem(MediaItem.fromUri(videoUri))
-//            repeatMode = Player.REPEAT_MODE_ONE // 🔥 Loop Video Automatically
-//            prepare()
-//            playWhenReady = true
-//        }
-//    }
-//    if(videos.isNotEmpty()) {
-//        val exoPlayer = remember(videos.size) {
-//            ExoPlayer.Builder(context).build().apply {
-//                val uri = Uri.fromFile(File(videos[1].videoPath)) // Convert video path to Uri
+//            val file = File(videoPath)
+//            if (file.exists()) {
+//                val uri = Uri.fromFile(file)
 //                val mediaItem = MediaItem.fromUri(uri)
 //                setMediaItem(mediaItem)
-//                repeatMode = Player.REPEAT_MODE_ONE // Loop video automatically
 //                prepare()
 //                playWhenReady = true
+//            } else {
+//                Log.e("Video", "Video file not found at $videoPath")
 //            }
 //        }
+//    }
 
-    val systemUiController = rememberSystemUiController()
-//    systemUiController.setSystemBarsColor(
-//        color = Color.Green, // status bar color
-//        darkIcons = true // status bar icons will be dark
-//    )
-
-//    systemUiController.setNavigationBarColor(
-//
-//        color = Color.Black, // navigation bar color
-//        darkIcons = false // navigation bar icons will be light
-//    )
-
-
-//    val navigationBarColor = Color.Blue // Customize with the desired color
-//
-//    systemUiController.setNavigationBarColor(
-//        color = navigationBarColor,  // Set the color
-//        darkIcons = false,  // Set icons to dark or light (false means dark icons)
-//        navigationBarContrastEnforced = false, // Enforce contrast
-//        transformColorForLightContent = { color -> color.copy(alpha = 0.7f) } // Custom transformation
-//    )
-//    systemUiController.isNavigationBarContrastEnforced=false
 
 
 
     val exoPlayer = remember {
-            ExoPlayer.Builder(context).build().apply {
-                val uri = Uri.fromFile(File(videoPath))
+        ExoPlayer.Builder(context).build().apply {
+            val file = File(videoPath)
+            if (file.exists()) {
+                val uri = Uri.fromFile(file)
                 val mediaItem = MediaItem.fromUri(uri)
                 setMediaItem(mediaItem)
-                repeatMode = Player.REPEAT_MODE_ONE // 🔁 Loop video automatically
                 prepare()
                 playWhenReady = true
+            } else {
+                Log.e("Video", "File not found at $videoPath, loading fallback from assets")
+
+                try {
+                    val fallbackFile = copyAssetToCache(context, videoPath)
+                    val uri = Uri.fromFile(fallbackFile)
+                    val mediaItem = MediaItem.fromUri(uri)
+                    setMediaItem(mediaItem)
+                    prepare()
+                    playWhenReady = true
+                } catch (e: Exception) {
+                    Log.e("VideoError", "Failed to load fallback asset video: ${e.message}")
+                    e.printStackTrace()
+                }
             }
         }
+    }
+
 
 
     BackHandler {
-        // Customize the behavior on back press
-        // For example, you could change the system UI or show a confirmation dialog
-        println("Back button pressed!")
         exoPlayer.release()
         navController.popBackStack()
         val encodedPicPath = Uri.encode(profileImage)
         navController.navigate("CallEndedScreen/$encodedPicPath")
-//        navController.navigate(Routes.CallEndedScreen)
-//        Log.d("onbackpressed", "FakeVideoCallScreen: ${videoPath}")
-
-
-        // You could do a custom action here or navigate, e.g.:
-        // navController.popBackStack() // if using navigation
     }
 
 
 
     Scaffold {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            AndroidView(
+                factory = {
+                    PlayerView(context).apply {
+                        player = exoPlayer
+                        useController = false
+                        layoutParams = FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                    }
+
+                },
+                )
+            Box(
+                modifier = Modifier
+                    .padding(top = 36.dp, end = 16.dp)
+                    .align(Alignment.TopEnd)
+            ) {
+                CameraPreviewBox()
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
             ) {
-                // Fake Video Call (Prerecorded Video)
-//        AndroidView(
-//            factory = { PlayerView(context).apply { player = exoPlayer } },
-//            modifier = Modifier.fillMaxSize()
-//        )
-                AndroidView(
-                    factory = {
-                        PlayerView(context).apply {
-                            player = exoPlayer
-                            useController = false // 🔥 Hide Video Controls
-                            layoutParams = FrameLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(vertical = 16.dp, horizontal = 16.dp)
+                        .background(
+                            color = Color.Black.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(Color.Black, shape = CircleShape)
+                                .clickable { },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
                             )
-                            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
                         }
 
-                    },
-//                modifier = Modifier.fillMaxSize()
-                )
 
-
-//            AndroidView(
-//                factory = {
-//                    PlayerView(context).apply {
-//                        player = exoPlayer
-//                        useController = false // Hide video controls
-//                        layoutParams = FrameLayout.LayoutParams(
-//                            ViewGroup.LayoutParams.MATCH_PARENT,
-//                            ViewGroup.LayoutParams.MATCH_PARENT
-//                        )
-//                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-//                    }
-//                },
-//                modifier = Modifier.fillMaxSize() // Adjust size as needed
-//            )
-
-
-                // User's Small Camera Feed (Static Image)
-                Box(
-//            modifier = Modifier
-//                .size(100.dp)
-//                .clip(CircleShape)
-//                .background(Color.Black)
-//                .align(Alignment.BottomEnd)
-//                .padding(16.dp)
-
-                    modifier = Modifier
-                        .padding(top = 36.dp, end = 16.dp)
-                        .align(Alignment.TopEnd)
-                ) {
-                    CameraPreviewBox()
-//            Image(
-//                painter = painterResource(id = R.drawable.ic_launcher_background), // Replace with actual user image
-//                contentDescription = "User's Camera",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier.fillMaxSize()
-//            )
-                }
-
-                // Call Controls
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .align(Alignment.BottomCenter)
-//                    .padding(bottom = 16.dp)
-//            ) {
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .align(Alignment.BottomCenter),
-//                    horizontalArrangement = Arrangement.SpaceEvenly
-//                ) {
-//                    // End Call Button
-//                    Button(
-//                        onClick = { exoPlayer.release() }, // Stop video on end call
-//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-//                        modifier = Modifier.width(80.dp),
-//                        shape = RoundedCornerShape(5.dp)
-//                    ) {
-//                        Text("End", color = Color.White)
-//                    }
-//
-//                    // Accept Call Button (For UI Simulation)
-//                    Button(
-//                        onClick = { /* Simulate Answering the Call */ },
-//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-//                        modifier = Modifier,
-//                        shape = RoundedCornerShape(5.dp)
-//                    ) {
-//                        Text("Accept", fontSize = 12.sp, color = Color.White)
-//                    }
-//                }
-//            }
-
-                ///this perfect code
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .align(Alignment.BottomCenter)
-//                    .padding(vertical = 16.dp, horizontal = 16.dp)
-//                    .background(
-//                        color = Color.Black.copy(alpha = 0.5f), // 🔥 Overlay background with transparency
-//                        shape = RoundedCornerShape(20.dp,) // 🔥 Rounded top corners
-//                    )
-//                    .padding(16.dp) // Add padding inside
-//            ) {
-//                Row(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.SpaceEvenly
-//                ) {
-//                    // ❌ End Call Button
-//                    Button(
-//                        onClick = { exoPlayer.release() }, // Stop video on end call
-//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-//                        modifier = Modifier.width(80.dp),
-//                        shape = RoundedCornerShape(10.dp) // Rounded button shape
-//                    ) {
-//                        Text("End", color = Color.White)
-//                    }
-//
-//                    // ✅ Accept Call Button
-//                    Button(
-//                        onClick = { /* Simulate Answering the Call */ },
-//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-//                        modifier = Modifier.width(80.dp),
-//                        shape = RoundedCornerShape(10.dp) // Rounded button shape
-//                    ) {
-//                        Text("Accept", fontSize = 12.sp, color = Color.White)
-//                    }
-//                }
-//            }
-
-                ///this is end
-
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    // 🔹 Semi-Transparent Bottom Overlay Box with Rounded Corners
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .padding(vertical = 16.dp, horizontal = 16.dp)
-                            .background(
-                                color = Color.Black.copy(alpha = 0.5f), // 🔥 Overlay background with transparency
-                                shape = RoundedCornerShape(10.dp) // 🔥 Rounded top corners
-                            )
-                            .padding(8.dp) // Add padding inside
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(Color.Black, shape = CircleShape)
+                                .clickable { },
+                            contentAlignment = Alignment.Center
                         ) {
-                            // 🎥 Video Toggle Button
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .background(Color.Black, shape = CircleShape)
-                                    .clickable { /* Toggle Video */ },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-//                                painter = painterResource(id = R.drawable.ic_video), // Replace with actual video icon
-                                    imageVector = Icons.Default.DateRange,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.Default.AddCircle,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
 
-                            // 🎤 Mic Toggle Button
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .background(Color.Black, shape = CircleShape)
-                                    .clickable { /* Toggle Mic */ },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-//                                painter = painterResource(id = R.drawable.ic_mic), // Replace with actual mic icon
-                                    imageVector = Icons.Default.AddCircle,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(Color.Black, shape = CircleShape)
+                                .clickable { },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(Color.Red, shape = CircleShape)
+                                .clickable {
+                                    exoPlayer.release()
+                                    navController.popBackStack()
+                                    val encodedPicPath = Uri.encode(profileImage)
+                                    navController.navigate("CallEndedScreen/$encodedPicPath")
 
-                            // 🔊 Speaker Toggle Button
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .background(Color.Black, shape = CircleShape)
-                                    .clickable { /* Toggle Speaker */ },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-
-//                                painter = painterResource(id = R.drawable.ic_speaker), // Replace with actual speaker icon
-                                    imageVector = Icons.Default.Delete,
-
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-
-                            // ❌ End Call Button
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .background(Color.Red, shape = CircleShape)
-                                    .clickable {
-                                        exoPlayer.release()
-//                                        navController.navigateUp()
-                                        navController.popBackStack()
-//                                        navController.navigate(Routes.CallEndedScreen)
-                                        val encodedPicPath = Uri.encode(profileImage)
-                                        navController.navigate("CallEndedScreen/$encodedPicPath")
-
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-//                                painter = painterResource(id = R.drawable.ic_call_end), // Replace with actual end call icon
-                                    imageVector = Icons.Default.Call,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Call,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
                     }
                 }
-
-
             }
         }
-//    }
-
+    }
 
 }
-
-//
-//@OptIn(UnstableApi::class)
-//@Composable
-//fun FakeVideoCallScreen(
-////    navController: NavHostController?,
-////    callerName: String,
-////    profileImageId: Int,
-//) {
-//    val context = LocalContext.current
-//
-//    val exoPlayer = remember {
-//        ExoPlayer.Builder(context).build().apply {
-//            val assetManager = context.assets
-//            // Open the video file from assets
-//            val fileDescriptor = assetManager.openFd("video/my_video.mp4") // Path relative to assets folder
-//
-//            // Create a MediaItem using the AssetFileDescriptor
-//            val mediaItem = MediaItem.fromUri(Uri.parse("file://" + fileDescriptor.fileDescriptor.toString()))
-//            setMediaItem(mediaItem)
-//            repeatMode = Player.REPEAT_MODE_ONE // Loop video automatically
-//            prepare()
-//            playWhenReady = true
-//        }
-//    }
-//
-//    // ExoPlayer Setup for Video from Assets
-////    val exoPlayer = remember {
-////        ExoPlayer.Builder(context).build().apply {
-////            val assetManager = context.assets
-////            val fileDescriptor = assetManager.openFd("video/my_video.mp4") // Access video from assets
-////            val mediaItem = MediaItem.fromUri(Uri.parse(fileDescriptor.uri.toString()))
-////            setMediaItem(mediaItem)
-////            repeatMode = Player.REPEAT_MODE_ONE // Loop video automatically
-////            prepare()
-////            playWhenReady = true
-////        }
-////    }
-//
-//    Scaffold {
-//        Box(
-//            modifier = Modifier.fillMaxSize().padding(it)
-//        ) {
-//            // Fake Video Call (Prerecorded Video from Assets)
-//            AndroidView(
-//                factory = { PlayerView(context).apply {
-//                    player = exoPlayer
-//                    useController = false // Hide video controls
-//                    layoutParams = FrameLayout.LayoutParams(
-//                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                        ViewGroup.LayoutParams.MATCH_PARENT
-//                    )
-//                    resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-//                }},
-//            )
-//
-//            // User's Small Camera Feed (Static Image from Assets)
-//            Box(
-//                modifier = Modifier
-//                    .padding(top = 36.dp, end = 16.dp)
-//                    .align(Alignment.TopEnd)
-//            ) {
-//                Image(
-//                    painter = rememberImagePainter("file:///android_asset/images/my_image.jpg"), // Load image from assets
-//                    contentDescription = "User's Camera",
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier
-//                        .size(100.dp)
-//                        .clip(CircleShape)
-//                        .border(4.dp, Color.White, CircleShape)
-//                )
-//            }
-//
-//            // Display Caller Name
-//            Text(
-//                text = "callerName",
-//                color = Color.White,
-//                fontSize = 18.sp,
-//                modifier = Modifier
-//                    .align(Alignment.TopCenter)
-//                    .padding(top = 8.dp)
-//            )
-//
-//            // Call Controls (Accept/End Call Buttons)
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .align(Alignment.BottomCenter)
-//                    .padding(vertical = 16.dp, horizontal = 16.dp)
-//                    .background(
-//                        color = Color.Black.copy(alpha = 0.5f),
-//                        shape = RoundedCornerShape(10.dp)
-//                    )
-//                    .padding(8.dp)
-//            ) {
-//                Row(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.SpaceEvenly
-//                ) {
-//                    // End Call Button
-//                    Box(
-//                        modifier = Modifier
-//                            .size(50.dp)
-//                            .background(Color.Red, shape = CircleShape)
-//                            .clickable { exoPlayer.release() },
-//                        contentAlignment = Alignment.Center
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Default.Call,
-//                            contentDescription = "End Call",
-//                            tint = Color.White,
-//                            modifier = Modifier.size(24.dp)
-//                        )
-//                    }
-//
-//                    // Accept Call Button (Simulate Answer)
-//                    Box(
-//                        modifier = Modifier
-//                            .size(50.dp)
-//                            .background(Color.Green, shape = CircleShape)
-//                            .clickable { /* Simulate Answering the Call */ },
-//                        contentAlignment = Alignment.Center
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Default.Call,
-//                            contentDescription = "Accept Call",
-//                            tint = Color.White,
-//                            modifier = Modifier.size(24.dp)
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}

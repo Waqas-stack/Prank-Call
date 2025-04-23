@@ -33,36 +33,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import com.o9tech.prankcall.R
-import com.o9tech.prankcall.Screen.callended.CallEndedScreen
 import com.o9tech.prankcall.ui.theme.black
 import com.o9tech.prankcall.ui.theme.white
 
-//
-//@Composable
-//fun CallsSc(){
-//    Scaffold (
-//        content = {
-//            Surface (
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(it)
-//                    .padding(8.dp)
-//            ){
-//                Column {
-//                    Text(text = "Calls")
-//                }
-//            }
-//        }
-//    )
-//}
+
 
 
 @Composable
 fun CallScreen(
     callerName: String = "John Doe",
-    callerImage: Int = R.drawable.uk, // Replace with your drawable
+    callerImage: Int = R.drawable.uk,
     onAnswer: () -> Unit,
     onDecline: () -> Unit,
 ) {
@@ -108,8 +89,6 @@ fun CallScreen(
                             fontSize = 18.sp,
                             fontStyle = FontStyle.Italic
                         )
-
-//            Spacer(modifier = Modifier.height(32.dp))
                         Spacer(modifier = Modifier.weight(1f))
 
                         Row(
@@ -123,12 +102,6 @@ fun CallScreen(
                                     tint = Color.Red,
                                     modifier = Modifier.size(60.dp)
                                 )
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.decline),
-//                        contentDescription = "Decline",
-////                        tint = Color.Red,
-//                        modifier = Modifier.size(60.dp)
-//                    )
                             }
 
                             IconButton(onClick = onAnswer) {

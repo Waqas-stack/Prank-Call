@@ -47,7 +47,6 @@ import com.o9tech.prankcall.ui.theme.grey
 import com.o9tech.prankcall.ui.theme.white
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
 fun LanguageScreen(navController: NavHostController?) {
     val safeNavController = navController ?: rememberNavController()
@@ -137,16 +136,16 @@ fun LanguageScreen(navController: NavHostController?) {
                                     Box(
                                         contentAlignment = Alignment.Center,
                                         modifier = Modifier
-                                            .size(40.dp) // Circle size
+                                            .size(40.dp)
                                             .clip(CircleShape)
-                                            .background(Color.LightGray) // Placeholder background
+                                            .background(Color.LightGray)
                                     ) {
                                         Image(
                                             painter = painterResource(id = language.flag),
                                             contentDescription = null,
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier
-                                                .size(40.dp) // Fits inside the circle
+                                                .size(40.dp)
                                                 .clip(CircleShape)
                                         )
                                     }
@@ -166,7 +165,6 @@ fun LanguageScreen(navController: NavHostController?) {
                                     selected = true,
                                     onClick = { /*TODO*/ },
                                     colors = RadioButtonDefaults.colors(
-//                                    selectedColor = settingsclr,
                                         selectedColor = Orange40,
                                         unselectedColor = Color.Gray,
                                         disabledSelectedColor = Color.LightGray,

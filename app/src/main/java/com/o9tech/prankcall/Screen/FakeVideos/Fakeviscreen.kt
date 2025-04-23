@@ -72,78 +72,31 @@ import java.io.File
 @Composable
 fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewModel) {
     val safeNavController = navController ?: rememberNavController()
-
-
-    val fakeMessagesvideo = mainViewModel.allUsers.collectAsState().value
     val userDetails = mainViewModel.userDetailsList.collectAsState().value
-
-//    val fakeMessage = listOf(
-//
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("Smith", R.drawable.fake2),
-//        FakeMessage("jhon", R.drawable.fake3),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("elisha", R.drawable.fake5),
-//        FakeMessage("Nawaz", R.drawable.fake6),
-//        FakeMessage("deph", R.drawable.fake7),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("United States", R.drawable.usa),
-//        FakeMessage("Canada", R.drawable.canada),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//        FakeMessage("UAE", R.drawable.dubai),
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//    )
-//    val fakeMessage = listOf(
-//        LanguageItem("Rose", R.drawable.uk),
-//        LanguageItem("Ronaldo", R.drawable.img_get_started_ronadol),
-//        LanguageItem("Rose", R.drawable.img_home_iu),
-//        LanguageItem("messi", R.drawable.img_home_messi),
-//        LanguageItem("Lisa", R.drawable.img_get_started_jimin),
-//
-//    )
-
-
-//    val fakeVideo = listOf(
-//        LanguageItem("Rose", R.drawable.uk),
-//        LanguageItem("Ronaldo", R.drawable.img_get_started_ronadol),
-//        LanguageItem("Rose", R.drawable.img_home_iu),
-//        LanguageItem("messi", R.drawable.img_home_messi),
-//        LanguageItem("Lisa", R.drawable.img_get_started_jimin),
-//
-//        )
-
-
-
     val context = LocalContext.current
 
+//    val fakeVideo = listOf(
+//        FakeVideoMessage("Rose", "drawable://img_home_iu", "/data/user/0/com.o9tech.prankcall/cache/call1.mp4" ,true),
+//        FakeVideoMessage("Ronaldo", "drawable://img_get_started_ronadol","/data/user/0/com.o9tech.prankcall/cache/call2.mp4", true),
+//        FakeVideoMessage("Messi", "drawable://img_home_messi", "/data/user/0/com.o9tech.prankcall/cache/prank.mp4",true),
+//        FakeVideoMessage("Lisa", "drawable://img_get_started_jimin","/data/user/0/com.o9tech.prankcall/cache/call1.mp4" ,true),
+//    )
+
+
     val fakeVideo = listOf(
-        FakeVideoMessage("Rose", "drawable://img_home_iu", "/data/user/0/com.o9tech.prankcall/cache/call1.mp4" ,true),
-        FakeVideoMessage("Ronaldo", "drawable://img_get_started_ronadol","/data/user/0/com.o9tech.prankcall/cache/call2.mp4", true),
-        FakeVideoMessage("Messi", "drawable://img_home_messi", "/data/user/0/com.o9tech.prankcall/cache/prank.mp4",true),
-        FakeVideoMessage("Lisa", "drawable://img_get_started_jimin","/data/user/0/com.o9tech.prankcall/cache/call1.mp4" ,true),
+        FakeVideoMessage("Rose", "drawable://img_home_iu", "call1.mp4" ,true),
+        FakeVideoMessage("Ronaldo", "drawable://img_get_started_ronadol","call2.mp4", true),
+        FakeVideoMessage("Messi", "drawable://img_home_messi", "prank.mp4",true),
+        FakeVideoMessage("Lisa", "drawable://img_get_started_jimin","call1.mp4" ,true),
     )
 
 
-
-
-    // Combining the database data with the predefined list
-//    val combinedFakeMessages = fakeMessagesvideo.map {
-//        Log.d("Idssss", "Imgessss: ${it.imageUri}")
-//        FakeVideoMessage(it.name, it.imageUri, false)
-//    } + fakeVideo
 
 
     val combinedFakeMessages = userDetails.map {
         Log.d("Idssss", "Imgessss: ${it.videoPath}")
         FakeVideoMessage(it.name, it.imageName,it.videoPath, false)
     } + fakeVideo
-
-
-
-
 
     Scaffold(
         topBar = {
@@ -154,7 +107,6 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
-//                        style = MaterialTheme.typography.titleMedium,
                         color = Orange40,
                         fontWeight = FontWeight.Bold
 
@@ -181,7 +133,6 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                                 .size(34.dp)
                                 .padding(start = 6.dp)
                         )
-//                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -197,7 +148,7 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                     .padding(it)
             ) {
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(3), // 3 columns
+                    columns = GridCells.Fixed(3),
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = Color.White)
@@ -213,33 +164,24 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .size(100.dp) // Circle size
+                                    .size(100.dp)
                                     .clip(CircleShape)
                                     .clickable {
                                         when (index) {
                                             0 -> {
                                                 safeNavController.navigate(Routes.AddCharacter)
-//                                                safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
-
                                             }
 
                                             else -> {
-//                                                safeNavController.navigate(Routes.SetVideoCall)
-//                                                safeNavController.navigate("SetVideoCallScreen/${item.name}/${item.pic}")
                                                     Log.d("pathing", "FakeVideoScreen: ${item.path}")
                                                 Log.d("pictue", "FakeVideoScreen: ${item.pic}")
-//                                                safeNavController.navigate("SetVideoCallScreen/${item.name}/${Uri.encode(item.pic)}"
                                                 safeNavController.navigate(
                                                     "SetVideoCallScreen/${item.name}/${Uri.encode(item.pic)}/${Uri.encode(item.path)}"
                                                 )
-
-
                                             }
-//                                        safeNavController.navigate(Routes.AddCharacter)
-
                                         }
                                     }
-                                    .background(if (index == 0) settingsclr else Color.Unspecified) // Conditional background color
+                                    .background(if (index == 0) settingsclr else Color.Unspecified)
                             ) {
 
 
@@ -261,16 +203,13 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                                             contentDescription = null,
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier
-                                                .size(100.dp) // Fits inside the circle
+                                                .size(100.dp)
                                                 .clip(CircleShape),
                                         )
                                     } else {
                                         if (!item.pic.isNullOrEmpty()) {
-
-
                                             Log.d("Picssssa", "Pictress: ${item.pic}")
                                             val painter = rememberAsyncImagePainter(File(item.pic))
-
                                             Image(
                                                 painter = painter,
                                                 contentDescription = "Profile Picture",
@@ -291,14 +230,10 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                                             )
                                         }
                                     }
-
                                 }
-
-
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-//                                text = item.name,
                                 text = if (index == 0) "Add New" else item.name,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,

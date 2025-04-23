@@ -23,6 +23,8 @@ class MainRepo @Inject constructor(
 ) {
     suspend fun insertUser(user: UserEntity) = userDatabase.userDao().insertUser(user)
     suspend fun InsertFakeMessage(messageEntity: MessageEntity) = userDatabase.fakeMessageDao().insertFakeMessage(messageEntity)
+//    suspend fun insertVideo(videoEntity: VideoEntity) = userDatabase.videoDao().insert(videoEntity)
+
 
     suspend fun insertVideo(videoEntity: VideoEntity) = userDatabase.videoDao().insert(videoEntity)
      fun getAllVideos(): Flow<List<VideoEntity>> = userDatabase.videoDao().getAllVideos()

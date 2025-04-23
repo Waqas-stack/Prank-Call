@@ -179,24 +179,6 @@ fun SearchScreen(navController: NavHostController?) {
         LanguageItem("Turkey", R.drawable.turkey),
         LanguageItem("UAE", R.drawable.dubai),
     )
-//    val fakeMessage = listOf(
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("Smith", R.drawable.fake2),
-//        FakeMessage("jhon", R.drawable.fake3),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("elisha", R.drawable.fake5),
-//        FakeMessage("Nawaz", R.drawable.fake6),
-//        FakeMessage("deph", R.drawable.fake7),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("United States", R.drawable.usa),
-//        FakeMessage("Canada", R.drawable.canada),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//        FakeMessage("UAE", R.drawable.dubai),
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//    )
 
     Scaffold(
         topBar = {
@@ -261,7 +243,7 @@ fun SearchScreen(navController: NavHostController?) {
             ) {
                 if (searchQuery.text.isNotEmpty()) {
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),  // 3 Columns
+                        columns = GridCells.Fixed(3),
                         modifier = Modifier.background(color = Color.White).fillMaxSize(),
                         contentPadding = PaddingValues(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -278,20 +260,19 @@ fun SearchScreen(navController: NavHostController?) {
                                 Box(
                                     contentAlignment = Alignment.Center,
                                     modifier = Modifier
-                                        .size(80.dp) // Circle size
+                                        .size(80.dp)
                                         .clip(CircleShape)
-                                        .background(Color.LightGray) // Placeholder background
+                                        .background(Color.LightGray)
                                 ) {
                                     Image(
                                         painter = painterResource(id = item.flag),
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
-                                            .size(80.dp) // Fits inside the circle
+                                            .size(80.dp)
                                             .clip(CircleShape)
                                     )
                                 }
-//                            Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     text = item.name,
                                     fontSize = 14.sp,
@@ -301,39 +282,6 @@ fun SearchScreen(navController: NavHostController?) {
                             }
                         }
                     }
-
-//                    LazyVerticalGrid(
-//                        columns = GridCells.Fixed(3),  // 3 Columns
-//                        modifier = Modifier.fillMaxSize(),
-//                        contentPadding = PaddingValues(8.dp),
-//                        verticalArrangement = Arrangement.spacedBy(8.dp),
-//                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                    ) {
-//                        items(filteredList.size) { item ->
-//                            Card(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .padding(4.dp),
-//                                shape = RoundedCornerShape(12.dp),
-////                                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
-////                                elevation = CardDefaults.cardElevation(4.dp)
-//                            ) {
-//                                Box(
-//                                    modifier = Modifier
-//                                        .fillMaxSize()
-//                                        .padding(16.dp),
-//                                    contentAlignment = Alignment.Center
-//                                ) {
-//                                    Text(
-//                                        text = "${filteredList[item]}",
-//                                        fontSize = 16.sp,
-////                                        fontWeight = FontWeight.Bold,
-//                                        color = Color.Black
-//                                    )
-//                                }
-//                            }
-//                        }
-//                    }
                 } else {
                     Text(
                         text = "Start typing to search...",

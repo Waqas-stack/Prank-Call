@@ -9,5 +9,5 @@ data class UserDetailsEntity(
     val id: Int = 0,
     val name: String,
     val imageName: String,
-    val videoPath: String // Path to the uploaded video in internal storage
+    val videoPath: String
 )

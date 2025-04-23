@@ -1,6 +1,7 @@
 package com.o9tech.prankcall.Screen.SetCall
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -49,7 +50,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
-import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.blue
 import com.o9tech.prankcall.ui.theme.grey
@@ -57,10 +57,9 @@ import com.o9tech.prankcall.ui.theme.setcallbg
 import com.o9tech.prankcall.ui.theme.white
 
 
-@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
+fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, audiopath: String) {
 
     val safeNavController = navController ?: rememberNavController()
 
@@ -74,7 +73,7 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        selectedImageUri = uri // Set selected image URI
+        selectedImageUri = uri
     }
     Scaffold(
         topBar = {
@@ -86,7 +85,6 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                         fontWeight = FontWeight.Bold,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
-//                        style = MaterialTheme.typography.titleMedium,
                         color = blue
                     )
                 },
@@ -99,20 +97,12 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             contentDescription = "back",
                             tint = grey,
 
-                            modifier = Modifier.size(34.dp).padding(start = 10.dp)
+                            modifier = Modifier
+                                .size(34.dp)
+                                .padding(start = 10.dp)
                         )
                     }
                 },
-//                actions = {
-//                    IconButton(onClick = {
-//                        safeNavController.navigate(Routes.Search)
-//                    }) {
-//                        Icon(imageVector = Icons.Default.Search,
-//                            contentDescription = "search",
-//                            modifier = Modifier.size(34.dp)
-//                        )
-//                    }
-//                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White
                 )
@@ -121,14 +111,15 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
         content = {
             Surface(
                 modifier = Modifier
-                    .fillMaxSize().background(color = Color.White)
+                    .fillMaxSize()
+                    .background(color = Color.White)
                     .padding(it)
             ) {
                 Column(
                     Modifier
-                        .fillMaxSize().background(color = Color.White)
+                        .fillMaxSize()
+                        .background(color = Color.White)
                         .padding(16.dp),
-//                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Box(
@@ -152,8 +143,7 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             )
                         } else {
                             Image(
-//                                    imageVector = Icons.Default.Person,
-                                painter = painterResource(id = flag), // Replace with your image
+                                painter = painterResource(id = flag),
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier
                                     .size(120.dp)
@@ -161,38 +151,9 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                                 contentScale = ContentScale.Crop
                             )
                         }
-//                            IconButton(
-//                                onClick = {
-//                                    imagePickerLauncher.launch("image/*")
-//                                },
-//                                modifier = Modifier
-//                                    .align(Alignment.BottomEnd)
-//                                    .offset(
-////                                       x = 1.dp,
-//                                        x = (-5).dp,
-//                                        y = (-15).dp
-//                                    )
-//                                    .background(
-////                                       color = Color.Blue,
-//                                        color = profilecircle,
-//                                        shape = CircleShape
-//                                    ).padding(8.dp)
-//                                    .size(17.dp)
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Add,
-//                                    contentDescription = "Upload Icon",
-//                                    tint = settingsclr,
-//
-//                                    )
-//                            }
-
-
-//                       ProfileImageUploader(onAddImageClick = { /* Handle add image click */ })
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-//                        text = "C.Ronaldo",
                         text = name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
@@ -205,7 +166,6 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             .clip(RoundedCornerShape(10.dp))
                             .background(setcallbg)
                             .padding(10.dp),
-//                        contentAlignment = Alignment.Center
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -217,11 +177,10 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             ) {
                                 Icon(
                                     painter = painterResource(id = com.o9tech.prankcall.R.drawable.volume_down),
-//                                    imageVector = Icons.Default.PlayArrow,
                                     contentDescription = "back",
                                     tint = blue,
                                     modifier = Modifier.size(20.dp)
-                                )   
+                                )
 
                                 Text(
                                     text = "Sound",
@@ -243,7 +202,9 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                                     uncheckedBorderColor = Color.Transparent,
                                     checkedBorderColor = Color.Transparent
                                 ),
-                                modifier = Modifier.padding(end = 20.dp).size(20.dp,15.dp)
+                                modifier = Modifier
+                                    .padding(end = 20.dp)
+                                    .size(20.dp, 15.dp)
                             )
                         }
                     }
@@ -254,7 +215,6 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             .clip(RoundedCornerShape(10.dp))
                             .background(setcallbg)
                             .padding(10.dp),
-//                        contentAlignment = Alignment.Center
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -267,7 +227,6 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             ) {
                                 Icon(
                                     painter = painterResource(id = com.o9tech.prankcall.R.drawable.vibration),
-//                                    imageVector = Icons.Default.Person,
                                     contentDescription = "back",
                                     tint = blue,
                                     modifier = Modifier.size(20.dp)
@@ -293,7 +252,9 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                                     uncheckedBorderColor = Color.Transparent,
                                     checkedBorderColor = Color.Transparent
                                 ),
-                                modifier = Modifier.padding(end = 20.dp).size(20.dp,15.dp)
+                                modifier = Modifier
+                                    .padding(end = 20.dp)
+                                    .size(20.dp, 15.dp)
                             )
                         }
                     }
@@ -304,7 +265,6 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             .clip(RoundedCornerShape(10.dp))
                             .background(setcallbg)
                             .padding(10.dp),
-//                        contentAlignment = Alignment.Center
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -317,9 +277,8 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                             ) {
                                 Icon(
                                     painter = painterResource(id = com.o9tech.prankcall.R.drawable.flash_on),
-//                                    imageVector = Icons.Default.Person,
                                     contentDescription = "back",
-                                    tint =blue,
+                                    tint = blue,
                                     modifier = Modifier.size(20.dp)
                                 )
 
@@ -343,7 +302,9 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                                     uncheckedBorderColor = Color.Transparent,
                                     checkedBorderColor = Color.Transparent
                                 ),
-                                modifier = Modifier.padding(end = 20.dp).size(20.dp,15.dp)
+                                modifier = Modifier
+                                    .padding(end = 20.dp)
+                                    .size(20.dp, 15.dp)
                             )
                         }
                     }
@@ -351,22 +312,15 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                     TextButton(
                         modifier = Modifier.width(220.dp),
                         onClick = {
-                            safeNavController.navigate(Routes.IncommingCallScreen)
-
+                            val encodedPath = Uri.encode(audiopath)
+                            safeNavController.navigate("IncommingAudioCall/$name/$flag/$encodedPath")
                         },
-//                        enabled = TODO(),
-//                        shape = TODO(),
-//                        colors = TODO(),
-//                        elevation = TODO(),
-                        border = BorderStroke(1.dp,blue),
-//                        contentPadding = TODO(),
-//                        interactionSource = TODO()
+                        border = BorderStroke(1.dp, blue),
                     ) {
                         Row {
                             Icon(
-//                               imageVector = Icons.Default.KeyboardArrowRight,
                                 painter = painterResource(id = com.o9tech.prankcall.R.drawable.call),
-                                tint =blue,
+                                tint = blue,
                                 modifier = Modifier.size(20.dp),
                                 contentDescription = "Character Name"
                             )
@@ -379,5 +333,17 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int) {
                 }
             }
         }
+    )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSetCallScreen() {
+    SetCallScreen(
+        navController = rememberNavController(),
+        name = "John Doe",
+        flag = R.drawable.uk,
+        audiopath = "audiopath"
     )
 }

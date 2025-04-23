@@ -74,35 +74,20 @@ import com.o9tech.prankcall.ui.theme.textfrilssetvideocall
 import com.o9tech.prankcall.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun setFakeMsgScreen(){
-//    Scaffold (
-//        content = {
-//            Surface(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(it)
-//                    .padding(16.dp)
-//            ) {
-//
-//            }
-//        }
-//    )
-//}
 
 
-@Preview(showBackground = true)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewModel: MainViewModel) {
+fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageUri2 by remember { mutableStateOf<Uri?>(null) }
     val safeNavController = navController ?: rememberNavController()
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var charname by remember { mutableStateOf("") }
+    var charname2 by remember { mutableStateOf("") }
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabTitles = listOf("Friend", "Famous people")
     val pagerState = rememberPagerState {
@@ -113,8 +98,14 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        selectedImageUri = uri // Set selected image URI
+        selectedImageUri = uri
     }
+    val imagePickerLauncher2 = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri2 = uri
+    }
+
     LaunchedEffect(pagerState.currentPage) {
         selectedTabIndex = pagerState.currentPage
     }
@@ -131,10 +122,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                         .fillMaxSize()
                         .background(Color.Unspecified)
                 ) {
-
-
                     Row (
-
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp)
@@ -156,56 +144,23 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                     painter = painterResource(id = R.drawable.arrowleft),
                                     tint = Color.White,
                                     modifier = Modifier.size(20.dp),
-//                                    Icons.Default.ArrowBack,
+
                                     contentDescription = "Back")
                             }
                             Text(text = "Set fake message", color = Color.White, fontSize = 18.sp)
                         }
-                        IconButton(onClick = { /* Handle navigation icon click */ }) {
+                        IconButton(onClick = {  }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.delete_is),
                                 tint = Color.White,
                                 modifier = Modifier.size(20.dp),
-//                                    Icons.Default.ArrowBack,
                                 contentDescription = "Back")
                         }
 
                     }
-                    // TopAppBar at the top of the screen
-//                    TopAppBar(
-////                        modifier = Modifier.height(100.dp),
-//                        title = { Text("Set fake message", color = Color.White, fontSize = 12.sp) },
-//                        colors = TopAppBarDefaults.topAppBarColors(
-//                            containerColor = rasish,
-//                        ),
-//                        navigationIcon = {
-//                            // Add navigation icon if needed
-//                            IconButton(onClick = { /* Handle navigation icon click */ }) {
-//                                Icon(
-//                                    painter = painterResource(id = R.drawable.arrowleft),
-//                                    tint = Color.White,
-//                                    modifier = Modifier.size(20.dp),
-////                                    Icons.Default.ArrowBack,
-//                                    contentDescription = "Back")
-//                            }
-//                        },
-//                        actions = {
-//                            IconButton(onClick = {}) {
-//                                Icon(
-//                                    painter = painterResource(id = R.drawable.delete_is),
-//                                    tint = Color.White,
-//                                    modifier = Modifier.size(24.dp),
-//                                    contentDescription = "Delete"
-//                                )
-//                            }
-//                        },
-//                        modifier = Modifier.height(100.dp).align(Alignment.TopCenter)
-//                    )
-
-                    // Content that overlaps the TopAppBar
                     Box(
                         modifier = Modifier
-                            .padding(top = 80.dp) // Adjust padding to position below the TopAppBar
+                            .padding(top = 80.dp)
                             .clip(
                                 RoundedCornerShape(
                                     topStart = 16.dp,
@@ -214,42 +169,26 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                             )
                             .background(Color.White)
                             .fillMaxWidth()
-                             // Adjust height as needed
                     ) {
 
                         TabRow(
-//                            selectedTabIndex = selectedTabIndex,
                             selectedTabIndex = pagerState.currentPage,
-//                            containerColor = tabbg,
                             containerColor = Color.White,
                             modifier = Modifier
                                 .fillMaxWidth(),
                             indicator = { tabPositions ->
                                 TabRowDefaults.Indicator(
                                     Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                                    color = Color.Red, // Change color as needed
-                                    height = Dp(2f) // Adjust height as needed
+                                    color = Color.Red,
+                                    height = Dp(2f)
                                 )
                             },
-//                            indicator = { tabPositions ->
-//                                Box(
-//                                    modifier = Modifier
-//                                        .tabIndicatorOffset(tabPositions[pagerState.currentPage])
-//                                        .fillMaxSize()
-//                                        .clip(RoundedCornerShape(16.dp))
-//                                        .then(Modifier.background(Color.White))
-//                                        .zIndex(-1f)
-//                                )
-//                            },
                             divider = {},
-//
                         ) {
 
                             tabTitles.forEachIndexed { index, title ->
                                 Tab(
                                     selected = pagerState.currentPage == index,
-//                                    selected = selectedTabIndex == index,
-//                                    onClick = { selectedTabIndex = index },
                                     onClick = {
                                         coroutineScope.launch {
                                             pagerState.animateScrollToPage(index)
@@ -259,8 +198,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                         Text(
                                             text = title,
                                             fontSize = 16.sp, fontWeight = FontWeight.W400,
-//                                            color = if (selectedTabIndex == index) Color.Black else Color.Gray // Selected text color
-                                            color = Color.Red // Selected text color
+                                            color = Color.Red
                                         )
                                     }
 
@@ -308,7 +246,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                         else {
                                             Image(
                                                 imageVector = Icons.Default.Person,
-//                               painter = painterResource(id = R.drawable.uk), // Replace with your image
                                                 contentDescription = "Profile Picture",
                                                 modifier = Modifier
                                                     .size(50.dp)
@@ -316,10 +253,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                                 contentScale = ContentScale.Crop
                                             )
                                         }
-
-
-
-
                                         IconButton(
                                             onClick = {
                                                 imagePickerLauncher.launch("image/*")
@@ -327,12 +260,10 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             modifier = Modifier
                                                 .align(Alignment.BottomEnd)
                                                 .offset(
-//                                       x = 1.dp,
                                                     x = (1).dp,
                                                     y = (-15).dp
                                                 )
                                                 .background(
-//                                       color = Color.Blue,
                                                     color = profilecircle,
                                                     shape = CircleShape
                                                 )
@@ -347,7 +278,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                                 )
                                         }
                                     }
-//                       ProfileImageUploader(onAddImageClick = { /* Handle add image click */ })
                                     Row {
                                         Text(
                                             "Change Avatar",
@@ -382,15 +312,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             focusedIndicatorColor = Color.Transparent,
                                             unfocusedIndicatorColor = Color.Transparent
                                         ),
-//                                colors = TextFieldDefaults.colors(
-//                                    focusedContainerColor = grey,
-//                                    unfocusedContainerColor = grey,
-//                                    cursorColor = Color.Black,
-//                                    focusedIndicatorColor = Color.Transparent,
-//                                    unfocusedIndicatorColor = Color.Transparent,
-////                            focusedTextColor = Color.White,
-////                            unfocusedTextColor = Color.White,
-//                                ),
                                         value = charname,
                                         onValueChange = {
                                             charname=it
@@ -399,14 +320,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
-//                            Text(
-//                                "Video call ",
-//                                maxLines = 1,
-//                                overflow = TextOverflow.Ellipsis,
-//                                modifier = Modifier.padding(start = 6.dp),
-//                                style = MaterialTheme.typography.titleMedium,
-//                                color = Orange40
-//                            )
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -419,7 +332,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .clickable {
-//                                            showDialog = true
                                                 }
                                                 .padding(horizontal = 10.dp, vertical = 5.dp),
                                             verticalAlignment = Alignment.CenterVertically,
@@ -446,12 +358,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
                                             ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Person,
-//                                    tint = Orange40,
-//                                    contentDescription = "Character Name"
-//                                )
-//                                Spacer(modifier = Modifier.padding(10.dp))
+
                                                 Icon(
                                                     imageVector = Icons.Default.KeyboardArrowRight,
                                                     tint = Color.DarkGray,
@@ -461,54 +368,17 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                         }
                                     }
                                     Spacer(modifier = Modifier.height(15.dp))
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(120.dp).clip(RoundedCornerShape(4.dp))
-//                                    .dashedBorder(2.dp, settingsclr, 8.dp).clickable{
-//
-//                                    },
-//                                contentAlignment = Alignment.Center
-//                            ) {
-//                                Column(
-//                                    horizontalAlignment = Alignment.CenterHorizontally
-//                                ) {
-//                                    // 🔹 Icon
-//                                    Icon(
-////                                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your icon
-//                                        imageVector = Icons.Default.Add,
-//                                        contentDescription = "Icon",
-//                                        tint = settingsclr,
-//                                        modifier = Modifier.size(24.dp)
-//                                    )
-//
-//                                    Spacer(modifier = Modifier.height(8.dp))
-//
-//                                    // 🔹 Text
-//                                    Text(
-//                                        text = "Upload Video",
-//                                        fontSize = 12.sp,
-//                                        color = Color.Black
-//                                    )
-//                                }
-//                            }
                                     Spacer(modifier = Modifier.weight(1f))
                                     TextButton(
                                         modifier = Modifier.fillMaxWidth(),
                                         onClick = {
                                             if (charname.isNotEmpty() && selectedImageUri != null) {
                                                 coroutineScope.launch {
-//                                            mainViewModel.saveUser(charname, selectedImageUri.toString())
                                             navController?.popBackStack()
                                         }
                                             }
                                         },
-//                        enabled = TODO(),
-//                        shape = TODO(),
-//                        colors = TODO(),
-//                        elevation = TODO(),
                                         border = BorderStroke(1.dp, Color.Red),
-//                        contentPadding = TODO(),
-//                        interactionSource = TODO()
                                     ) {
                                         Text(text = "Save",color = Color.Red)
 
@@ -538,9 +408,9 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                                 )
                                         )
 
-                                        if (selectedImageUri != null) {
+                                        if (selectedImageUri2 != null) {
                                             Image(
-                                                painter = rememberAsyncImagePainter(selectedImageUri),
+                                                painter = rememberAsyncImagePainter(selectedImageUri2),
                                                 contentDescription = "Profile Picture",
                                                 modifier = Modifier
                                                     .size(100.dp)
@@ -551,7 +421,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                         else {
                                             Image(
                                                 imageVector = Icons.Default.Person,
-//                               painter = painterResource(id = R.drawable.uk), // Replace with your image
                                                 contentDescription = "Profile Picture",
                                                 modifier = Modifier
                                                     .size(50.dp)
@@ -560,22 +429,17 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             )
                                         }
 
-
-
-
                                         IconButton(
                                             onClick = {
-                                                imagePickerLauncher.launch("image/*")
+                                                imagePickerLauncher2.launch("image/*")
                                             },
                                             modifier = Modifier
                                                 .align(Alignment.BottomEnd)
                                                 .offset(
-//                                       x = 1.dp,
                                                     x = (1).dp,
                                                     y = (-15).dp
                                                 )
                                                 .background(
-//                                       color = Color.Blue,
                                                     color = profilecircle,
                                                     shape = CircleShape
                                                 )
@@ -590,7 +454,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                                 )
                                         }
                                     }
-//                       ProfileImageUploader(onAddImageClick = { /* Handle add image click */ })
                                     Row {
                                         Text(
                                             "Change Avatar",
@@ -624,31 +487,14 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             focusedIndicatorColor = Color.Transparent,
                                             unfocusedIndicatorColor = Color.Transparent
                                         ),
-//                                colors = TextFieldDefaults.colors(
-//                                    focusedContainerColor = grey,
-//                                    unfocusedContainerColor = grey,
-//                                    cursorColor = Color.Black,
-//                                    focusedIndicatorColor = Color.Transparent,
-//                                    unfocusedIndicatorColor = Color.Transparent,
-////                            focusedTextColor = Color.White,
-////                            unfocusedTextColor = Color.White,
-//                                ),
-                                        value = charname,
+                                        value = charname2,
                                         onValueChange = {
-                                            charname=it
+                                            charname2=it
                                         },
                                         placeholder = { Text("Character Name") },
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
-//                            Text(
-//                                "Video call ",
-//                                maxLines = 1,
-//                                overflow = TextOverflow.Ellipsis,
-//                                modifier = Modifier.padding(start = 6.dp),
-//                                style = MaterialTheme.typography.titleMedium,
-//                                color = Orange40
-//                            )
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -661,7 +507,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .clickable {
-//                                            showDialog = true
                                                 }
                                                 .padding(horizontal = 10.dp, vertical = 5.dp),
                                             verticalAlignment = Alignment.CenterVertically,
@@ -688,12 +533,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
                                             ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Person,
-//                                    tint = Orange40,
-//                                    contentDescription = "Character Name"
-//                                )
-//                                Spacer(modifier = Modifier.padding(10.dp))
                                                 Icon(
                                                     imageVector = Icons.Default.KeyboardArrowRight,
                                                     tint = Color.DarkGray,
@@ -703,54 +542,14 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
                                         }
                                     }
                                     Spacer(modifier = Modifier.height(15.dp))
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(120.dp).clip(RoundedCornerShape(4.dp))
-//                                    .dashedBorder(2.dp, settingsclr, 8.dp).clickable{
-//
-//                                    },
-//                                contentAlignment = Alignment.Center
-//                            ) {
-//                                Column(
-//                                    horizontalAlignment = Alignment.CenterHorizontally
-//                                ) {
-//                                    // 🔹 Icon
-//                                    Icon(
-////                                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your icon
-//                                        imageVector = Icons.Default.Add,
-//                                        contentDescription = "Icon",
-//                                        tint = settingsclr,
-//                                        modifier = Modifier.size(24.dp)
-//                                    )
-//
-//                                    Spacer(modifier = Modifier.height(8.dp))
-//
-//                                    // 🔹 Text
-//                                    Text(
-//                                        text = "Upload Video",
-//                                        fontSize = 12.sp,
-//                                        color = Color.Black
-//                                    )
-//                                }
-//                            }
                                     Spacer(modifier = Modifier.weight(1f))
                                     TextButton(
                                         modifier = Modifier.fillMaxWidth(),
                                         onClick = {
-                                            if (charname.isNotEmpty() && selectedImageUri != null) {
-//                                        scope.launch {
-////                                            mainViewModel.saveUser(charname, selectedImageUri.toString())
-////                                            navController?.popBackStack()
-//                                        }
+                                            if (charname2.isNotEmpty() && selectedImageUri2 != null) {
                                             }
                                         },
-//                        enabled = TODO(),
-//                        shape = TODO(),
-//                        colors = TODO(),
-//                        elevation = TODO(),
                                         border = BorderStroke(1.dp, Color.Red),
-//                        contentPadding = TODO(),
-//                        interactionSource = TODO()
                                     ) {
                                         Text(text = "Save",color = Color.Red)
 
@@ -768,159 +567,14 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, mainViewM
 }
 
 
-//import androidx.compose.foundation.background
-//import androidx.compose.foundation.layout.*
-//import androidx.compose.foundation.shape.CircleShape
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.filled.Delete
-//import androidx.compose.material.icons.filled.Edit
-//import androidx.compose.material.icons.filled.Person
-//
-//import androidx.compose.material3.*
-//
-//import androidx.compose.ui.res.painterResource
-//import androidx.compose.ui.text.font.FontWeight
-//
-//import androidx.compose.ui.unit.sp
-//import com.o9tech.prankcall.R
-//
-//
-//@Composable
-//fun FakeMessageScreen() {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color(0xFFFF4F4F))
-//    ) {
-//        TopBar()
-//        Content()
-//    }
-//}
-//
-//@Composable
-//fun TopBar() {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        IconButton(onClick = { /*TODO*/ }) {
-//            Icon(
-////                imageVector = Icons.Default.ArrowBack,
-//                painterResource(id = R.drawable.arrowleft),
-//                contentDescription = "Back"
-//            )
-//        }
-//        Text(
-//            text = "Set Fake Message",
-//            fontSize = 20.sp,
-//            color = Color.White,
-//            fontWeight = FontWeight.Bold
-//        )
-//        Spacer(modifier = Modifier.weight(1f))
-//        IconButton(onClick = { /*TODO*/ }) {
-//            Icon(
-//                imageVector = Icons.Default.Delete,
-////                painterResource(id = R.drawable.ic_delete),
-//                contentDescription = "Delete")
-//        }
-//    }
-//}
-//
-//@Composable
-//fun Content() {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color.White),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        TabRow()
-//        Spacer(modifier = Modifier.height(16.dp))
-//        AvatarSection()
-//        Spacer(modifier = Modifier.height(16.dp))
-//        InputFields()
-//        Spacer(modifier = Modifier.weight(1f))
-//        SendButton()
-//    }
-//}
-//
-//@Composable
-//fun TabRow() {
-//    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-//        Text("Friend", fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Bold)
-//        Text("Famous people", fontSize = 16.sp, color = Color.Gray)
-//    }
-//    Divider(color = Color.Red, thickness = 2.dp, modifier = Modifier.padding(horizontal = 64.dp))
-//}
-//
-//@Composable
-//fun AvatarSection() {
-//    Box(contentAlignment = Alignment.BottomEnd) {
-//        Box(
-//            modifier = Modifier
-//                .size(80.dp)
-//                .clip(CircleShape)
-//                .background(Color.Gray)
-//        )
-//        Icon(
-//            painter = painterResource(id = R.drawable.volume_off),
-////            iamgeVector = Icons.Default.Edit,
-//            contentDescription = "Edit Avatar",
-//            tint = Color.Red,
-//            modifier = Modifier
-//                .size(24.dp)
-//                .align(Alignment.BottomEnd)
-//        )
-//    }
-//    Text("Change Avatar", fontSize = 14.sp, color = Color.Red)
-//}
-//
-//@Composable
-//fun InputFields() {
-//    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-//        InputField("hg")
-//        Spacer(modifier = Modifier.height(8.dp))
-//        InputField("Choose Theme", isHint = true)
-//    }
-//}
-//
-//@Composable
-//fun InputField(text: String, isHint: Boolean = false) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
-//            .padding(16.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Icon(
-////            painterResource(id = R.drawable.ic_user),
-//            imageVector = Icons.Default.Person,
-//            contentDescription = "User", tint = Color.Red)
-//        Spacer(modifier = Modifier.width(8.dp))
-//        Text(text, fontSize = 16.sp, color = if (isHint) Color.Gray else Color.Black)
-//    }
-//}
-//
-//@Composable
-//fun SendButton() {
-//    Button(
-//        onClick = { /*TODO*/ },
-//        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-//        shape = RoundedCornerShape(50),
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp)
-//    ) {
-//        Text("Send", fontSize = 18.sp, color = Color.Red)
-//    }
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewFakeMessageScreen() {
-//    FakeMessageScreen()
-//}
+@Preview(showBackground = true)
+@Composable
+fun PreviewFakeMessageScreen() {
+    OverlappingBoxWithRoundedCorners(
+        navController = rememberNavController(),
+    )
+}
+
+
+
 
