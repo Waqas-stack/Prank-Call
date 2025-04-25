@@ -1,5 +1,6 @@
 package com.o9tech.prankcall.Screen.FakeMessage
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,6 +46,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.DataModel.FakeMessage
+import com.o9tech.prankcall.DataModel.FakeVideoMessage
 import com.o9tech.prankcall.DataModel.LanguageItem
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.Orange40
@@ -55,56 +57,19 @@ import com.o9tech.prankcall.viewModel.MainViewModel
 @Composable
 fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainViewModel) {
     val safeNavController = navController ?: rememberNavController()
-
-//    val fakeMessagess by mainViewModel.fakeMessage.collectAsState()
-
     val fakeMessages = mainViewModel.fakeMessage.collectAsState().value
 
-//    val fakeMessage = listOf(
-//
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("Smith", R.drawable.fake2),
-//        FakeMessage("jhon", R.drawable.fake3),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("elisha", R.drawable.fake5),
-//        FakeMessage("Nawaz", R.drawable.fake6),
-//        FakeMessage("deph", R.drawable.fake7),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("United States", R.drawable.usa),
-//        FakeMessage("Canada", R.drawable.canada),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//        FakeMessage("UAE", R.drawable.dubai),
-//        FakeMessage("Trivas", R.drawable.fake1),
-//        FakeMessage("ayan", R.drawable.fake4),
-//        FakeMessage("Elsvish", R.drawable.fake8),
-//        FakeMessage("Turkey", R.drawable.turkey),
-//    )
-    //----------------
-//    val fakeMessage = listOf(
-//        LanguageItem("English", R.drawable.img_get_started_cha_eunwoo),
-//
-//        LanguageItem("jennie", R.drawable.img_home_carrdi),
-//        LanguageItem("jisoo", R.drawable.img_home_iu),
-//        LanguageItem("Messi", R.drawable.img_home_messi),
-//        LanguageItem("Ronaldo", R.drawable.img_get_started_ronadol),
-//    )
-    //--------------
-
-    val predefinedItems = listOf(
-//        FakeMessage("English", "drawable://img_get_started_cha_eunwoo",false),
-        FakeMessage("Jennie", "drawable://img_home_carrdi",true),
+    val predefinedItems = arrayListOf<FakeMessage>(
+        FakeMessage("Add New", "drawable://accept",  true),
         FakeMessage("Jisoo", "drawable://img_home_iu",true),
         FakeMessage("Messi", "drawable://img_home_messi",true),
         FakeMessage("Ronaldo", "drawable://img_get_started_ronadol",true),
     )
     val context= LocalContext.current
 
-    // Combining the database data with the predefined list
-    val combinedFakeMessages = fakeMessages.map {
-        FakeMessage(it.name, it.imageUri,false)
-    } + predefinedItems
-        
-        
+    predefinedItems.addAll(fakeMessages.map {
+        FakeMessage(it.name, it.imageUri, false)
+    })
     Scaffold(
         topBar = {
             TopAppBar(
@@ -114,7 +79,6 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
-//                        style = MaterialTheme.typography.bodyLarge,
                         color = Orange40,
                         fontWeight = FontWeight.Bold
                     )
@@ -139,7 +103,6 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                                 .size(34.dp)
                                 .padding(start = 6.dp)
                         )
-//                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -154,14 +117,13 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                     .fillMaxSize()
                     .padding(it)
             ) {
-
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(3), // 3 columns
+                    columns = GridCells.Fixed(3),
                     modifier = Modifier.fillMaxSize().background(color = Color.White).padding(5.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                    itemsIndexed(combinedFakeMessages) { index, item ->
+                    itemsIndexed(predefinedItems) { index, item ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(8.dp)
@@ -169,7 +131,7 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .size(100.dp) // Circle size
+                                    .size(100.dp)
                                     .clip(CircleShape)
                                     .clickable {
                                         when (index) {
@@ -177,52 +139,41 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                                                 safeNavController.navigate(Routes.AddCharacterMsg)
                                             }
                                             else -> {
-                                                safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
+//                                                safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
+                                                safeNavController.navigate(
+                                                    "OverlappingBoxWithRoundedCorners/${item.name}/${Uri.encode(item.pic)}"
+                                                )
                                             }
                                         }
                                     }
-                                    .background(if (index == 0) Orange40 else Color.LightGray) // Conditional background color
+                                    .background(if (index == 0) Orange40 else Color.LightGray)
                             ) {
-
                                 val drawableId = context.resources.getIdentifier(
                                     item.pic.substringAfter("drawable://"),
                                     "drawable",
                                     context.packageName
                                 )
-
-                              if (index == 0) {
-                                   Image(
-                                       painterResource(id = R.drawable.plus),
-                                       colorFilter = if (index == 0) ColorFilter.tint(Color.White) else null,
-                                       contentDescription = null,
+                                if(item.isDrawable){
+                                    Image(
+                                        painter =painterResource(id = drawableId),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .clip(CircleShape),
                                    )
-                                } else {
-                                    if(item.isDrawable){
-                                        Image(
-                                            painter =painterResource(id = drawableId),
-                                            contentDescription = null,
-                                            contentScale = ContentScale.Crop,
-                                            modifier = Modifier
-                                                .size(100.dp) // Fits inside the circle
-                                                .clip(CircleShape),
-                                            colorFilter = if (index == 0) ColorFilter.tint(Color.White) else null
-                                        )
-                                    }
-                                    else{
-                                        AsyncImage(model = item.pic, contentDescription = null,
-                                            contentScale = ContentScale.Crop,
-                                            modifier = Modifier
-                                                .size(100.dp) // Fits inside the circle
-                                                .clip(CircleShape),)
-                                    }
                                 }
-
-                            }
-
+                                else{
+                                    AsyncImage(model = item.pic, contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .clip(CircleShape),)
+                                }}
                             Spacer(modifier = Modifier.size(8.dp))
 
                             Text(
-                                text = if (index == 0) "Add New" else item.name,
+                                text = item.name,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
@@ -231,69 +182,6 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                     }
                 }
 
-//                LazyVerticalGrid(
-//                    columns = GridCells.Fixed(3), // 3 columns
-//                    modifier = Modifier.fillMaxSize().background(color = Color.White).padding(5.dp),
-//                    verticalArrangement = Arrangement.spacedBy(16.dp),
-//                    horizontalArrangement = Arrangement.spacedBy(0.dp)
-//                ) {
-//                    itemsIndexed(fakeMessage) { index,item ->
-////                        val item = fakeMessage[item]
-////                        CircularImageWithText(imageRes = item.first, text = item.second)
-//                        Column(
-//                            horizontalAlignment = Alignment.CenterHorizontally,
-//                            modifier = Modifier.padding(8.dp)
-//                        ) {
-//                            Box(
-//                                contentAlignment = Alignment.Center,
-//                                modifier = Modifier
-//                                    .size(100.dp) // Circle size
-//                                    .clip(CircleShape).clickable{
-//                                        when (index) {
-//                                            0 -> {
-//                                                safeNavController.navigate(Routes.AddCharacterMsg)
-//                                            }
-//                                            else  -> {
-//                                                safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
-//                                        }
-//                                        }
-////                                        safeNavController.navigate(Routes.AddCharacter)
-//
-//                                    }
-//                                    .background(if (index == 0) Orange40 else Color.LightGray) // Conditional background color
-//
-//                            ) {
-//                                val imagePainter = if (index == 0) {
-//                                    painterResource(id = R.drawable.plus)
-//                                } else {
-//                                    painterResource(id = item.flag)
-//                                }
-//                                Image(
-////                                    painter = painterResource(id = item.flag),
-//                                    painter = imagePainter,
-//                                    contentDescription = null,
-//                                    contentScale = ContentScale.Crop,
-//
-//                                    modifier = Modifier
-//                                        .size(100.dp) // Fits inside the circle
-//                                        .clip(CircleShape),
-////                                    tint = if (index == 0) Color.White else white,
-//                                    colorFilter = if (index == 0) ColorFilter.tint(Color.White) else null
-//
-//                                )
-//                            }
-////                            Spacer(modifier = Modifier.height(8.dp))
-//                            Spacer(modifier = Modifier.size(8.dp))
-//                            Text(
-////                                text = item.name,
-//                                text = if (index == 0) "Add New" else item.name,
-//                                fontSize = 14.sp,
-//                                fontWeight = FontWeight.Bold,
-//                                textAlign = TextAlign.Center
-//                            )
-//                        }
-//                    }
-//                }
             }
         }
     )

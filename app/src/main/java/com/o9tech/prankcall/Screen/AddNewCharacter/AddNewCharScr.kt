@@ -1,13 +1,18 @@
 package com.o9tech.prankcall.Screen.AddNewCharacter
 
 import android.Manifest
+import android.content.Context
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
+import android.widget.VideoView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,11 +42,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,8 +75,10 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.AssetPickerConfig
 import com.huhx.picker.model.RequestType
@@ -88,13 +97,26 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
 
     val safeNavController = navController ?: rememberNavController()
     val scope = rememberCoroutineScope()
+    var videoView: VideoView? = null
+
 
 
     val context = LocalContext.current
-    var charname by remember { mutableStateOf("") }
+    var charname by rememberSaveable { mutableStateOf("") }
 
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
+    val videoUri = remember { mutableStateOf<Uri?>(null) }
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        imageUri.value = uri
+    }
 
-
+    val videoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        videoUri.value = uri
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -150,44 +172,32 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                                    .size(100.dp)
                                    .background(color = Color.LightGray, shape = CircleShape)
                            )
-                           val selectedImages by mainViewModel.selectedImages.collectAsState()
-
-
-                           if (selectedImages.firstOrNull() != null) {
-                               val painter = rememberAsyncImagePainter(model = File(selectedImages.first().filepath))
-
-                               Image(
-                                   painter = rememberAsyncImagePainter(selectedImages.first().uriString),
-                                   contentDescription = "Profile Picture",
+                           imageUri.value?.let {
+                               AsyncImage(
+                                   model = it,
+                                   contentDescription = null,
                                    modifier = Modifier
-                                       .size(100.dp)
+                                       .size(120.dp)
                                        .clip(CircleShape),
                                    contentScale = ContentScale.Crop
                                )
-                           } else {
-                               Image(
-                                   imageVector = Icons.Default.Person,
-                                   contentDescription = "Profile Picture",
-                                   modifier = Modifier
-                                       .size(50.dp)
-                                       .clip(CircleShape),
-                                   contentScale = ContentScale.Crop
-                               )
-                           }
-
-
-
-
-                          IconButton(
+                           } ?: Icon(
+                               imageVector = Icons.Default.Person,
+                               contentDescription = "Default Person Icon",
+                               modifier = Modifier
+                                   .size(120.dp)
+                                   .clip(CircleShape)
+                                   .padding(16.dp),
+                               tint = Color.DarkGray
+                           )
+                           IconButton(
                               onClick = {
-                                  safeNavController.navigate("asset_picker")
-
-
+                                  imagePickerLauncher.launch("image/*")
                               },
                               modifier = Modifier
                                   .align(Alignment.BottomEnd)
                                   .offset(
-                                      x = (-5).dp,
+                                      x = 2.dp,
                                       y = (-15).dp
                                   )
                                   .background(
@@ -256,41 +266,51 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                             .clip(RoundedCornerShape(4.dp))
                             .dashedBorder(2.dp, settingsclr, 8.dp)
                             .clickable {
-                                safeNavController.navigate("video_picker")
+                                videoPickerLauncher.launch("video/*")
                             },
                         contentAlignment = Alignment.Center
+
                     ) {
-                        val selectedVideos by mainViewModel.selectedVideos.collectAsState()
-
-
-                        if (selectedVideos.firstOrNull() != null) {
-                            val videoPath = selectedVideos.first().filepath
-                            val videoUri = Uri.fromFile(File(videoPath))
-
-                            Log.d("Video", "Videosuro: $videoUri")
-                            Image(
-                                painter = rememberAsyncImagePainter(model = videoUri),
-                                contentDescription = "Video Thumbnail",
+                        if (videoUri.value != null) {
+                            AndroidView(
+                                factory = { context ->
+                                    VideoView(context).apply {
+                                        setVideoURI(videoUri.value)
+                                        setOnPreparedListener { mediaPlayer ->
+                                            mediaPlayer.isLooping = true
+                                            start()
+                                        }
+                                        videoView = this
+                                    }
+                                },
                                 modifier = Modifier
-                                    .size(120.dp)
-                                    .clip(RoundedCornerShape(4.dp)),
-                                contentScale = ContentScale.Fit
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .border(2.dp, Color.Gray, RoundedCornerShape(12.dp))
                             )
+
+                            DisposableEffect(Unit) {
+                                onDispose {
+                                    videoView?.stopPlayback()
+                                    videoView = null
+                                }
+                            }
                         } else {
                             Column(
+                                verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = "Icon",
-                                    tint = settingsclr,
-                                    modifier = Modifier.size(24.dp)
+                                    contentDescription = "Add Video",
+                                    modifier = Modifier.size(48.dp),
+                                    tint = Color.Gray
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "Upload Video",
-                                    fontSize = 12.sp,
-                                    color = Color.Black
+                                    text = "Upload Videos",
+                                    color = Color.Gray,
+                                    style = MaterialTheme.typography.bodySmall
                                 )
                             }
                         }
@@ -299,11 +319,25 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            if (charname.isNotEmpty()) {
+
+                            val imagePath = imageUri.value?.let {
+                                copyUriToInternalStorage(context, it, "image_${System.currentTimeMillis()}.jpg")
+                            } ?: ""
+
+                            val videoPath = videoUri.value?.let {
+                                copyUriToInternalStorage(context, it, "video_${System.currentTimeMillis()}.mp4")
+                            } ?: ""
+
+                            Log.d("Video", "VideoPath: $videoPath")
+                            Log.d("imagePath", "ImagePath: $imagePath")
+
+                            if (charname.isNotEmpty() && imagePath.isNotEmpty() && videoPath.isNotEmpty()) {
                                 scope.launch {
-                                mainViewModel.insertUserDetails(charname)
-                                navController?.popBackStack()
+                                    mainViewModel.insertUserDetails(charname, imagePath, videoPath)
+                                    navController?.popBackStack()
                                 }
+                            } else {
+                                Toast.makeText(context, "Character name cannot be empty", Toast.LENGTH_SHORT).show()
                             }
                         },
                         border = BorderStroke(1.dp, Color.Red),
@@ -370,7 +404,16 @@ fun VideoPicker(
     }
 }
 
-
+fun copyUriToInternalStorage(context: Context, uri: Uri, filename: String): String {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val file = File(context.filesDir, filename)
+    inputStream?.use { input ->
+        file.outputStream().use { output ->
+            input.copyTo(output)
+        }
+    }
+    return file.absolutePath
+}
 
 
 

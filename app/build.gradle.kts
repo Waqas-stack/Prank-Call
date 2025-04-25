@@ -118,6 +118,11 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 
 
+    //image and videos
+    implementation ("androidx.activity:activity-compose:1.8.0") // or latest
+
+
+
 
 
 

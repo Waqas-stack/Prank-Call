@@ -133,7 +133,7 @@ fun HomeScreenDesign(
 
                 ){
                     IconButton(onClick = {
-                        onSearchClick()
+//                        onSearchClick()
 
                     }) {
                         Icon(

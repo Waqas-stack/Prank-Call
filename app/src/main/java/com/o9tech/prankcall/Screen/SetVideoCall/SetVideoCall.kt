@@ -210,23 +210,23 @@ fun SetVideoCallScreen(
                                 }
                             }
 
-                            IconButton(
-                                onClick = {
-                                    imagePickerLauncher.launch("image/*")
-                                },
-                                modifier = Modifier
-                                    .align(Alignment.BottomEnd)
-                                    .offset(x = (-5).dp, y = (-15).dp)
-                                    .background(color = profilecircle, shape = CircleShape)
-                                    .padding(8.dp)
-                                    .size(17.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = "Upload Icon",
-                                    tint = settingsclr,
-                                )
-                            }
+//                            IconButton(
+//                                onClick = {
+//                                    imagePickerLauncher.launch("image/*")
+//                                },
+//                                modifier = Modifier
+//                                    .align(Alignment.BottomEnd)
+//                                    .offset(x = (-5).dp, y = (-15).dp)
+//                                    .background(color = profilecircle, shape = CircleShape)
+//                                    .padding(8.dp)
+//                                    .size(17.dp)
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Add,
+//                                    contentDescription = "Upload Icon",
+//                                    tint = settingsclr,
+//                                )
+//                            }
 
                         }
                     }
@@ -723,10 +723,11 @@ fun CustomCallSettings(
                 )
             ) {
                 Column(
-                    modifier = Modifier
+                    modifier = Modifier.height(210.dp)
                         .padding(10.dp)
                         .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = "call Setting",

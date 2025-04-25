@@ -109,7 +109,6 @@ fun FakeAudioScreen(navController: NavHostController?) {
                 )
             )
         },
-
         content = {
             Surface(
                 modifier = Modifier

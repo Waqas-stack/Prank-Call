@@ -2,6 +2,7 @@ package com.o9tech.prankcall.Screen.FakeVideos
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -67,36 +68,24 @@ import com.o9tech.prankcall.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 
-@Preview(showBackground = true)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewModel) {
     val safeNavController = navController ?: rememberNavController()
-    val userDetails = mainViewModel.userDetailsList.collectAsState().value
+    val userDetails by mainViewModel.userDetailsList.collectAsState()
+
     val context = LocalContext.current
 
-//    val fakeVideo = listOf(
-//        FakeVideoMessage("Rose", "drawable://img_home_iu", "/data/user/0/com.o9tech.prankcall/cache/call1.mp4" ,true),
-//        FakeVideoMessage("Ronaldo", "drawable://img_get_started_ronadol","/data/user/0/com.o9tech.prankcall/cache/call2.mp4", true),
-//        FakeVideoMessage("Messi", "drawable://img_home_messi", "/data/user/0/com.o9tech.prankcall/cache/prank.mp4",true),
-//        FakeVideoMessage("Lisa", "drawable://img_get_started_jimin","/data/user/0/com.o9tech.prankcall/cache/call1.mp4" ,true),
-//    )
-
-
-    val fakeVideo = listOf(
-        FakeVideoMessage("Rose", "drawable://img_home_iu", "call1.mp4" ,true),
+    val videoList = arrayListOf<FakeVideoMessage>(
+        FakeVideoMessage("Add New", "drawable://accept", "call1.mp4" ,true),
         FakeVideoMessage("Ronaldo", "drawable://img_get_started_ronadol","call2.mp4", true),
         FakeVideoMessage("Messi", "drawable://img_home_messi", "prank.mp4",true),
         FakeVideoMessage("Lisa", "drawable://img_get_started_jimin","call1.mp4" ,true),
     )
-
-
-
-
-    val combinedFakeMessages = userDetails.map {
-        Log.d("Idssss", "Imgessss: ${it.videoPath}")
+    videoList.addAll(userDetails.map {
         FakeVideoMessage(it.name, it.imageName,it.videoPath, false)
-    } + fakeVideo
+    })
 
     Scaffold(
         topBar = {
@@ -109,7 +98,6 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                         modifier = Modifier.padding(start = 6.dp),
                         color = Orange40,
                         fontWeight = FontWeight.Bold
-
                     )
                 },
                 actions = {
@@ -140,7 +128,6 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                 )
             )
         },
-
         content = {
             Surface(
                 modifier = Modifier
@@ -156,7 +143,7 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                    itemsIndexed(combinedFakeMessages) { index, item ->
+                    itemsIndexed(videoList) { index, item ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(8.dp)
@@ -173,8 +160,6 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                                             }
 
                                             else -> {
-                                                    Log.d("pathing", "FakeVideoScreen: ${item.path}")
-                                                Log.d("pictue", "FakeVideoScreen: ${item.pic}")
                                                 safeNavController.navigate(
                                                     "SetVideoCallScreen/${item.name}/${Uri.encode(item.pic)}/${Uri.encode(item.path)}"
                                                 )
@@ -183,58 +168,46 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                                     }
                                     .background(if (index == 0) settingsclr else Color.Unspecified)
                             ) {
-
-
-                                if (index == 0) {
+                                if (item.isDrawable) {
+                                    val drawableId = context.resources.getIdentifier(
+                                        item.pic.substringAfter("drawable://"),
+                                        "drawable",
+                                        context.packageName
+                                    )
                                     Image(
-                                        painterResource(id = R.drawable.plus),
-                                        colorFilter = if (index == 0) ColorFilter.tint(Color.White) else null,
+                                        painter = painterResource(id = drawableId),
                                         contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .clip(CircleShape),
                                     )
                                 } else {
-                                    if (item.isDrawable) {
-                                        val drawableId = context.resources.getIdentifier(
-                                            item.pic.substringAfter("drawable://"),
-                                            "drawable",
-                                            context.packageName
-                                        )
+                                    if (!item.pic.isNullOrEmpty()) {
+                                        val painter = rememberAsyncImagePainter(File(item.pic))
                                         Image(
-                                            painter = painterResource(id = drawableId),
-                                            contentDescription = null,
+                                            painter = painter,
+                                            contentDescription = "Profile Picture",
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier
                                                 .size(100.dp)
-                                                .clip(CircleShape),
+                                                .clip(CircleShape)
                                         )
                                     } else {
-                                        if (!item.pic.isNullOrEmpty()) {
-                                            Log.d("Picssssa", "Pictress: ${item.pic}")
-                                            val painter = rememberAsyncImagePainter(File(item.pic))
-                                            Image(
-                                                painter = painter,
-                                                contentDescription = "Profile Picture",
-                                                contentScale = ContentScale.Crop,
-                                                modifier = Modifier
-                                                    .size(1000.dp)
-                                                    .clip(CircleShape)
-                                            )
-                                        } else {
-                                            Log.d("Picssssa", "No image found.")
-                                            Image(
-                                                imageVector = Icons.Default.Person,
-                                                contentDescription = "Profile Picture",
-                                                modifier = Modifier
-                                                    .size(50.dp)
-                                                    .clip(CircleShape),
-                                                contentScale = ContentScale.Crop
-                                            )
-                                        }
+                                        Image(
+                                            imageVector = Icons.Default.Person,
+                                            contentDescription = "Profile Picture",
+                                            modifier = Modifier
+                                                .size(50.dp)
+                                                .clip(CircleShape),
+                                            contentScale = ContentScale.Crop
+                                        )
                                     }
                                 }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = if (index == 0) "Add New" else item.name,
+                                text =   item.name,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center

@@ -13,8 +13,6 @@ import androidx.navigation.navArgument
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.Screen.AddCharacterMsg.AddCharacterMsg
 import com.o9tech.prankcall.Screen.AddNewCharacter.AddCharacterSCreen
-import com.o9tech.prankcall.Screen.AddNewCharacter.ImagePicker
-import com.o9tech.prankcall.Screen.AddNewCharacter.VideoPicker
 import com.o9tech.prankcall.Screen.AudioCallEnded.AudioCallEndedScreen
 import com.o9tech.prankcall.Screen.AudioCalling.AudioCallingScreen
 import com.o9tech.prankcall.Screen.Callscreen.CallScreen
@@ -56,7 +54,7 @@ fun Navigation() {
         composable(Routes.Setting) {
             SettingsScreen(navController)
         }
-        composable(Routes.Search) {
+        composable("SearchScreen") {
             SearchScreen(navController)
         }
         composable(Routes.CallScreen) {
@@ -84,8 +82,6 @@ fun Navigation() {
             SetVideoCallScreen(navController, name = name, flag = pic, videoPath = path)
 
         }
-
-
         composable("FakeVideoCall/{videoPath}/{pic}") { backStackEntry ->
             val encodedPath = backStackEntry.arguments?.getString("videoPath") ?: ""
             val videoPath = Uri.decode(encodedPath)
@@ -99,16 +95,12 @@ fun Navigation() {
                 videoPath = videoPath
             )
         }
-
-
-
         composable(Routes.ChooseThemeScreen) {
             ChooseThemeScreen(navController)
         }
         composable("CallEndedScreen/{profileImage}") { backStackEntry ->
             val profileImage = backStackEntry.arguments?.getString("profileImage") ?: ""
             val decodedPic = Uri.decode(profileImage)
-
             CallEndedScreen(
                 navController = navController,
                 profileImage = decodedPic,
@@ -120,9 +112,6 @@ fun Navigation() {
                 }
             )
         }
-
-
-
         composable("VideoCallingScreen/{name}/{pic}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val pic = backStackEntry.arguments?.getString("pic") ?: ""
@@ -136,7 +125,6 @@ fun Navigation() {
                 onToggleSpeaker = {  },
                 onEndCall = {  })
         }
-
         composable(
             "SetCallScreen/{name}/{flag}/{audioPath}",
             arguments = listOf(
@@ -151,47 +139,47 @@ fun Navigation() {
 
             SetCallScreen(navController, name, flag,audioPath)
         }
-        composable("asset_picker") {
-            ImagePicker(
-                onPicked = { assets ->
-                    mainViewModel.clearSelectedImages()
-                    mainViewModel.updateSelectedImages(assets)
-                    navController.navigateUp()
-                },
-                onClose = { assets ->
-                    mainViewModel.clearSelectedImages()
-                    navController.navigateUp()
-                }
-            )
-        }
+//        composable("asset_picker") {
+//            ImagePicker(
+//                onPicked = { assets ->
+//                    mainViewModel.clearSelectedImages()
+//                    mainViewModel.updateSelectedImages(assets)
+//                    navController.navigateUp()
+//                },
+//                onClose = { assets ->
+//                    mainViewModel.clearSelectedImages()
+//                    navController.navigateUp()
+//                }
+//            )
+//        }
 
-        composable("fake_message_asset_picker") {
-            ImagePicker(
-                onPicked = { assets ->
-                    mainViewModel.clearSelectedFakeMessage()
-                    mainViewModel.updateSelectedFakeMessage(assets)
-                    navController.navigateUp()
-                },
-                onClose = { assets ->
-                    mainViewModel.clearSelectedFakeMessage()
-                    navController.navigateUp()
-                }
-            )
-        }
-
-        composable("video_picker") {
-            VideoPicker(
-                onPicked = { assets ->
-                    mainViewModel.clearSelectedVideos()
-                    mainViewModel.updateSelectedVideos(assets)
-                    navController.navigateUp()
-                },
-                onClose = { assets ->
-                    mainViewModel.clearSelectedVideos()
-                    navController.navigateUp()
-                }
-            )
-        }
+//        composable("fake_message_asset_picker") {
+//            ImagePicker(
+//                onPicked = { assets ->
+//                    mainViewModel.clearSelectedFakeMessage()
+//                    mainViewModel.updateSelectedFakeMessage(assets)
+//                    navController.navigateUp()
+//                },
+//                onClose = { assets ->
+//                    mainViewModel.clearSelectedFakeMessage()
+//                    navController.navigateUp()
+//                }
+//            )
+//        }
+//
+//        composable("video_picker") {
+//            VideoPicker(
+//                onPicked = { assets ->
+//                    mainViewModel.clearSelectedVideos()
+//                    mainViewModel.updateSelectedVideos(assets)
+//                    navController.navigateUp()
+//                },
+//                onClose = { assets ->
+//                    mainViewModel.clearSelectedVideos()
+//                    navController.navigateUp()
+//                }
+//            )
+//        }
 
         composable("IncommingCallScreen/{name}/{pic}/{path}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
@@ -205,17 +193,29 @@ fun Navigation() {
                 videoPath = path,
                 onCallAgain = {})
         }
-
-
         composable(Routes.FakeVideoScreen) {
             FakeVideoScreen(navController, mainViewModel)
         }
         composable(Routes.FakeAudioScreen) {
             FakeAudioScreen(navController)
         }
-        composable(Routes.OverlappingBoxWithRoundedCorners) {
-            OverlappingBoxWithRoundedCorners(navController )
+//        composable(Routes.OverlappingBoxWithRoundedCorners) {
+//            OverlappingBoxWithRoundedCorners(navController )
+//        }
+
+        composable(
+            "OverlappingBoxWithRoundedCorners/{name}/{pic}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("pic") { type = NavType.StringType },
+            )
+        ) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: "Unknown"
+            val pic = backStackEntry.arguments?.getString("pic") ?: ""
+            OverlappingBoxWithRoundedCorners(navController, name = name, flag = pic,)
+
         }
+
         composable(Routes.AddCharacterMsg) {
             AddCharacterMsg(navController, mainViewModel)
         }
@@ -242,12 +242,10 @@ fun Navigation() {
                 navArgument("name") { type = NavType.StringType },
                 navArgument("flag") { type = NavType.IntType },
                 navArgument("audioPath") { type = NavType.StringType },
-
                 )) { backStackEntry ->
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val flag = backStackEntry.arguments?.getInt("flag") ?: 0
                 val audioPath = Uri.decode(backStackEntry.arguments?.getString("audioPath") ?: "")
-
                 AudioCallingScreen(
                     navController,
                     audioPath,
@@ -255,11 +253,7 @@ fun Navigation() {
                     onCallAgain = {},
                     callerName = name,
                 )
-
         }
-
-
-
         composable("AudioCallEndedScreen/{name}/{flag}", arguments = listOf(
             navArgument("name") { type = NavType.StringType },
             navArgument("flag") { type = NavType.IntType }
@@ -270,10 +264,20 @@ fun Navigation() {
                 navController,
                 profileImage = flag,
                 onCallAgain = {
-                    navController.popBackStack()
+                    navController?.navigate(Routes.FakeAudioScreen) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
                 },
                 onReturn = {
-                    navController.popBackStack()
+                    navController?.navigate(Routes.FakeAudioScreen) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
                 },
                 callername = name,
             )

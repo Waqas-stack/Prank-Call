@@ -85,17 +85,35 @@ fun ChooseThemeScreen(navController: NavHostController?) {
 
     val safeNavController = navController ?: rememberNavController()
 
-
     var selectedTheme by remember { mutableStateOf<ThemeItem?>(null) }
 
     val themes = listOf(
-        ThemeItem(Color.Black.copy(alpha = 0.5f), Color.Cyan, R.drawable.uk),
-        ThemeItem(Color.Red.copy(alpha = 0.5f), Color.Magenta, R.drawable.turkey),
-        ThemeItem(Color.Cyan.copy(alpha = 0.5f), Color.LightGray, R.drawable.australia),
-        ThemeItem(Color.Blue.copy(alpha = 0.5f), Color.LightGray, R.drawable.canada),
-        ThemeItem(Color.Gray, Color.LightGray, R.drawable.china),
+        ThemeItem(
+            Color.Black.copy(alpha = 0.5f),
+            Color.Cyan, R.drawable.uk,
+            themeName = "Facebook"
+        ),
+        ThemeItem(
+            Color.Red.copy(alpha = 0.5f),
+            Color.Magenta,
+            R.drawable.turkey,
+            themeName = "Instagram"
+        ),
+        ThemeItem(
+            Color.Cyan.copy(alpha = 0.5f),
+            Color.LightGray,
+            R.drawable.australia,
+            themeName = "X-Twitter"
+        ),
+        ThemeItem(
+            Color.Blue.copy(alpha = 0.5f),
+            Color.LightGray,
+            R.drawable.canada,
+            themeName = "Thread"
+        ),
+        ThemeItem(Color.Gray, Color.LightGray, R.drawable.china, themeName = "youtube"),
     )
-    Scaffold (
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = {
@@ -115,14 +133,15 @@ fun ChooseThemeScreen(navController: NavHostController?) {
                             painter = painterResource(id = R.drawable.arrowleft),
                             contentDescription = "back",
                             tint = white,
-                            modifier = Modifier.padding(start = 10.dp))
+                            modifier = Modifier.padding(start = 10.dp)
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = settingsclr
                 ),
 
-            )
+                )
         },
         content = {
             Surface(
@@ -136,19 +155,20 @@ fun ChooseThemeScreen(navController: NavHostController?) {
                         .background(Color.White)
                         .padding(16.dp)
                 ) {
-
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(2), // 🔹 2 columns
+                        columns = GridCells.Fixed(2),
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(themes) { theme ->
-                                    ThemeBox(theme = theme,
-                                        isSelected = theme == selectedTheme,
-                                        onThemeSelected = {
-                                        selectedTheme = theme
-                                    })
+                            ThemeBox(
+                                theme = theme,
+                                themeName = theme.themeName,
+                                isSelected = theme == selectedTheme,
+                                onThemeSelected = {
+                                    selectedTheme = theme
+                                })
                         }
                     }
                 }
@@ -156,8 +176,11 @@ fun ChooseThemeScreen(navController: NavHostController?) {
         }
     )
 }
+
 @Composable
-fun ThemeBox(theme: ThemeItem,isSelected: Boolean, onThemeSelected: () -> Unit) {
+fun ThemeBox(
+    theme: ThemeItem, isSelected: Boolean, onThemeSelected: () -> Unit, themeName: String,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -194,12 +217,17 @@ fun ThemeBox(theme: ThemeItem,isSelected: Boolean, onThemeSelected: () -> Unit) 
             )
         }
         Text(
-            text = "FaceBook",
+            text = themeName,
             modifier = Modifier.align(Alignment.BottomCenter),
             color = Color.White,
             fontSize = 18.sp,
-            fontWeight = FontWeight.W400        )
+            fontWeight = FontWeight.W400
+        )
     }
 }
-
-data class ThemeItem(val boxColor: Color, val circleColor: Color, val topIcon: Int)
+data class ThemeItem(
+    val boxColor: Color,
+    val circleColor: Color,
+    val topIcon: Int,
+    val themeName: String = "",
+)

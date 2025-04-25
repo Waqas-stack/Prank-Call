@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.Orange40
@@ -71,7 +72,6 @@ import com.o9tech.prankcall.ui.theme.profilecircle
 import com.o9tech.prankcall.ui.theme.rasish
 import com.o9tech.prankcall.ui.theme.settingsclr
 import com.o9tech.prankcall.ui.theme.textfrilssetvideocall
-import com.o9tech.prankcall.viewModel.MainViewModel
 import kotlinx.coroutines.launch
 
 
@@ -79,15 +79,16 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
+fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: String, name: String, ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var selectedImageUri2 by remember { mutableStateOf<Uri?>(null) }
     val safeNavController = navController ?: rememberNavController()
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    var charname by remember { mutableStateOf("") }
-    var charname2 by remember { mutableStateOf("") }
+    var charname by remember { mutableStateOf(name) }
+
+    var charname2 by remember { mutableStateOf(name) }
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabTitles = listOf("Friend", "Famous people")
     val pagerState = rememberPagerState {
@@ -105,6 +106,13 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
     ) { uri: Uri? ->
         selectedImageUri2 = uri
     }
+
+
+    val drawableId = LocalContext.current.resources.getIdentifier(
+        flag.substringAfter("drawable://"),
+        "drawable",
+        LocalContext.current.packageName
+    )
 
     LaunchedEffect(pagerState.currentPage) {
         selectedTabIndex = pagerState.currentPage
@@ -156,7 +164,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                 modifier = Modifier.size(20.dp),
                                 contentDescription = "Back")
                         }
-
                     }
                     Box(
                         modifier = Modifier
@@ -233,9 +240,19 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                                 )
                                         )
 
-                                        if (selectedImageUri != null) {
+
+                                        if (drawableId != 0) {
                                             Image(
-                                                painter = rememberAsyncImagePainter(selectedImageUri),
+                                                painter = painterResource(id = drawableId),
+                                                contentDescription = "Profile Picture",
+                                                modifier = Modifier
+                                                    .size(100.dp)
+                                                    .clip(CircleShape),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        } else {
+                                            AsyncImage(
+                                                model = flag,
                                                 contentDescription = "Profile Picture",
                                                 modifier = Modifier
                                                     .size(100.dp)
@@ -243,44 +260,56 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                                 contentScale = ContentScale.Crop
                                             )
                                         }
-                                        else {
-                                            Image(
-                                                imageVector = Icons.Default.Person,
-                                                contentDescription = "Profile Picture",
-                                                modifier = Modifier
-                                                    .size(50.dp)
-                                                    .clip(CircleShape),
-                                                contentScale = ContentScale.Crop
-                                            )
-                                        }
-                                        IconButton(
-                                            onClick = {
-                                                imagePickerLauncher.launch("image/*")
-                                            },
-                                            modifier = Modifier
-                                                .align(Alignment.BottomEnd)
-                                                .offset(
-                                                    x = (1).dp,
-                                                    y = (-15).dp
-                                                )
-                                                .background(
-                                                    color = profilecircle,
-                                                    shape = CircleShape
-                                                )
-                                                .padding(8.dp)
-                                                .size(12.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Add,
-                                                contentDescription = "Upload Icon",
-                                                tint = settingsclr,
 
-                                                )
-                                        }
+//                                        if (selectedImageUri != null) {
+//                                            Image(
+//                                                painter = rememberAsyncImagePainter(selectedImageUri),
+//                                                contentDescription = "Profile Picture",
+//                                                modifier = Modifier
+//                                                    .size(100.dp)
+//                                                    .clip(CircleShape),
+//                                                contentScale = ContentScale.Crop
+//                                            )
+//                                        }
+//                                        else {
+//                                            Image(
+//                                                imageVector = Icons.Default.Person,
+//                                                contentDescription = "Profile Picture",
+//                                                modifier = Modifier
+//                                                    .size(50.dp)
+//                                                    .clip(CircleShape),
+//                                                contentScale = ContentScale.Crop
+//                                            )
+//                                        }
+//                                        IconButton(
+//                                            onClick = {
+//                                                imagePickerLauncher.launch("image/*")
+//                                            },
+//                                            modifier = Modifier
+//                                                .align(Alignment.BottomEnd)
+//                                                .offset(
+//                                                    x = (1).dp,
+//                                                    y = (-15).dp
+//                                                )
+//                                                .background(
+//                                                    color = profilecircle,
+//                                                    shape = CircleShape
+//                                                )
+//                                                .padding(8.dp)
+//                                                .size(12.dp)
+//                                        ) {
+//                                            Icon(
+//                                                imageVector = Icons.Default.Add,
+//                                                contentDescription = "Upload Icon",
+//                                                tint = settingsclr,
+//
+//                                                )
+//                                        }
                                     }
                                     Row {
                                         Text(
-                                            "Change Avatar",
+//                                            "Change Avatar",
+                                            name,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
                                             modifier = Modifier.padding(start = 6.dp),
@@ -385,6 +414,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                     }
                                 }
 
+
                                 1 ->  Column(
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -393,7 +423,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Spacer(modifier = Modifier.height(40.dp))
-
                                     Box(
                                         contentAlignment = Alignment.Center,
                                         modifier = Modifier
@@ -408,9 +437,19 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                                 )
                                         )
 
-                                        if (selectedImageUri2 != null) {
+
+                                        if (drawableId != 0) {
                                             Image(
-                                                painter = rememberAsyncImagePainter(selectedImageUri2),
+                                                painter = painterResource(id = drawableId),
+                                                contentDescription = "Profile Picture",
+                                                modifier = Modifier
+                                                    .size(100.dp)
+                                                    .clip(CircleShape),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        } else {
+                                            AsyncImage(
+                                                model = flag,
                                                 contentDescription = "Profile Picture",
                                                 modifier = Modifier
                                                     .size(100.dp)
@@ -418,45 +457,56 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                                 contentScale = ContentScale.Crop
                                             )
                                         }
-                                        else {
-                                            Image(
-                                                imageVector = Icons.Default.Person,
-                                                contentDescription = "Profile Picture",
-                                                modifier = Modifier
-                                                    .size(50.dp)
-                                                    .clip(CircleShape),
-                                                contentScale = ContentScale.Crop
-                                            )
-                                        }
 
-                                        IconButton(
-                                            onClick = {
-                                                imagePickerLauncher2.launch("image/*")
-                                            },
-                                            modifier = Modifier
-                                                .align(Alignment.BottomEnd)
-                                                .offset(
-                                                    x = (1).dp,
-                                                    y = (-15).dp
-                                                )
-                                                .background(
-                                                    color = profilecircle,
-                                                    shape = CircleShape
-                                                )
-                                                .padding(8.dp)
-                                                .size(12.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Add,
-                                                contentDescription = "Upload Icon",
-                                                tint = settingsclr,
-
-                                                )
-                                        }
+//                                        if (selectedImageUri != null) {
+//                                            Image(
+//                                                painter = rememberAsyncImagePainter(selectedImageUri),
+//                                                contentDescription = "Profile Picture",
+//                                                modifier = Modifier
+//                                                    .size(100.dp)
+//                                                    .clip(CircleShape),
+//                                                contentScale = ContentScale.Crop
+//                                            )
+//                                        }
+//                                        else {
+//                                            Image(
+//                                                imageVector = Icons.Default.Person,
+//                                                contentDescription = "Profile Picture",
+//                                                modifier = Modifier
+//                                                    .size(50.dp)
+//                                                    .clip(CircleShape),
+//                                                contentScale = ContentScale.Crop
+//                                            )
+//                                        }
+//                                        IconButton(
+//                                            onClick = {
+//                                                imagePickerLauncher.launch("image/*")
+//                                            },
+//                                            modifier = Modifier
+//                                                .align(Alignment.BottomEnd)
+//                                                .offset(
+//                                                    x = (1).dp,
+//                                                    y = (-15).dp
+//                                                )
+//                                                .background(
+//                                                    color = profilecircle,
+//                                                    shape = CircleShape
+//                                                )
+//                                                .padding(8.dp)
+//                                                .size(12.dp)
+//                                        ) {
+//                                            Icon(
+//                                                imageVector = Icons.Default.Add,
+//                                                contentDescription = "Upload Icon",
+//                                                tint = settingsclr,
+//
+//                                                )
+//                                        }
                                     }
                                     Row {
                                         Text(
-                                            "Change Avatar",
+//                                            "Change Avatar",
+                                            name,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
                                             modifier = Modifier.padding(start = 6.dp),
@@ -467,7 +517,8 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                         Icon(
                                             imageVector = Icons.Default.Notifications,
                                             tint = Orange40,
-                                            contentDescription = "Character Name")
+                                            contentDescription = "Character Name"
+                                        )
                                     }
                                     Spacer(modifier = Modifier.height(10.dp))
                                     TextField(
@@ -487,9 +538,9 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                             focusedIndicatorColor = Color.Transparent,
                                             unfocusedIndicatorColor = Color.Transparent
                                         ),
-                                        value = charname2,
+                                        value = charname,
                                         onValueChange = {
-                                            charname2=it
+                                            charname=it
                                         },
                                         placeholder = { Text("Character Name") },
                                         modifier = Modifier.fillMaxWidth()
@@ -533,6 +584,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
                                             ) {
+
                                                 Icon(
                                                     imageVector = Icons.Default.KeyboardArrowRight,
                                                     tint = Color.DarkGray,
@@ -546,7 +598,10 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
                                     TextButton(
                                         modifier = Modifier.fillMaxWidth(),
                                         onClick = {
-                                            if (charname2.isNotEmpty() && selectedImageUri2 != null) {
+                                            if (charname.isNotEmpty() && selectedImageUri != null) {
+                                                coroutineScope.launch {
+                                                    navController?.popBackStack()
+                                                }
                                             }
                                         },
                                         border = BorderStroke(1.dp, Color.Red),
@@ -555,6 +610,177 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
 
                                     }
                                 }
+
+//                                1 ->  Column(
+//                                    modifier = Modifier
+//                                        .fillMaxSize()
+//                                        .padding(16.dp),
+//                                    verticalArrangement = Arrangement.Center,
+//                                    horizontalAlignment = Alignment.CenterHorizontally
+//                                ) {
+//                                    Spacer(modifier = Modifier.height(40.dp))
+//
+//                                    Box(
+//                                        contentAlignment = Alignment.Center,
+//                                        modifier = Modifier
+//                                            .size(100.dp)
+//                                    ) {
+//                                        Box(
+//                                            modifier = Modifier
+//                                                .size(80.dp)
+//                                                .background(
+//                                                    color = Color.LightGray,
+//                                                    shape = CircleShape
+//                                                )
+//                                        )
+//
+//                                        if (selectedImageUri2 != null) {
+//                                            Image(
+//                                                painter = rememberAsyncImagePainter(selectedImageUri2),
+//                                                contentDescription = "Profile Picture",
+//                                                modifier = Modifier
+//                                                    .size(100.dp)
+//                                                    .clip(CircleShape),
+//                                                contentScale = ContentScale.Crop
+//                                            )
+//                                        }
+//                                        else {
+//                                            Image(
+//                                                imageVector = Icons.Default.Person,
+//                                                contentDescription = "Profile Picture",
+//                                                modifier = Modifier
+//                                                    .size(50.dp)
+//                                                    .clip(CircleShape),
+//                                                contentScale = ContentScale.Crop
+//                                            )
+//                                        }
+//
+//                                        IconButton(
+//                                            onClick = {
+//                                                imagePickerLauncher2.launch("image/*")
+//                                            },
+//                                            modifier = Modifier
+//                                                .align(Alignment.BottomEnd)
+//                                                .offset(
+//                                                    x = (1).dp,
+//                                                    y = (-15).dp
+//                                                )
+//                                                .background(
+//                                                    color = profilecircle,
+//                                                    shape = CircleShape
+//                                                )
+//                                                .padding(8.dp)
+//                                                .size(12.dp)
+//                                        ) {
+//                                            Icon(
+//                                                imageVector = Icons.Default.Add,
+//                                                contentDescription = "Upload Icon",
+//                                                tint = settingsclr,
+//
+//                                                )
+//                                        }
+//                                    }
+//                                    Row {
+//                                        Text(
+//                                            "Change Avatar",
+//                                            maxLines = 1,
+//                                            overflow = TextOverflow.Ellipsis,
+//                                            modifier = Modifier.padding(start = 6.dp),
+//                                            style = MaterialTheme.typography.titleMedium,
+//                                            color = Orange40
+//                                        )
+//                                        Spacer(modifier = Modifier.width(10.dp))
+//                                        Icon(
+//                                            imageVector = Icons.Default.Notifications,
+//                                            tint = Orange40,
+//                                            contentDescription = "Character Name")
+//                                    }
+//                                    Spacer(modifier = Modifier.height(10.dp))
+//                                    TextField(
+//                                        leadingIcon = {
+//                                            Icon(
+//                                                imageVector = Icons.Default.Person,
+//                                                tint = Orange40,
+//                                                contentDescription = "Character Name"
+//                                            )
+//                                        },
+//                                        singleLine = true,
+//                                        maxLines = 1,
+//                                        shape = RoundedCornerShape(16.dp),
+//                                        colors = TextFieldDefaults.colors(
+//                                            focusedContainerColor = textfrilssetvideocall,
+//                                            unfocusedContainerColor = textfrilssetvideocall,
+//                                            focusedIndicatorColor = Color.Transparent,
+//                                            unfocusedIndicatorColor = Color.Transparent
+//                                        ),
+//                                        value = charname2,
+//                                        onValueChange = {
+//                                            charname2=it
+//                                        },
+//                                        placeholder = { Text("Character Name") },
+//                                        modifier = Modifier.fillMaxWidth()
+//                                    )
+//                                    Spacer(modifier = Modifier.height(10.dp))
+//                                    Box(
+//                                        modifier = Modifier
+//                                            .fillMaxWidth()
+//                                            .clip(shape = RoundedCornerShape(10.dp))
+//                                            .height(60.dp)
+//                                            .background(textfrilssetvideocall),
+//
+//                                        ) {
+//                                        Row(
+//                                            modifier = Modifier
+//                                                .fillMaxSize()
+//                                                .clickable {
+//                                                }
+//                                                .padding(horizontal = 10.dp, vertical = 5.dp),
+//                                            verticalAlignment = Alignment.CenterVertically,
+//                                            horizontalArrangement = Arrangement.SpaceBetween
+//                                        ) {
+//                                            Row(
+//                                                verticalAlignment = Alignment.CenterVertically,
+//                                            ) {
+//                                                Icon(
+//                                                    imageVector = Icons.Default.Notifications,
+//                                                    tint = Orange40,
+//                                                    contentDescription = "Character Name"
+//                                                )
+//                                                Spacer(modifier = Modifier.padding(10.dp))
+//                                                Column {
+//                                                    Text(
+//                                                        text = "Set Time",
+//                                                        fontWeight = FontWeight.W600,
+//                                                        fontSize = 16.sp
+//                                                    )
+//                                                    Text(text = "Now",fontSize = 12.sp,color = Color.DarkGray)
+//                                                }
+//                                            }
+//                                            Row(
+//                                                verticalAlignment = Alignment.CenterVertically,
+//                                            ) {
+//                                                Icon(
+//                                                    imageVector = Icons.Default.KeyboardArrowRight,
+//                                                    tint = Color.DarkGray,
+//                                                    contentDescription = "Character Name"
+//                                                )
+//                                            }
+//                                        }
+//                                    }
+//                                    Spacer(modifier = Modifier.height(15.dp))
+//                                    Spacer(modifier = Modifier.weight(1f))
+//                                    TextButton(
+//                                        modifier = Modifier.fillMaxWidth(),
+//                                        onClick = {
+//                                            if (charname2.isNotEmpty() && selectedImageUri2 != null) {
+//                                            }
+//                                        },
+//                                        border = BorderStroke(1.dp, Color.Red),
+//                                    ) {
+//                                        Text(text = "Save",color = Color.Red)
+//
+//                                    }
+//                                }
                             }
                         }
 
@@ -572,6 +798,8 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, ) {
 fun PreviewFakeMessageScreen() {
     OverlappingBoxWithRoundedCorners(
         navController = rememberNavController(),
+        flag = "drawable://img_home_messi",
+        name = "waqas",
     )
 }
 

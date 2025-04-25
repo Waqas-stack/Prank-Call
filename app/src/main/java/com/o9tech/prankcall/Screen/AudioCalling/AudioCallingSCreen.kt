@@ -75,14 +75,8 @@ fun AudioCallingScreen(
 ) {
     val safeNavController = navController ?: rememberNavController()
     val context = LocalContext.current
-//    var mediaPlayer: MediaPlayer? = null
     var currentPosition by remember { mutableStateOf(0) }
     val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
-
-
-
-
 
 
 
@@ -98,32 +92,10 @@ fun AudioCallingScreen(
         return cacheFile
     }
 
-//
-//    LaunchedEffect(audioPath) {
-//        try {
-//            val path = copyAssetToCache(context, audioPath)
-//            if (path.exists()) {
-//                mediaPlayer = MediaPlayer().apply {
-//                    setDataSource(path.absolutePath)
-//                    prepare()
-//                    start()
-//                }
-//            } else {
-////                copyAssetToCache(context, "audiocall1.mp3")
-//                copyAssetToCache(context, audioPath)
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
 
 
     fun onCallEnd() {
-        // ✅ You can do anything here:
         Toast.makeText(context, "Call Ended", Toast.LENGTH_SHORT).show()
-
-        // Or navigate to another screen (if you’re using NavController)
-        // navController.navigate("call_ended_screen")
         safeNavController.navigate("AudioCallEndedScreen/$callerName/$profileImage")
 
 
@@ -160,36 +132,13 @@ fun AudioCallingScreen(
 
 
 
-
-//    DisposableEffect(Unit) {
-//        onDispose {
-//            mediaPlayer?.stop()
-//            mediaPlayer?.release()
-//            mediaPlayer = null
-//        }
-//    }
-
     BackHandler {
         mediaPlayer.stop()
         safeNavController.popBackStack()
         mediaPlayer.release()
 //        mediaPlayer = null
         safeNavController.navigate("AudioCallEndedScreen/$callerName/$profileImage")
-
-
     }
-
-
-
-//    DisposableEffect(Unit) {
-//        onDispose {
-//            mediaPlayer.stop()
-//            mediaPlayer.release()
-//            safeNavController.navigate("AudioCallEndedScreen/$callerName/$profileImage")
-//
-//        }
-//    }
-
 
     DisposableEffect(Unit) {
         onDispose {
@@ -198,15 +147,12 @@ fun AudioCallingScreen(
                     mediaPlayer.stop()
                 }
             } catch (e: IllegalStateException) {
-                e.printStackTrace() // just in case it's in wrong state
+                e.printStackTrace()
             } finally {
                 mediaPlayer.release()
             }
         }
     }
-
-
-
     Scaffold(
         content = {
             Surface(
@@ -265,7 +211,7 @@ fun AudioCallingScreen(
                                 modifier = Modifier
                                     .padding(top = 36.dp)
                                     .clickable {
-                                        Log.d("ImageCheck", "image: $profileImage")
+                                        Log.d(" ", "image: $profileImage")
                                     }
                             ) {
                                 Image(

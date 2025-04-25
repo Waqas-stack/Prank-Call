@@ -1,12 +1,15 @@
 package com.o9tech.prankcall.Screen.AddCharacterMsg
 
 
+import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +71,8 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import com.o9tech.prankcall.Screen.AddNewCharacter.copyUriToInternalStorage
 import com.o9tech.prankcall.viewModel.MainViewModel
 
 import kotlinx.coroutines.launch
@@ -80,16 +86,16 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
     val safeNavController = navController ?: rememberNavController()
     val scope = rememberCoroutineScope()
 
-
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
-    var charname by remember { mutableStateOf("") }
+    var charname by rememberSaveable { mutableStateOf("") }
+
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
 
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        selectedImageUri = uri
+        imageUri.value = uri
     }
 
 
@@ -138,6 +144,74 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ){
+//                        Box(
+//                            contentAlignment = Alignment.Center,
+//                            modifier = Modifier
+//                                .size(120.dp)
+//                        ) {
+//                            Box(
+//                                modifier = Modifier
+//                                    .size(100.dp)
+//                                    .background(color = Color.LightGray, shape = CircleShape)
+//                            )
+//                            val selectedFakeImages by mainViewModel.selectedFakeMessage.collectAsState()
+//
+//
+//                            if (selectedFakeImages.firstOrNull() != null) {
+//                                val painter = rememberAsyncImagePainter(model = File(selectedFakeImages.first().filepath))
+//
+//                                Image(
+////                                    painter = rememberAsyncImagePainter(selectedImageUri),
+//                                    painter = rememberAsyncImagePainter(selectedFakeImages.first().uriString),
+//
+//                                    contentDescription = "Profile Picture",
+//                                    modifier = Modifier
+//                                        .size(100.dp)
+//                                        .clip(CircleShape),
+//                                    contentScale = ContentScale.Crop
+//                                )
+//                            } else {
+//                                Image(
+//                                    imageVector = Icons.Default.Person,
+//                                    contentDescription = "Profile Picture",
+//                                    modifier = Modifier
+//                                        .size(50.dp)
+//                                        .clip(CircleShape),
+//                                    contentScale = ContentScale.Crop
+//                                )
+//                            }
+//
+//
+//
+//
+//                            IconButton(
+//                                onClick = {
+//                                    safeNavController.navigate("fake_message_asset_picker")
+//
+//                                },
+//                                modifier = Modifier
+//                                    .align(Alignment.BottomEnd)
+//                                    .offset(
+//                                        x = (-5).dp,
+//                                        y = (-15).dp
+//                                    )
+//                                    .background(
+//                                        color = profilecircle,
+//                                        shape = CircleShape
+//                                    )
+//                                    .padding(8.dp)
+//                                    .size(17.dp)
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Add,
+//                                    contentDescription = "Upload Icon",
+//                                    tint = settingsclr,
+//
+//                                    )
+//                            }
+//                        }
+
+
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -148,45 +222,32 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                                     .size(100.dp)
                                     .background(color = Color.LightGray, shape = CircleShape)
                             )
-                            val selectedFakeImages by mainViewModel.selectedFakeMessage.collectAsState()
-
-
-                            if (selectedFakeImages.firstOrNull() != null) {
-                                val painter = rememberAsyncImagePainter(model = File(selectedFakeImages.first().filepath))
-
-                                Image(
-//                                    painter = rememberAsyncImagePainter(selectedImageUri),
-                                    painter = rememberAsyncImagePainter(selectedFakeImages.first().uriString),
-
-                                    contentDescription = "Profile Picture",
+                            imageUri.value?.let {
+                                AsyncImage(
+                                    model = it,
+                                    contentDescription = null,
                                     modifier = Modifier
-                                        .size(100.dp)
+                                        .size(120.dp)
                                         .clip(CircleShape),
                                     contentScale = ContentScale.Crop
                                 )
-                            } else {
-                                Image(
-                                    imageVector = Icons.Default.Person,
-                                    contentDescription = "Profile Picture",
-                                    modifier = Modifier
-                                        .size(50.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-
-
-
-
+                            } ?: Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Default Person Icon",
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .clip(CircleShape)
+                                    .padding(16.dp),
+                                tint = Color.DarkGray
+                            )
                             IconButton(
                                 onClick = {
-                                    safeNavController.navigate("fake_message_asset_picker")
-
+                                    imagePickerLauncher.launch("image/*")
                                 },
                                 modifier = Modifier
                                     .align(Alignment.BottomEnd)
                                     .offset(
-                                        x = (-5).dp,
+                                        x = 2.dp,
                                         y = (-15).dp
                                     )
                                     .background(
@@ -204,6 +265,8 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                                     )
                             }
                         }
+
+
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     TextField(
@@ -236,11 +299,21 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            if (charname.isNotEmpty() && mainViewModel.selectedFakeMessage.value.firstOrNull() != null) {
+
+                            val imagePath = imageUri.value?.let {
+                                copyUriToInternalStorage(
+                                    context,
+                                    it,
+                                    "image_${System.currentTimeMillis()}.jpg"
+                                )
+                            } ?: ""
+                            if (charname.isNotEmpty() && imagePath.isNotEmpty()) {
                                 scope.launch {
-                                    mainViewModel.saveFakeMessage(charname)
+                                    mainViewModel.saveFakeMessage(charname,imagePath)
                                     navController?.popBackStack()
                                 }
+                            } else {
+                                Toast.makeText(context, "Character name or message cannot be empty", Toast.LENGTH_SHORT).show()
                             }
                         },
                         border = BorderStroke(1.dp, Color.Red),
@@ -253,6 +326,19 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
         }
     )
 
+}
+
+
+
+fun copyUriToInternalStorage(context: Context, uri: Uri, filename: String): String {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val file = File(context.filesDir, filename)
+    inputStream?.use { input ->
+        file.outputStream().use { output ->
+            input.copyTo(output)
+        }
+    }
+    return file.absolutePath
 }
 
 

@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -157,13 +159,13 @@ import com.o9tech.prankcall.ui.theme.greytext
 @Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun SearchScreen(navController: NavHostController?) {
+fun SearchScreen(navController: NavHostController?,) {
     val safeNavController = navController ?: rememberNavController()
-    var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
+        var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
 
     val itemList = listOf("Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grapes", "Honeydew", "Ice Plant", "Jackfruit")
 
-    val filteredList = itemList.filter { it.contains(searchQuery.text, ignoreCase = true) }
+
 
     val fakeMessage = listOf(
         LanguageItem("English", R.drawable.uk),
@@ -179,6 +181,10 @@ fun SearchScreen(navController: NavHostController?) {
         LanguageItem("Turkey", R.drawable.turkey),
         LanguageItem("UAE", R.drawable.dubai),
     )
+
+    val filteredList = fakeMessage.filter {
+        it.name.startsWith(searchQuery.text, ignoreCase = true)
+    }
 
     Scaffold(
         topBar = {
@@ -213,6 +219,17 @@ fun SearchScreen(navController: NavHostController?) {
                                 contentDescription = "Search",
                                 tint = Color.Black
                             )
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                searchQuery = TextFieldValue("")
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = "Clear",
+                                    tint = Color.Black
+                                )
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -249,10 +266,7 @@ fun SearchScreen(navController: NavHostController?) {
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(fakeMessage.size) { item ->
-                            val item = fakeMessage[item]
-
-
+                        itemsIndexed(filteredList) { index, languageItem ->
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier.padding(8.dp)
@@ -265,7 +279,7 @@ fun SearchScreen(navController: NavHostController?) {
                                         .background(Color.LightGray)
                                 ) {
                                     Image(
-                                        painter = painterResource(id = item.flag),
+                                        painter = painterResource(id = languageItem.flag),
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
@@ -274,7 +288,7 @@ fun SearchScreen(navController: NavHostController?) {
                                     )
                                 }
                                 Text(
-                                    text = item.name,
+                                    text = languageItem.name,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center

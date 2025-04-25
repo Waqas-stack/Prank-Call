@@ -62,19 +62,10 @@ import com.o9tech.prankcall.ui.theme.white
 fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, audiopath: String) {
 
     val safeNavController = navController ?: rememberNavController()
-
-
     var isChecked by remember { mutableStateOf(false) }
     var isChecked2 by remember { mutableStateOf(false) }
     var isChecked3 by remember { mutableStateOf(false) }
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        selectedImageUri = uri
-    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -132,25 +123,14 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, au
                                 .size(100.dp)
                                 .background(color = Color.LightGray, shape = CircleShape)
                         )
-                        if (selectedImageUri != null) {
-                            Image(
-                                painter = rememberAsyncImagePainter(selectedImageUri),
-                                contentDescription = "Profile Picture",
-                                modifier = Modifier
-                                    .size(120.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Image(
-                                painter = painterResource(id = flag),
-                                contentDescription = "Profile Picture",
-                                modifier = Modifier
-                                    .size(120.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
+                        Image(
+                            painter = painterResource(id = flag),
+                            contentDescription = "Profile Picture",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(

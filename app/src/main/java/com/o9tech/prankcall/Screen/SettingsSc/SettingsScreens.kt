@@ -190,9 +190,6 @@ fun SettingsScreen(navController: NavHostController?) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
-                                        safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
-                                    }
                                     .padding(vertical = 5.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
@@ -267,7 +264,7 @@ fun SettingsScreen(navController: NavHostController?) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        safeNavController.navigate(Routes.FakeMessage)
+//                                        safeNavController.navigate(Routes.FakeMessage)
                                     }
                                     .padding(vertical = 5.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,

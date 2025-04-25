@@ -30,11 +30,13 @@ class MainViewModel @Inject constructor(
     val userDetailsList: StateFlow<List<UserDetailsEntity>> = mainRepo.getAllUserDetails()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    fun insertUserDetails(name: String,) {
+    fun insertUserDetails(name: String, imagePath: String, videoPath: String) {
         val userDetailsEntity = UserDetailsEntity(
             name = name,
-            imageName =  _selectedImages.value.first().filepath,
-            videoPath = _selectedVideos.value.first().filepath
+            imageName = imagePath,
+            videoPath = videoPath
+//            imageName =  _selectedImages.value.first().filepath,
+//            videoPath = _selectedVideos.value.first().filepath
         )
         viewModelScope.launch {
             mainRepo.insertUserDetails(userDetailsEntity)
@@ -121,9 +123,13 @@ class MainViewModel @Inject constructor(
     val fakeMessage: StateFlow<List<MessageEntity>> = mainRepo.getFakeMessage()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun saveFakeMessage(name: String,) {
+    fun saveFakeMessage(name: String, imagePath: String) {
         viewModelScope.launch {
-            mainRepo.InsertFakeMessage(MessageEntity(name = name, imageUri = _selectedFakeMessage.value.first().filepath))
+            mainRepo.InsertFakeMessage(MessageEntity(name = name,
+                imageUri = imagePath,
+//                imageUri = _selectedFakeMessage.value.first().filepath
+            )
+            )
         }
     }
 

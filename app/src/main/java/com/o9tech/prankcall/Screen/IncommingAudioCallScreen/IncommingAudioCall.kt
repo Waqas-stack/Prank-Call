@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.R
 
 @Composable
@@ -122,7 +123,13 @@ fun IncommingAudioCall(
                                 text = "Decline",
                                 backgroundColor = Color.Red,
                                 onClick = {
-                                    safeNavController.popBackStack()
+//                                    safeNavController.popBackStack()
+                                    navController?.navigate(Routes.FakeAudioScreen) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            inclusive = false // Don't remove root/start screen
+                                        }
+                                        launchSingleTop = true // Avoid multiple instances
+                                    }
                                 }
 
                             )
