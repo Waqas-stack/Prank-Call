@@ -1,7 +1,9 @@
 package com.o9tech.prankcall.Screen.SettingsSc
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -73,6 +75,7 @@ import com.o9tech.prankcall.ui.theme.grey
 import com.o9tech.prankcall.ui.theme.settingsclr
 import com.o9tech.prankcall.ui.theme.white
 import com.o9tech.prankcall.utils.PreferenceHelper
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -84,9 +87,10 @@ fun SettingsScreen(navController: NavHostController?) {
     val preferenceHelper = remember { PreferenceHelper(context) }
     val defaultLang = Languagesis("English", R.drawable.usa,"en")
     val selectedLang = remember { preferenceHelper.getLanguage() ?: defaultLang }
+    val packageName = context.packageName
+    val appLink = "https://play.google.com/store/apps/details?id=$packageName"
 
 
-//    val selectedLang = remember { preferenceHelper.getLanguage() }
 
     Scaffold(
         topBar = {
@@ -136,9 +140,6 @@ fun SettingsScreen(navController: NavHostController?) {
                         .fillMaxSize()
                         .background(white)
                 ) {
-
-
-//                    Text(text = "General", fontSize = 16.sp, fontWeight = FontWeight.W600)
                     Text( text = stringResource(R.string.gernal), fontSize = 16.sp, fontWeight = FontWeight.W600)
                     Card(
                         modifier = Modifier
@@ -178,7 +179,6 @@ fun SettingsScreen(navController: NavHostController?) {
 
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
-//                                    Text(text = "Languages", fontSize = 16.sp)
                                     Text(text = stringResource(R.string.language), fontSize = 16.sp)
                                 }
                                 Row(
@@ -235,9 +235,8 @@ fun SettingsScreen(navController: NavHostController?) {
                                     .clickable {
                                         shareText(
                                             context,
-                                            "Hey! Check out this amazing app: https://play.google.com/store/apps/details?id=com.yourap"
+                                            "Hey! Check out this amazing app: $appLink"
                                         )
-
                                     }
                                     .padding(vertical = 5.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -318,6 +317,7 @@ fun SettingsScreen(navController: NavHostController?) {
                         onSubmit = { rating ->
                             Log.d("RateUs", "User rated: $rating stars")
                             showDialog = false
+                            openAppInPlayStore(context)
                         }
                     )
                 }
@@ -344,6 +344,7 @@ fun CustomRateUsDialog(
     onDismiss: () -> Unit,
     onSubmit: (Int) -> Unit,
 ) {
+    val context = LocalContext.current
     if (showDialog) {
         Dialog(onDismissRequest = onDismiss) {
             Card(
@@ -383,7 +384,10 @@ fun CustomRateUsDialog(
                     var selectedRating by rememberSaveable { mutableStateOf(0) }
                     Row(horizontalArrangement = Arrangement.Center) {
                         (1..5).forEach { star ->
-                            IconButton(onClick = { selectedRating = star }) {
+                            IconButton(onClick = {
+                                selectedRating = star
+                                openAppInPlayStore(context)
+                            }) {
                                 Icon(
                                     imageVector = Icons.Default.Star,
                                     contentDescription = "Rating Star",
@@ -414,6 +418,28 @@ fun CustomRateUsDialog(
 }
 
 
+
+fun openAppInPlayStore(context: Context) {
+    val packageName = context.packageName
+    val uri = "market://details?id=$packageName".toUri()
+    val goToMarket = Intent(Intent.ACTION_VIEW, uri).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+    }
+
+    try {
+        context.startActivity(goToMarket)
+    } catch (e: ActivityNotFoundException) {
+        // Fallback if Play Store is not installed
+        context.startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+            )
+        )
+    }
+}
 
 
 

@@ -157,13 +157,7 @@ fun LanguageScreen(navController: NavHostController?) {
                                 selectedLanguage = language
                                 val newContext = LocaleManager.setLocale(context, language.localeCode)
                                 preferenceHelper.saveLanguage(language)
-
                                 (context as Activity).recreate()
-
-
-//                                val intent = (context as Activity).intent
-//                                context.finish()
-//                                context.startActivity(intent)
                                       },
                             modifier = Modifier
                                 .fillMaxWidth()

@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -45,39 +46,9 @@ import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.Orange40
 import com.o9tech.prankcall.ui.theme.grey
 
-//@Composable
-//fun ChatScreen() {
-//
-//    Scaffold {
-//        contentPadding ->
-//        // Your chat screen content goes here
-//        // For example, you can use a Column to display messages
-//        // and a TextField for input.
-//
-//        // Example placeholder content
-//        Column(
-//            modifier = androidx.compose.ui.Modifier
-//                .fillMaxSize()
-//                .padding(contentPadding)
-//        ) {
-//            // Placeholder for chat messages
-//    Text("Chat messages will be displayed here.")
-//
-//            // Placeholder for input field
-//
-//            TextField(
-//                value = "",
-//                onValueChange = {},
-//                label = { androidx.compose.material3.Text("Type a message") }
-//            )
-//        }
-//    }
-//
-//}
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ChatScreen(navController: NavHostController) {
     val viewModel: ChatViewModel = viewModel()
@@ -196,7 +167,11 @@ fun ChatBubble(message: ChatMessage) {
 
 
 
-data class ChatMessage(
-    val text: String,
-    val isSentByMe: Boolean
-)
+@Preview(showBackground = true)
+@Composable
+fun ChatScreenPreview() {
+    val navController = rememberNavController()
+    ChatScreen(navController = navController)
+}
+
+

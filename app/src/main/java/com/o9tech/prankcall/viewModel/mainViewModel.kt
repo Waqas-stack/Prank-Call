@@ -80,12 +80,15 @@ class MainViewModel @Inject constructor(
     }
     private val _selectedFakeMessage = MutableStateFlow<List<AssetInfo>>(emptyList())
     val selectedFakeMessage: StateFlow<List<AssetInfo>> = _selectedFakeMessage
+
     fun updateSelectedFakeMessage(newImages: List<AssetInfo>) {
         _selectedFakeMessage.value = newImages
     }
+
     fun clearSelectedFakeMessage() {
         _selectedFakeMessage.value = emptyList()
     }
+
     fun updateSelectedImages(newImages: List<AssetInfo>) {
 
         _selectedImages.value = newImages
@@ -94,6 +97,7 @@ class MainViewModel @Inject constructor(
     fun clearSelectedVideos() {
         _selectedVideos.value = emptyList()
     }
+
     fun clearSelectedImages() {
         _selectedImages.value = emptyList()
     }
@@ -125,7 +129,8 @@ class MainViewModel @Inject constructor(
 
     fun saveFakeMessage(name: String, imagePath: String) {
         viewModelScope.launch {
-            mainRepo.InsertFakeMessage(MessageEntity(name = name,
+            mainRepo.InsertFakeMessage(MessageEntity(
+                name = name,
                 imageUri = imagePath,
 //                imageUri = _selectedFakeMessage.value.first().filepath
             )

@@ -22,9 +22,11 @@ class ChatViewModel  @Inject constructor() : ViewModel() {
             // Simulate reply after sending
 //            messages = messages + ChatMessage("Reply to: $message", isSentByMe = false)
             viewModelScope.launch {
-                delay(1000L) // 1 second delay
+                delay(1000L)
                 messages = messages + ChatMessage("Reply to: $message", isSentByMe = false)
             }
         }
     }
 }
+
+
