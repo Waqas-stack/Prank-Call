@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -35,6 +37,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,6 +47,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
 import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.DataModel.FakeMessage
 import com.o9tech.prankcall.DataModel.FakeVideoMessage
@@ -59,12 +64,15 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
     val safeNavController = navController ?: rememberNavController()
     val fakeMessages = mainViewModel.fakeMessage.collectAsState().value
 
+
     val predefinedItems = arrayListOf<FakeMessage>(
-        FakeMessage("Add New", "drawable://accept",  true),
-        FakeMessage("Jisoo", "drawable://img_home_iu",true),
+        FakeMessage(stringResource(R.string.add_new), "drawable://add_add",  true),
+        FakeMessage("Jisoo", "drawable://img_get_started_jisoo",true),
         FakeMessage("Messi", "drawable://img_home_messi",true),
-        FakeMessage("Ronaldo", "drawable://img_get_started_ronadol",true),
+        FakeMessage("jennie", "drawable://img_home_selena_gomez",true),
     )
+
+
     val context= LocalContext.current
 
     predefinedItems.addAll(fakeMessages.map {
@@ -75,7 +83,8 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
             TopAppBar(
                 title = {
                     Text(
-                        "Fake message",
+//                        "Fake message",
+                        text = stringResource(R.string.fake_message),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
@@ -83,16 +92,16 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                         fontWeight = FontWeight.Bold
                     )
                 },
-                actions = {
-                    IconButton(onClick = {
-                        safeNavController.navigate(Routes.Search)
-                    }) {
-                        Icon(imageVector = Icons.Default.Search,
-                            contentDescription = "search",
-                            modifier = Modifier.size(34.dp)
-                        )
-                    }
-                },
+//                actions = {
+//                    IconButton(onClick = {
+//                        safeNavController.navigate(Routes.Search)
+//                    }) {
+//                        Icon(imageVector = Icons.Default.Search,
+//                            contentDescription = "search",
+//                            modifier = Modifier.size(34.dp)
+//                        )
+//                    }
+//                },
                 navigationIcon = {
                     IconButton(onClick = { safeNavController.popBackStack() }) {
                         Icon(
@@ -117,70 +126,95 @@ fun FakeMessageScreen(navController: NavHostController?, mainViewModel: MainView
                     .fillMaxSize()
                     .padding(it)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier.fillMaxSize().background(color = Color.White).padding(5.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(0.dp)
-                ) {
-                    itemsIndexed(predefinedItems) { index, item ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .clip(CircleShape)
-                                    .clickable {
-                                        when (index) {
-                                            0 -> {
-                                                safeNavController.navigate(Routes.AddCharacterMsg)
-                                            }
-                                            else -> {
-//                                                safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
-                                                safeNavController.navigate(
-                                                    "OverlappingBoxWithRoundedCorners/${item.name}/${Uri.encode(item.pic)}"
-                                                )
+                Column (
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Color.White)
+                            .padding(5.dp),
+                        //                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(0.dp)
+                    ) {
+                        itemsIndexed(predefinedItems) { index, item ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            when (index) {
+                                                0 -> {
+                                                    safeNavController.navigate(Routes.AddCharacterMsg)
+                                                }
+
+                                                else -> {
+                                                    //                                                safeNavController.navigate(Routes.OverlappingBoxWithRoundedCorners)
+                                                    safeNavController.navigate(
+                                                        "OverlappingBoxWithRoundedCorners/${item.name}/${
+                                                            Uri.encode(
+                                                                item.pic
+                                                            )
+                                                        }"
+                                                    )
+                                                }
                                             }
                                         }
+                                        .background(if (index == 0) Orange40 else Color.LightGray)
+                                ) {
+                                    val drawableId = context.resources.getIdentifier(
+                                        item.pic.substringAfter("drawable://"),
+                                        "drawable",
+                                        context.packageName
+                                    )
+                                    if (item.isDrawable) {
+                                        Image(
+                                            painter = painterResource(id = drawableId),
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .size(100.dp)
+                                                .clip(CircleShape),
+                                        )
+                                    } else {
+                                        AsyncImage(
+                                            model = item.pic, contentDescription = null,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .size(100.dp)
+                                                .clip(CircleShape),
+                                        )
                                     }
-                                    .background(if (index == 0) Orange40 else Color.LightGray)
-                            ) {
-                                val drawableId = context.resources.getIdentifier(
-                                    item.pic.substringAfter("drawable://"),
-                                    "drawable",
-                                    context.packageName
-                                )
-                                if(item.isDrawable){
-                                    Image(
-                                        painter =painterResource(id = drawableId),
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .size(100.dp)
-                                            .clip(CircleShape),
-                                   )
                                 }
-                                else{
-                                    AsyncImage(model = item.pic, contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .size(100.dp)
-                                            .clip(CircleShape),)
-                                }}
-                            Spacer(modifier = Modifier.size(8.dp))
+                                Spacer(modifier = Modifier.size(8.dp))
 
-                            Text(
-                                text = item.name,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
+                                Text(
+                                    text = item.name,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
                 }
+
+
+
 
             }
         }

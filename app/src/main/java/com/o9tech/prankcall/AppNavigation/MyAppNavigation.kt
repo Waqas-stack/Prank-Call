@@ -16,6 +16,7 @@ import com.o9tech.prankcall.Screen.AddNewCharacter.AddCharacterSCreen
 import com.o9tech.prankcall.Screen.AudioCallEnded.AudioCallEndedScreen
 import com.o9tech.prankcall.Screen.AudioCalling.AudioCallingScreen
 import com.o9tech.prankcall.Screen.Callscreen.CallScreen
+import com.o9tech.prankcall.Screen.Chat.ChatScreen
 import com.o9tech.prankcall.Screen.ChooseTheme.ChooseThemeScreen
 import com.o9tech.prankcall.Screen.FakeMessage.FakeMessageScreen
 import com.o9tech.prankcall.Screen.FakeVideos.FakeVideoScreen
@@ -112,18 +113,21 @@ fun Navigation() {
                 }
             )
         }
-        composable("VideoCallingScreen/{name}/{pic}") { backStackEntry ->
+        composable("VideoCallingScreen/{name}/{pic}/{path}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val pic = backStackEntry.arguments?.getString("pic") ?: ""
+            val path  = backStackEntry.arguments?.getString("path") ?: ""
             val decodedPic = Uri.decode(pic)
             VideoCallingScreen(
                 navController,
                 callerName = name,
                 callerImage = decodedPic,
+                videoPath = path,
                 onToggleVideo = {},
                 onToggleMic = {  },
                 onToggleSpeaker = {  },
-                onEndCall = {  })
+                onEndCall = {}
+            )
         }
         composable(
             "SetCallScreen/{name}/{flag}/{audioPath}",
@@ -139,6 +143,8 @@ fun Navigation() {
 
             SetCallScreen(navController, name, flag,audioPath)
         }
+
+
 //        composable("asset_picker") {
 //            ImagePicker(
 //                onPicked = { assets ->
@@ -254,6 +260,13 @@ fun Navigation() {
                     callerName = name,
                 )
         }
+        composable("ChatScreen") { backStackEntry ->
+//            val name = backStackEntry.arguments?.getString("name") ?: ""
+//            val flag = backStackEntry.arguments?.getInt("flag") ?: 0
+//            val audioPath = Uri.decode(backStackEntry.arguments?.getString("audioPath") ?: "")
+            ChatScreen(navController)
+        }
+
         composable("AudioCallEndedScreen/{name}/{flag}", arguments = listOf(
             navArgument("name") { type = NavType.StringType },
             navArgument("flag") { type = NavType.IntType }

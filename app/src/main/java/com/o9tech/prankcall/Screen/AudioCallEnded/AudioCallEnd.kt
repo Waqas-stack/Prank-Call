@@ -1,5 +1,7 @@
 package com.o9tech.prankcall.Screen.AudioCallEnded
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -41,7 +43,9 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,12 +53,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.Screen.SettingsSc.CustomRateUsDialog
-
-
-
+import com.o9tech.prankcall.Screen.callended.loadAd
 
 
 @Composable
@@ -66,6 +74,34 @@ fun AudioCallEndedScreen(
     onCallAgain: () -> Unit
 ) {
     val safeNavController = navController ?: rememberNavController()
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+
+
+
+    var interstitialAd: InterstitialAd? by remember { mutableStateOf(null) }
+    var shouldShowAd by remember { mutableStateOf(false) }
+
+    if (shouldShowAd) {
+        loadsAd(context) { ad ->
+            interstitialAd = ad
+            ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    interstitialAd = null
+                    shouldShowAd = false
+                    safeNavController.popBackStack() // Navigate back
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    interstitialAd = null
+                    shouldShowAd = false
+                }
+            }
+            activity?.let { ad.show(it) }
+        }
+    }
+
     Scaffold (
         content = {
             Surface(
@@ -84,28 +120,28 @@ fun AudioCallEndedScreen(
                             alpha = 0.22f
                         )
                 ) {
-                    IconButton(
-                        modifier = Modifier.align(Alignment.TopStart).padding(16.dp),
-                        onClick = {
-                            navController?.navigate(Routes.FakeAudioScreen) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = false // Don't remove root/start screen
-                                }
-                                launchSingleTop = true // Avoid multiple instances
-                            }
-
-//                            safeNavController.popBackStack()
+//                    IconButton(
+//                        modifier = Modifier.align(Alignment.TopStart).padding(16.dp),
+//                        onClick = {
 //                            navController?.navigate(Routes.FakeAudioScreen) {
-//                                popUpTo(0) { inclusive = true }
-//                                launchSingleTop = true
+//                                popUpTo(navController.graph.startDestinationId) {
+//                                    inclusive = false // Don't remove root/start screen
+//                                }
+//                                launchSingleTop = true // Avoid multiple instances
 //                            }
-                        }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrowleft),
-                            contentDescription = "Back",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp))
-                    }
+//
+////                            safeNavController.popBackStack()
+////                            navController?.navigate(Routes.FakeAudioScreen) {
+////                                popUpTo(0) { inclusive = true }
+////                                launchSingleTop = true
+////                            }
+//                        }) {
+//                        Icon(
+//                            painter = painterResource(id = R.drawable.arrowleft),
+//                            contentDescription = "Back",
+//                            tint = Color.White,
+//                            modifier = Modifier.size(24.dp))
+//                    }
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -139,7 +175,8 @@ fun AudioCallEndedScreen(
                                 }
                             }
                             Text(
-                                text = "Call ended",
+//                                text = "Call ended",
+                                text = stringResource(R.string.Call_ended),
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.W400,
                                 color = Color.White
@@ -155,7 +192,8 @@ fun AudioCallEndedScreen(
                             verticalArrangement = Arrangement.Center
                         ){
                             Text(
-                                text = "How was the quality of your call?",
+//                                text = "How was the quality of your call?",
+                                text = stringResource(R.string.how_was_the_qulaity_of_call),
                                 fontSize = 14.sp,
                                 color = Color.White.copy(alpha = 0.8f)
                             )
@@ -167,15 +205,23 @@ fun AudioCallEndedScreen(
                         ) {
                             CircularButton(
                                 icon = R.drawable.baseline_call_end_24,
-                                text = "Return",
+//                                text = "Return",
+                                text = stringResource(R.string.return_is),
                                 backgroundColor = Color.Red,
-                                onClick = onReturn
+                                onClick = {
+                                    shouldShowAd = true
+
+                                }
                             )
                             CircularButtonWithWave(
                                 icon = R.drawable.call,
-                                text = "Call again",
+//                                text = "Call again",
+                                text = stringResource(R.string.call_again),
                                 backgroundColor = Color.Blue,
-                                onClick = onCallAgain
+                                onClick = {
+                                    shouldShowAd = true
+
+                                }
                             )
                         }
                     }
@@ -324,5 +370,24 @@ fun PreviewCallEndedScreen() {
         onReturn = {},
         callername = "Messi",
         onCallAgain = {}
+    )
+}
+
+
+
+fun loadsAd(context: Context, onAdLoaded: (InterstitialAd) -> Unit) {
+    InterstitialAd.load(
+        context,
+        "ca-app-pub-3940256099942544/1033173712", // test ad unit
+        AdRequest.Builder().build(),
+        object : InterstitialAdLoadCallback() {
+            override fun onAdLoaded(ad: InterstitialAd) {
+                onAdLoaded(ad)
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                println("Ad failed: ${error.message}")
+            }
+        }
     )
 }

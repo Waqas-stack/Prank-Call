@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="test_name">恶作剧电话</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="share_app">分享应用</string>
+    <string name="rate_us">给我们评分</string>
+    <string name="more_app">更多应用</string>
+    <string name="settings">设置</string>
+    <string name="gernal">通用</string>
+    <string name="fake_video_call">假视频通话</string>
+    <string name="fake_message">假消息</string>
+    <string name="fake_call">假电话</string>
+    <string name="add_new">添加新内容</string>
+    <string name="set_video_call">设置视频通话</string>
+    <string name="incoming_">来电</string>
+    <string name="calling">正在呼叫</string>
+    <string name="set_time">设置时间</string>
+    <string name="video_call">视频通话</string>
+    <string name="Accept">接受</string>
+    <string name="Decline">拒绝</string>
+    <string name="Call_ended">通话结束</string>
+    <string name="how_was_the_qulaity_of_call">通话质量如何？</string>
+    <string name="call_again">再次拨打</string>
+    <string name="return_is">返回</string>
+    <string name="set_time_delay">设置延迟时间</string>
+    <string name="save">保存</string>
+    <string name="cancle">取消</string>
+    <string name="add_new_character">添加新角色</string>
+    <string name="character_name">角色名称</string>
+    <string name="upload_videos">上传视频</string>
+    <string name="name_contact">联系人名称</string>
+    <string name="set_fake_message">设置假消息</string>
+    <string name="friend">朋友</string>
+    <string name="Famous_peole">名人</string>
+    <string name="set_call">设置电话</string>
+    <string name="sound">声音</string>
+    <string name="vibration">振动</string>
+    <string name="flash">闪光</string>
+    <string name="call">拨打电话</string>
+    <string name="language">语言</string>
+    <string name="fake_video_call_chat">假视频通话和聊天</string>
+    <string name="now">现在</string>
+    <string name="more">更多</string>
+
+
+    <string name="thanks_for_using">感谢使用恶作剧应用</string>
+    <string name="please_rate_us">如果您能为我们评分，我们将不胜感激</string>
+    <string name="rate_now">立即评分</string>
+
+    <string name="call_delay_message">我们将在 %1$d 秒后拨打电话，请不要关闭手机</string>
+    <string name="got_it">知道了</string>
+    <string name="double_tap_exit">双击退出</string>
+
+
+</resources>

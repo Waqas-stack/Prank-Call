@@ -37,6 +37,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -69,9 +70,12 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
 import com.o9tech.prankcall.Screen.AddNewCharacter.copyUriToInternalStorage
 import com.o9tech.prankcall.viewModel.MainViewModel
 
@@ -116,7 +120,8 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                 },
                 title = {
                     Text(
-                        "Add New Character",
+//                        "Add New Character",
+                        text = stringResource(R.string.add_new_character),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
@@ -124,19 +129,25 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                         color = Orange40
                     )
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                ),
             )
         },
         content = {
             Surface(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize().background(color = Color.White)
                     .padding(it)
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxSize().background(color = Color.White)
                         .padding(16.dp)
                 ) {
+                    Spacer(modifier = Modifier.height(5.dp))
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
+                    Spacer(modifier = Modifier.height(15.dp))
                     Row (
                         modifier = Modifier
                             .fillMaxWidth()
@@ -144,74 +155,6 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ){
-//                        Box(
-//                            contentAlignment = Alignment.Center,
-//                            modifier = Modifier
-//                                .size(120.dp)
-//                        ) {
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(100.dp)
-//                                    .background(color = Color.LightGray, shape = CircleShape)
-//                            )
-//                            val selectedFakeImages by mainViewModel.selectedFakeMessage.collectAsState()
-//
-//
-//                            if (selectedFakeImages.firstOrNull() != null) {
-//                                val painter = rememberAsyncImagePainter(model = File(selectedFakeImages.first().filepath))
-//
-//                                Image(
-////                                    painter = rememberAsyncImagePainter(selectedImageUri),
-//                                    painter = rememberAsyncImagePainter(selectedFakeImages.first().uriString),
-//
-//                                    contentDescription = "Profile Picture",
-//                                    modifier = Modifier
-//                                        .size(100.dp)
-//                                        .clip(CircleShape),
-//                                    contentScale = ContentScale.Crop
-//                                )
-//                            } else {
-//                                Image(
-//                                    imageVector = Icons.Default.Person,
-//                                    contentDescription = "Profile Picture",
-//                                    modifier = Modifier
-//                                        .size(50.dp)
-//                                        .clip(CircleShape),
-//                                    contentScale = ContentScale.Crop
-//                                )
-//                            }
-//
-//
-//
-//
-//                            IconButton(
-//                                onClick = {
-//                                    safeNavController.navigate("fake_message_asset_picker")
-//
-//                                },
-//                                modifier = Modifier
-//                                    .align(Alignment.BottomEnd)
-//                                    .offset(
-//                                        x = (-5).dp,
-//                                        y = (-15).dp
-//                                    )
-//                                    .background(
-//                                        color = profilecircle,
-//                                        shape = CircleShape
-//                                    )
-//                                    .padding(8.dp)
-//                                    .size(17.dp)
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Add,
-//                                    contentDescription = "Upload Icon",
-//                                    tint = settingsclr,
-//
-//                                    )
-//                            }
-//                        }
-
-
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -291,7 +234,8 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                         onValueChange = {
                             charname=it
                         },
-                        placeholder = { Text("Name contact") },
+//                        placeholder = { Text("Name contact") },
+                        placeholder = { Text(text = stringResource(R.string.name_contact),) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(10.dp))
@@ -318,7 +262,8 @@ fun AddCharacterMsg(navController: NavHostController?, mainViewModel: MainViewMo
                         },
                         border = BorderStroke(1.dp, Color.Red),
                     ) {
-                        Text(text = "Save",color = Color.Red)
+//                        Text(text = "Save",color = Color.Red)
+                        Text(text = stringResource(R.string.save),color = Color.Red)
 
                     }
                 }

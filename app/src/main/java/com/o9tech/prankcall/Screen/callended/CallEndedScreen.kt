@@ -1,5 +1,7 @@
 package com.o9tech.prankcall.Screen.callended
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -32,6 +34,12 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.o9tech.prankcall.R
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.o9tech.prankcall.Screen.SettingsSc.CustomRateUsDialog
 
 
@@ -43,9 +51,84 @@ fun CallEndedScreen(
     onCallAgain: () -> Unit
 ) {
     val safeNavController = navController ?: rememberNavController()
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+
+    var loadInterstitialAd by remember { mutableStateOf(true) }
+
+    var interstitialAd: InterstitialAd? by remember { mutableStateOf(null) }
+    var shouldShowAd by remember { mutableStateOf(false) }
+
+
+
+    LaunchedEffect(loadInterstitialAd) {
+        if(loadInterstitialAd){
+            InterstitialAd.load(
+                context,
+                "ca-app-pub-3940256099942544/1033173712",
+                AdRequest.Builder().build(),
+                object : InterstitialAdLoadCallback() {
+                    override fun onAdFailedToLoad(error: LoadAdError) {
+                        println("Ad failed to load: ${error.message}")
+                    }
+                    override fun onAdLoaded(loadedAd: InterstitialAd) {
+                        println("Ad Loaded Successfully")
+                        interstitialAd = loadedAd
+                    }
+                }
+            )
+        }
+    }
+
+
+//    LaunchedEffect(interstitialAd != null) {
+//        loadInterstitialAd = false
+//        if (interstitialAd != null) {
+//            interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+//                override fun onAdDismissedFullScreenContent() {
+//                    super.onAdDismissedFullScreenContent()
+//                    println("Ad dismissed, resetting value...")
+//                    interstitialAd = null
+//                    loadInterstitialAd=false
+//                }
+//
+//                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+//                    println("Ad failed to show: ${adError.message}")
+//                    interstitialAd = null
+//                }
+//            }
+//            activity?.let {
+//                interstitialAd?.show(it)
+//            }
+//        }
+//    }
+
+
+
+
+    if (shouldShowAd) {
+        loadAd(context) { ad ->
+            interstitialAd = ad
+            ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    interstitialAd = null
+                    shouldShowAd = false
+                    safeNavController.popBackStack() // Navigate back
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    interstitialAd = null
+                    shouldShowAd = false
+                }
+            }
+            activity?.let { ad.show(it) }
+        }
+    }
+
 
     val drawableId = LocalContext.current.resources.getIdentifier(
-        profileImage.substringAfter("drawable://"), // Extract drawable name
+        profileImage.substringAfter("drawable://"),
         "drawable",
         LocalContext.current.packageName
     )
@@ -68,17 +151,17 @@ fun CallEndedScreen(
                            alpha = 0.22f
                        )
                ) {
-                   IconButton(
-                       modifier = Modifier.align(Alignment.TopStart).padding(16.dp),
-                       onClick = {
-                           safeNavController.popBackStack()
-                       }) {
-                       Icon(
-                           painter = painterResource(id = R.drawable.arrowleft),
-                           contentDescription = "Back",
-                           tint = Color.White,
-                           modifier = Modifier.size(24.dp))
-                   }
+//                   IconButton(
+//                       modifier = Modifier.align(Alignment.TopStart).padding(16.dp),
+//                       onClick = {
+//                           safeNavController.popBackStack()
+//                       }) {
+//                       Icon(
+//                           painter = painterResource(id = R.drawable.arrowleft),
+//                           contentDescription = "Back",
+//                           tint = Color.White,
+//                           modifier = Modifier.size(24.dp))
+//                   }
                    Column(
                        modifier = Modifier
                            .fillMaxSize()
@@ -120,7 +203,8 @@ fun CallEndedScreen(
                                )
                            }
                            Text(
-                               text = "Call ended",
+//                               text = "Call ended",
+                               text = stringResource(R.string.Call_ended),
                                fontSize = 22.sp,
                                fontWeight = FontWeight.W400,
                                color = Color.White
@@ -136,7 +220,9 @@ fun CallEndedScreen(
                            verticalArrangement = Arrangement.Center
                        ){
                            Text(
-                               text = "How was the quality of your call?",
+//                               text = "How was the quality of your call?",
+                               text = stringResource(R.string.how_was_the_qulaity_of_call),
+
                                fontSize = 14.sp,
                                color = Color.White.copy(alpha = 0.8f)
                            )
@@ -146,18 +232,64 @@ fun CallEndedScreen(
                            modifier = Modifier.fillMaxWidth(),
                            horizontalArrangement = Arrangement.SpaceEvenly
                        ) {
+//                           CircularButton(
+//                               icon = R.drawable.baseline_call_end_24,
+//                               text = "Return",
+//                               backgroundColor = Color.Gray,
+//                               onClick = {
+//                                   loadInterstitialAd= true
+//                               }
+//                           )
+
+
                            CircularButton(
                                icon = R.drawable.baseline_call_end_24,
-                               text = "Return",
+//                               text = "Return",
+                               text = stringResource(R.string.return_is),
+
                                backgroundColor = Color.Gray,
-                               onClick = onReturn
+                               onClick = {
+                                   shouldShowAd = true
+
+                               }
+//                               onClick = {
+//                                   if (interstitialAd != null) {
+//                                       interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+//                                           override fun onAdDismissedFullScreenContent() {
+//                                               println("Ad dismissed, resetting value...")
+//                                               interstitialAd = null
+//                                               loadInterstitialAd = true // load next ad
+//                                               safeNavController.popBackStack()
+//
+//                                           }
+//
+//                                           override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+//                                               println("Ad failed to show: ${adError.message}")
+//                                               interstitialAd = null
+//                                           }
+//                                       }
+//                                       activity?.let {
+//                                           interstitialAd?.show(it)
+//                                       }
+//                                   } else {
+//                                       // Optional: show a message ad not ready
+//                                       println("Ad not loaded yet")
+//                                   }
+//                               }
                            )
+
+
 
                            CircularButtonWithWave(
                                icon = R.drawable.videocall,
-                               text = "Call again",
+//                               text = "Call again",
+                               text = stringResource(R.string.call_again),
+
                                backgroundColor = Color(0xFFFF9800),
-                               onClick = onCallAgain
+                               onClick = {
+                                   shouldShowAd = true
+
+                               }
                            )
                        }
                    }
@@ -360,3 +492,24 @@ fun PreviewCallEndedScreen() {
         onReturn = {}
     ) {}
 }
+
+
+
+
+fun loadAd(context: Context, onAdLoaded: (InterstitialAd) -> Unit) {
+    InterstitialAd.load(
+        context,
+        "ca-app-pub-3940256099942544/1033173712", // test ad unit
+        AdRequest.Builder().build(),
+        object : InterstitialAdLoadCallback() {
+            override fun onAdLoaded(ad: InterstitialAd) {
+                onAdLoaded(ad)
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                println("Ad failed: ${error.message}")
+            }
+        }
+    )
+}
+

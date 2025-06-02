@@ -116,9 +116,9 @@ fun AudioCallingScreen(
             }
 
 
-            mediaPlayer.setOnCompletionListener {
-                onCallEnd()
-            }
+//            mediaPlayer.setOnCompletionListener {
+//                onCallEnd()
+//            }
 
             // Update position every second
             while (mediaPlayer.isPlaying) {

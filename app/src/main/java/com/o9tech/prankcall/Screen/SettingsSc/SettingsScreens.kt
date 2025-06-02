@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -62,12 +63,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
 import com.o9tech.prankcall.AppNavigation.Routes
+import com.o9tech.prankcall.DataModel.Languagesis
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.blue
 import com.o9tech.prankcall.ui.theme.grey
 import com.o9tech.prankcall.ui.theme.settingsclr
 import com.o9tech.prankcall.ui.theme.white
+import com.o9tech.prankcall.utils.PreferenceHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -76,6 +81,13 @@ fun SettingsScreen(navController: NavHostController?) {
     val safeNavController = navController ?: rememberNavController()
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val preferenceHelper = remember { PreferenceHelper(context) }
+    val defaultLang = Languagesis("English", R.drawable.usa,"en")
+    val selectedLang = remember { preferenceHelper.getLanguage() ?: defaultLang }
+
+
+//    val selectedLang = remember { preferenceHelper.getLanguage() }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -91,7 +103,8 @@ fun SettingsScreen(navController: NavHostController?) {
                 },
                 title = {
                     Text(
-                        text = "Settings",
+//                        text = "Settings",
+                        text = stringResource(R.string.settings),
                         style = TextStyle(
                             platformStyle = PlatformTextStyle(
                                 includeFontPadding = false
@@ -123,7 +136,10 @@ fun SettingsScreen(navController: NavHostController?) {
                         .fillMaxSize()
                         .background(white)
                 ) {
-                    Text(text = "General", fontSize = 16.sp, fontWeight = FontWeight.W600)
+
+
+//                    Text(text = "General", fontSize = 16.sp, fontWeight = FontWeight.W600)
+                    Text( text = stringResource(R.string.gernal), fontSize = 16.sp, fontWeight = FontWeight.W600)
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -162,29 +178,33 @@ fun SettingsScreen(navController: NavHostController?) {
 
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "Languages", fontSize = 16.sp)
+//                                    Text(text = "Languages", fontSize = 16.sp)
+                                    Text(text = stringResource(R.string.language), fontSize = 16.sp)
                                 }
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text(text = "English", fontSize = 16.sp)
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    Box(
-                                        contentAlignment = Alignment.Center,
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .clip(CircleShape)
-                                            .background(Color.LightGray)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.uk),
-                                            contentDescription = null,
-                                            contentScale = ContentScale.Crop,
+                                    selectedLang?.let {
+                                        Text(text = it.name, fontSize = 16.sp)
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                        Box(
+                                            contentAlignment = Alignment.Center,
                                             modifier = Modifier
                                                 .size(30.dp)
                                                 .clip(CircleShape)
-                                        )
+                                                .background(Color.LightGray)
+                                        ) {
+                                            Image(
+                                                painter = painterResource(id = it.flag),
+                                                contentDescription = null,
+                                                contentScale = ContentScale.Crop,
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .clip(CircleShape)
+                                            )
+                                        }
                                     }
+
                                 }
                             }
                             Row(
@@ -201,7 +221,8 @@ fun SettingsScreen(navController: NavHostController?) {
                                         tint = settingsclr
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "Privacy Policy", fontSize = 16.sp)
+//                                    Text(text = "Privacy Policy", fontSize = 16.sp)
+                                    Text( text = stringResource(R.string.privacy_policy), fontSize = 16.sp)
                                 }
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
@@ -229,7 +250,8 @@ fun SettingsScreen(navController: NavHostController?) {
                                         tint = settingsclr
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "Share App", fontSize = 16.sp)
+//                                    Text(text = "Share App", fontSize = 16.sp)
+                                    Text( text = stringResource(R.string.share_app), fontSize = 16.sp)
                                 }
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
@@ -253,7 +275,8 @@ fun SettingsScreen(navController: NavHostController?) {
                                         tint = settingsclr
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "Rate us", fontSize = 16.sp)
+//                                    Text(text = "Rate us", fontSize = 16.sp)
+                                    Text( text = stringResource(R.string.rate_us), fontSize = 16.sp)
                                 }
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
@@ -277,7 +300,8 @@ fun SettingsScreen(navController: NavHostController?) {
                                         tint = settingsclr
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "More APP", fontSize = 16.sp)
+//                                    Text(text = "More APP", fontSize = 16.sp)
+                                    Text( text = stringResource(R.string.more_app), fontSize = 16.sp)
                                 }
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
@@ -286,6 +310,8 @@ fun SettingsScreen(navController: NavHostController?) {
                             }
                         }
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.BANNER)
                     CustomRateUsDialog(
                         showDialog = showDialog,
                         onDismiss = { showDialog = false },
@@ -339,14 +365,16 @@ fun CustomRateUsDialog(
                 ) {
                     Text(text = "😊", fontSize = 48.sp)
                     Text(
-                        text = "Thanks for using Prank App",
+//                        text = "Thanks for using Prank App",
+                        text = stringResource(R.string.thanks_for_using),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Text(
-                        text = "It would be greatly appreciated if you rate us",
+//                        text = "It would be greatly appreciated if you rate us",
+                        text = stringResource(R.string.please_rate_us),
                         fontSize = 16.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center,
@@ -377,7 +405,7 @@ fun CustomRateUsDialog(
                             contentColor = Color.White
                         )
                     ) {
-                        Text(text = "Rate Now", fontSize = 16.sp)
+                        Text(text = stringResource(R.string.rate_now), fontSize = 16.sp)
                     }
                 }
             }

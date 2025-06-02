@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="test_name">Streichanruf</string>
+    <string name="privacy_policy">Datenschutzrichtlinie</string>
+    <string name="share_app">App teilen</string>
+    <string name="rate_us">Bewerten Sie uns</string>
+    <string name="more_app">Weitere Apps</string>
+    <string name="settings">Einstellungen</string>
+    <string name="gernal">Allgemein</string>
+    <string name="fake_video_call">Fake-Videoanruf</string>
+    <string name="fake_message">Fake-Nachricht</string>
+    <string name="fake_call">Fake-Anruf</string>
+    <string name="add_new">Neu hinzufügen</string>
+    <string name="set_video_call">Videoanruf festlegen</string>
+    <string name="incoming_">Eingehend</string>
+    <string name="calling">Anruf wird getätigt</string>
+    <string name="set_time">Zeit festlegen</string>
+    <string name="video_call">Videoanruf</string>
+    <string name="Accept">Annehmen</string>
+    <string name="Decline">Ablehnen</string>
+    <string name="Call_ended">Anruf beendet</string>
+    <string name="how_was_the_qulaity_of_call">Wie war die Gesprächsqualität?</string>
+    <string name="call_again">Erneut anrufen</string>
+    <string name="return_is">Zurück</string>
+    <string name="set_time_delay">Zeitverzögerung einstellen</string>
+    <string name="save">Speichern</string>
+    <string name="cancle">Abbrechen</string>
+    <string name="add_new_character">Neuen Charakter hinzufügen</string>
+    <string name="character_name">Charaktername</string>
+    <string name="upload_videos">Videos hochladen</string>
+    <string name="name_contact">Kontaktname</string>
+    <string name="set_fake_message">Fake-Nachricht festlegen</string>
+    <string name="friend">Freund</string>
+    <string name="Famous_peole">Berühmte Personen</string>
+    <string name="set_call">Anruf festlegen</string>
+    <string name="sound">Ton</string>
+    <string name="vibration">Vibration</string>
+    <string name="flash">Blitz</string>
+    <string name="call">Anrufen</string>
+    <string name="language">Sprache</string>
+    <string name="fake_video_call_chat">Falscher Videoanruf Chat</string>
+    <string name="now">Jetzt</string>
+    <string name="more">Mehr</string>
+
+    <string name="thanks_for_using">Danke, dass Sie Prank App verwenden</string>
+    <string name="please_rate_us">Wir würden uns sehr freuen, wenn Sie uns bewerten</string>
+    <string name="rate_now">Jetzt bewerten</string>
+
+    <string name="call_delay_message">Wir rufen nach %1$d Sekunden an, bitte schalten Sie Ihr Telefon nicht aus</string>
+    <string name="got_it">Verstanden</string>
+    <string name="double_tap_exit">Doppelt tippen zum Beenden</string>
+
+
+</resources>

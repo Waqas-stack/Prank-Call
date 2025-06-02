@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Theme.MyAppSplash" parent="Theme.SplashScreen" >
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/spio</item>
+<!--        <item name="windowSplashScreenAnimationDuration">500</item>-->
+        <item name="postSplashScreenTheme">@style/Theme.PrankCall</item>
+    </style>
+
+
     <style name="Theme.PrankCall" parent="android:Theme.Material.Light.NoActionBar" />
+<!--    <style name="Theme.MyApp" parent="android:Theme.Material.Light.NoActionBar" >-->
+<!--        <item name="android:windowSplashScreenBackground">@color/white</item>-->
+<!--        <item name="android:windowSplashScreenAnimatedIcon">@drawable/dubai</item>-->
+<!--        <item name="android:windowSplashScreenAnimationDuration">500</item>-->
+<!--    </style>-->
 </resources>

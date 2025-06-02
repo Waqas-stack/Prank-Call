@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,6 +67,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.Orange40
 import com.o9tech.prankcall.ui.theme.profilecircle
@@ -90,7 +93,8 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
 
     var charname2 by remember { mutableStateOf(name) }
     var selectedTabIndex by remember { mutableStateOf(0) }
-    val tabTitles = listOf("Friend", "Famous people")
+//    val tabTitles = listOf("Friend", "Famous people")
+    val tabTitles = listOf(stringResource(R.string.friend), stringResource(R.string.Famous_peole))
     val pagerState = rememberPagerState {
         tabTitles.size
     }
@@ -155,15 +159,16 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
 
                                     contentDescription = "Back")
                             }
-                            Text(text = "Set fake message", color = Color.White, fontSize = 18.sp)
+//                            Text(text = "Set fake message", color = Color.White, fontSize = 18.sp)
+                            Text(  text = stringResource(R.string.set_fake_message), color = Color.White, fontSize = 18.sp)
                         }
-                        IconButton(onClick = {  }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.delete_is),
-                                tint = Color.White,
-                                modifier = Modifier.size(20.dp),
-                                contentDescription = "Back")
-                        }
+//                        IconButton(onClick = {  }) {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.delete_is),
+//                                tint = Color.White,
+//                                modifier = Modifier.size(20.dp),
+//                                contentDescription = "Back")
+//                        }
                     }
                     Box(
                         modifier = Modifier
@@ -226,6 +231,8 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Spacer(modifier = Modifier.height(40.dp))
+                                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
+                                    Spacer(modifier = Modifier.height(25.dp))
                                     Box(
                                         contentAlignment = Alignment.Center,
                                         modifier = Modifier
@@ -325,6 +332,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                     }
                                     Spacer(modifier = Modifier.height(10.dp))
                                     TextField(
+                                        readOnly = true,
                                         leadingIcon = {
                                             Icon(
                                                 imageVector = Icons.Default.Person,
@@ -343,7 +351,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                         ),
                                         value = charname,
                                         onValueChange = {
-                                            charname=it
+//                                            charname=it
                                         },
                                         placeholder = { Text("Character Name") },
                                         modifier = Modifier.fillMaxWidth()
@@ -377,7 +385,8 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                                 Spacer(modifier = Modifier.padding(10.dp))
                                                 Column {
                                                     Text(
-                                                        text = "Set Time",
+//                                                        text = "Set Time",
+                                                        text = stringResource(R.string.set_time),
                                                         fontWeight = FontWeight.W600,
                                                         fontSize = 16.sp
                                                     )
@@ -396,20 +405,24 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                             }
                                         }
                                     }
-                                    Spacer(modifier = Modifier.height(15.dp))
                                     Spacer(modifier = Modifier.weight(1f))
+
+
                                     TextButton(
                                         modifier = Modifier.fillMaxWidth(),
                                         onClick = {
+                                            navController.navigate("ChatScreen")
                                             if (charname.isNotEmpty() && selectedImageUri != null) {
                                                 coroutineScope.launch {
-                                            navController?.popBackStack()
+//                                            navController?.popBackStack()
+
                                         }
                                             }
                                         },
                                         border = BorderStroke(1.dp, Color.Red),
                                     ) {
-                                        Text(text = "Save",color = Color.Red)
+//                                        Text(text = "Save",color = Color.Red)
+                                        Text(  text = stringResource(R.string.save),color = Color.Red)
 
                                     }
                                 }
@@ -422,6 +435,8 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
+                                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
+                                    Spacer(modifier = Modifier.height(25.dp))
                                     Spacer(modifier = Modifier.height(40.dp))
                                     Box(
                                         contentAlignment = Alignment.Center,
@@ -522,6 +537,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                     }
                                     Spacer(modifier = Modifier.height(10.dp))
                                     TextField(
+                                        readOnly = true,
                                         leadingIcon = {
                                             Icon(
                                                 imageVector = Icons.Default.Person,
@@ -540,7 +556,7 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                         ),
                                         value = charname,
                                         onValueChange = {
-                                            charname=it
+//                                            charname=it
                                         },
                                         placeholder = { Text("Character Name") },
                                         modifier = Modifier.fillMaxWidth()
@@ -593,7 +609,6 @@ fun OverlappingBoxWithRoundedCorners(navController: NavHostController, flag: Str
                                             }
                                         }
                                     }
-                                    Spacer(modifier = Modifier.height(15.dp))
                                     Spacer(modifier = Modifier.weight(1f))
                                     TextButton(
                                         modifier = Modifier.fillMaxWidth(),

@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +51,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
 import com.o9tech.prankcall.R
 import com.o9tech.prankcall.ui.theme.blue
 import com.o9tech.prankcall.ui.theme.grey
@@ -71,7 +74,8 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, au
             TopAppBar(
                 title = {
                     Text(
-                        "Set Call",
+//                        "Set Call",
+                        text = stringResource(R.string.set_call),
                         maxLines = 1,
                         fontWeight = FontWeight.Bold,
                         overflow = TextOverflow.Ellipsis,
@@ -113,6 +117,8 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, au
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
+                    Spacer(modifier = Modifier.height(25.dp))
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
@@ -163,7 +169,8 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, au
                                 )
 
                                 Text(
-                                    text = "Sound",
+//                                    text = "Sound",
+                                    text = stringResource(R.string.sound),
                                     fontSize = 15.sp,
                                     color = Color.Black,
                                     modifier = Modifier.padding(start = 10.dp)
@@ -213,7 +220,8 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, au
                                 )
 
                                 Text(
-                                    text = "Vibration",
+//                                    text = "Vibration",
+                                    text = stringResource(R.string.vibration),
                                     fontSize = 15.sp,
                                     color = Color.Black,
                                     modifier = Modifier.padding(start = 10.dp)
@@ -263,7 +271,8 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, au
                                 )
 
                                 Text(
-                                    text = "Flash",
+//                                    text = "Flash",
+                                    text = stringResource(R.string.flash),
                                     fontSize = 15.sp,
                                     color = Color.Black,
                                     modifier = Modifier.padding(start = 10.dp)
@@ -305,7 +314,8 @@ fun SetCallScreen(navController: NavHostController?, name: String, flag: Int, au
                                 contentDescription = "Character Name"
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(text = "Call", color = blue)
+//                            Text(text = "Call", color = blue)
+                            Text(  text = stringResource(R.string.call), color = blue)
                         }
 
                     }

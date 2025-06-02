@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
 import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.DataModel.AudiocallData
 import com.o9tech.prankcall.DataModel.FakeMessage
@@ -59,6 +63,8 @@ fun FakeAudioScreen(navController: NavHostController?) {
 
     val fakeAudio = listOf(
         AudiocallData("Iu", R.drawable.img_home_iu, "audiocall1.mp3"),
+        AudiocallData("RM", R.drawable.img_get_started_lisa, "audiocall2.mp3"),
+        AudiocallData("jungkook", R.drawable.img_get_started_jungkook, "audiocall1.mp3"),
         AudiocallData("messi", R.drawable.img_home_messi, "audiocall2.mp3"),
         AudiocallData("jimin", R.drawable.img_get_started_jimin, "audiocall3.mp3"),
         AudiocallData("CardiB", R.drawable.img_home_carrdi, "audiocall4.mp3"),
@@ -66,14 +72,13 @@ fun FakeAudioScreen(navController: NavHostController?) {
     )
 
 
-
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        "Fake Call",
+//                        "Fake Call",
+                        text = stringResource(R.string.fake_call),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Bold,
@@ -81,17 +86,17 @@ fun FakeAudioScreen(navController: NavHostController?) {
                         color = setcall
                     )
                 },
-                actions = {
-                    IconButton(onClick = {
-                        safeNavController.navigate(Routes.Search)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "search",
-                            modifier = Modifier.size(34.dp)
-                        )
-                    }
-                },
+//                actions = {
+//                    IconButton(onClick = {
+//                        safeNavController.navigate(Routes.Search)
+//                    }) {
+//                        Icon(
+//                            imageVector = Icons.Default.Search,
+//                            contentDescription = "search",
+//                            modifier = Modifier.size(34.dp)
+//                        )
+//                    }
+//                },
                 navigationIcon = {
                     IconButton(onClick = { safeNavController.popBackStack() }) {
                         Icon(
@@ -115,54 +120,64 @@ fun FakeAudioScreen(navController: NavHostController?) {
                     .fillMaxSize()
                     .padding(it)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.White)
-                        .padding(5.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(0.dp)
-                ) {
-                    items(fakeAudio.size) { item ->
-                        val item = fakeAudio[item]
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .clip(CircleShape)
-                                    .clickable {
-                                        Log.d("Sendpath", "FakeAudioScreen: ${item.audioPath}")
-                                        val encodedPath = Uri.encode(item.audioPath)
-                                        safeNavController.navigate("SetCallScreen/${item.name}/${item.flag}/$encodedPath")
-
-
-                                    }
-                                    .background(Color.LightGray)
+                Column (
+                    modifier = Modifier.fillMaxSize().background(color = Color.White)
+                ){
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Color.White)
+                            .padding(5.dp),
+                        //                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(0.dp)
+                    ) {
+                        items(fakeAudio.size) { item ->
+                            val item = fakeAudio[item]
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(8.dp)
                             ) {
-                                Image(
-                                    painter = painterResource(id = item.flag),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
+                                Box(
+                                    contentAlignment = Alignment.Center,
                                     modifier = Modifier
                                         .size(100.dp)
                                         .clip(CircleShape)
+                                        .clickable {
+                                            Log.d("Sendpath", "FakeAudioScreen: ${item.audioPath}")
+                                            val encodedPath = Uri.encode(item.audioPath)
+                                            safeNavController.navigate("SetCallScreen/${item.name}/${item.flag}/$encodedPath")
+
+
+                                        }
+                                        .background(Color.LightGray)
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = item.flag),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .clip(CircleShape)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = item.name,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
                                 )
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = item.name,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
                         }
+
                     }
+
+                    Spacer(modifier = Modifier.weight(1f))
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
                 }
+
+
             }
         }
     )

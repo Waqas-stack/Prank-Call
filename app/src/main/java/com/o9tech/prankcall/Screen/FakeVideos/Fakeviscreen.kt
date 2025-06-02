@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,6 +55,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
 import com.o9tech.prankcall.AppNavigation.Routes
 import com.o9tech.prankcall.DataModel.FakeMessage
 import com.o9tech.prankcall.DataModel.FakeVideoMessage
@@ -76,9 +80,8 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
     val userDetails by mainViewModel.userDetailsList.collectAsState()
 
     val context = LocalContext.current
-
     val videoList = arrayListOf<FakeVideoMessage>(
-        FakeVideoMessage("Add New", "drawable://accept", "call1.mp4" ,true),
+        FakeVideoMessage(stringResource(R.string.add_new), "drawable://add_add", "call1.mp4" ,true),
         FakeVideoMessage("Ronaldo", "drawable://img_get_started_ronadol","call2.mp4", true),
         FakeVideoMessage("Messi", "drawable://img_home_messi", "prank.mp4",true),
         FakeVideoMessage("Lisa", "drawable://img_get_started_jimin","call1.mp4" ,true),
@@ -92,7 +95,8 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
             TopAppBar(
                 title = {
                     Text(
-                        "Fake Video Call",
+//                        "Fake Video Call",
+                        text = stringResource(R.string.fake_video_call),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
@@ -100,17 +104,17 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                         fontWeight = FontWeight.Bold
                     )
                 },
-                actions = {
-                    IconButton(onClick = {
-                        safeNavController.navigate(Routes.Search)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "search",
-                            modifier = Modifier.size(34.dp)
-                        )
-                    }
-                },
+//                actions = {
+//                    IconButton(onClick = {
+//                        safeNavController.navigate(Routes.Search)
+//                    }) {
+//                        Icon(
+//                            imageVector = Icons.Default.Search,
+//                            contentDescription = "search",
+//                            modifier = Modifier.size(34.dp)
+//                        )
+//                    }
+//                },
                 navigationIcon = {
                     IconButton(onClick = { safeNavController.popBackStack() }) {
                         Icon(
@@ -134,87 +138,103 @@ fun FakeVideoScreen(navController: NavHostController?, mainViewModel: MainViewMo
                     .fillMaxSize()
                     .padding(it)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.White)
-                        .padding(5.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(0.dp)
-                ) {
-                    itemsIndexed(videoList) { index, item ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .clip(CircleShape)
-                                    .clickable {
-                                        when (index) {
-                                            0 -> {
-                                                safeNavController.navigate(Routes.AddCharacter)
-                                            }
+                Column (
+                    modifier = Modifier.fillMaxSize().background(color = Color.White)
 
-                                            else -> {
-                                                safeNavController.navigate(
-                                                    "SetVideoCallScreen/${item.name}/${Uri.encode(item.pic)}/${Uri.encode(item.path)}"
-                                                )
+                ){
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Color.White)
+                            .padding(5.dp),
+                        //                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(0.dp)
+                    ) {
+                        itemsIndexed(videoList) { index, item ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            when (index) {
+                                                0 -> {
+                                                    safeNavController.navigate(Routes.AddCharacter)
+                                                }
+
+                                                else -> {
+                                                    safeNavController.navigate(
+                                                        "SetVideoCallScreen/${item.name}/${
+                                                            Uri.encode(
+                                                                item.pic
+                                                            )
+                                                        }/${Uri.encode(item.path)}"
+                                                    )
+                                                }
                                             }
                                         }
-                                    }
-                                    .background(if (index == 0) settingsclr else Color.Unspecified)
-                            ) {
-                                if (item.isDrawable) {
-                                    val drawableId = context.resources.getIdentifier(
-                                        item.pic.substringAfter("drawable://"),
-                                        "drawable",
-                                        context.packageName
-                                    )
-                                    Image(
-                                        painter = painterResource(id = drawableId),
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .size(100.dp)
-                                            .clip(CircleShape),
-                                    )
-                                } else {
-                                    if (!item.pic.isNullOrEmpty()) {
-                                        val painter = rememberAsyncImagePainter(File(item.pic))
+                                        .background(if (index == 0) settingsclr else Color.Unspecified)
+                                ) {
+                                    if (item.isDrawable) {
+                                        val drawableId = context.resources.getIdentifier(
+                                            item.pic.substringAfter("drawable://"),
+                                            "drawable",
+                                            context.packageName
+                                        )
                                         Image(
-                                            painter = painter,
-                                            contentDescription = "Profile Picture",
+                                            painter = painterResource(id = drawableId),
+                                            contentDescription = null,
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier
                                                 .size(100.dp)
-                                                .clip(CircleShape)
+                                                .clip(CircleShape),
                                         )
                                     } else {
-                                        Image(
-                                            imageVector = Icons.Default.Person,
-                                            contentDescription = "Profile Picture",
-                                            modifier = Modifier
-                                                .size(50.dp)
-                                                .clip(CircleShape),
-                                            contentScale = ContentScale.Crop
-                                        )
+                                        if (!item.pic.isNullOrEmpty()) {
+                                            val painter = rememberAsyncImagePainter(File(item.pic))
+                                            Image(
+                                                painter = painter,
+                                                contentDescription = "Profile Picture",
+                                                contentScale = ContentScale.Crop,
+                                                modifier = Modifier
+                                                    .size(100.dp)
+                                                    .clip(CircleShape)
+                                            )
+                                        } else {
+                                            Image(
+                                                imageVector = Icons.Default.Person,
+                                                contentDescription = "Profile Picture",
+                                                modifier = Modifier
+                                                    .size(50.dp)
+                                                    .clip(CircleShape),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        }
                                     }
                                 }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = item.name,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
+                                )
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text =   item.name,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
                         }
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
+
+//                Spacer(modifier = Modifier.height(150.dp))
+
+
             }
         }
 

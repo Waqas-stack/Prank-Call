@@ -55,6 +55,10 @@ import com.o9tech.prankcall.ui.theme.settingsclr
 import com.o9tech.prankcall.viewModel.MainViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
+import com.google.android.gms.ads.AdSize
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
+import com.o9tech.prankcall.DataModel.FakeVideoMessage
 import com.o9tech.prankcall.ui.theme.divider
 import com.o9tech.prankcall.ui.theme.grey
 import com.o9tech.prankcall.ui.theme.profilecircle
@@ -99,25 +103,28 @@ fun HomeScreenDesign(
     ) {
     val gradientColors = listOf(Orange40, settingsclr, Purple40)
     val fakeVideoCallList = listOf(
-        LanguageItem("Rose", R.drawable.img_get_started_jenny),
-        LanguageItem("Lisa", R.drawable.img_get_started_jisoo),
-        LanguageItem("Elsa", R.drawable.img_home_carrdi),
-        LanguageItem("more", R.drawable.ic_more_fake_video_call),
+        LanguageItem("Ronaldo", R.drawable.img_get_started_ronadol),
+        LanguageItem("Messi", R.drawable.img_home_messi),
+        LanguageItem("Lisa", R.drawable.img_get_started_jimin),
+        LanguageItem(stringResource(R.string.more), R.drawable.ic_more_fake_video_call),
     )
 
+
+
+    //stringResource(R.string.save)
     val fakeMessagesList = listOf(
         LanguageItem("jisoo", R.drawable.img_get_started_jisoo),
         LanguageItem("Messi ", R.drawable.img_home_messi),
         LanguageItem("jennie", R.drawable.img_home_selena_gomez),
-        LanguageItem("more", R.drawable.ic_more_fake_message),
-
-
+        LanguageItem(stringResource(R.string.more), R.drawable.ic_more_fake_message),
         )
+
+
     val fakeAudioCallList = listOf(
         LanguageItem("iu", R.drawable.img_home_iu),
         LanguageItem("RM", R.drawable.img_get_started_lisa),
         LanguageItem("jungkook", R.drawable.img_get_started_jungkook),
-        LanguageItem("more", R.drawable.ic_more_fake_call),
+        LanguageItem(stringResource(R.string.more), R.drawable.ic_more_fake_call),
 
         )
     Scaffold(
@@ -127,22 +134,24 @@ fun HomeScreenDesign(
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
+
+                Spacer(modifier = Modifier.height(10.dp))
                 Row (
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
 
                 ){
-                    IconButton(onClick = {
-//                        onSearchClick()
-
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.diamond),
-                            contentDescription = "Back",
-                            tint = Color.Unspecified,
-                            modifier = Modifier.size(34.dp)
-                        )
-                    }
+//                    IconButton(onClick = {
+////                        onSearchClick()
+//
+//                    }) {
+//                        Icon(
+//                            painter = painterResource(id = R.drawable.diamond),
+//                            contentDescription = "Back",
+//                            tint = Color.Unspecified,
+//                            modifier = Modifier.size(34.dp)
+//                        )
+//                    }
                     IconButton(onClick = {
                         onSettingClick()
                     }) {
@@ -159,7 +168,8 @@ fun HomeScreenDesign(
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     )
-                Text(text = "Fake Video Call & chat", fontSize = 15.sp, color = Orange40, fontWeight = FontWeight.W400)
+//                Text(text = "Fake Video Call & chat", fontSize = 15.sp, color = Orange40, fontWeight = FontWeight.W400)
+                Text( text = stringResource(R.string.fake_video_call_chat), fontSize = 15.sp, color = Orange40, fontWeight = FontWeight.W400)
             }
         },
         content = {
@@ -187,7 +197,8 @@ fun HomeScreenDesign(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "FAKE VIDEO CALL",
+//                            text = "FAKE VIDEO CALL",
+                            text = stringResource(R.string.fake_video_call),
                             fontSize = 14.sp,
                             color = settingsclr,
                             fontWeight = FontWeight.W600
@@ -255,7 +266,8 @@ fun HomeScreenDesign(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "FAKE MESSAGE",
+//                            text = "FAKE MESSAGE",
+                            text = stringResource(R.string.fake_message),
                             fontSize = 14.sp,
                             color = Orange40,
                             fontWeight = FontWeight.W600
@@ -319,7 +331,8 @@ fun HomeScreenDesign(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "FAKE CALL",
+//                            text = "FAKE CALL",
+                            text = stringResource(R.string.fake_call),
                             fontSize = 14.sp,
                             color = blue,
                             fontWeight = FontWeight.W600
@@ -371,8 +384,11 @@ fun HomeScreenDesign(
                         color = divider,
                         thickness = 1.dp
                     )
+                    Spacer(modifier = Modifier.weight(1f))
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.BANNER)
 
-                }
+
+            }
             }
         }
     )

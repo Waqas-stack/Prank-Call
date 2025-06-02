@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -109,7 +110,8 @@ fun IncommingAudioCall(
                                 color = Color.White
                             )
                             Text(
-                                text = "Incoming call..",
+//                                text = "Incoming call..",
+                                text = stringResource(R.string.incoming_),
                                 fontSize = 16.sp,
                                 color = Color.White.copy(alpha = 0.7f)
                             )
@@ -120,7 +122,8 @@ fun IncommingAudioCall(
                         ) {
                             CircularButton(
                                 icon = R.drawable.baseline_call_end_24,
-                                text = "Decline",
+//                                text = "Decline",
+                                text = stringResource(R.string.Decline),
                                 backgroundColor = Color.Red,
                                 onClick = {
 //                                    safeNavController.popBackStack()
@@ -136,11 +139,12 @@ fun IncommingAudioCall(
 
                             CircularButton(
                                 icon = R.drawable.call,
-                                text = "Accept",
+//                                text = "Accept",
+                                text = stringResource(R.string.Accept),
                                 backgroundColor = Color(0xFF4CAF50),
                                 onClick = {
                                     val encodedPath = Uri.encode(audioPath)
-
+                                    safeNavController.popBackStack()
                                     safeNavController.navigate("AudioCallingScreen/$callerName/$profileImage/$encodedPath")
 
 

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="test_name">Appel Farce Français</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="share_app">Partager l\'application</string>
+    <string name="rate_us">Évaluez-nous</string>
+    <string name="more_app">Plus d\'applications</string>
+    <string name="settings">Paramètres</string>
+    <string name="gernal">Général</string>
+    <string name="fake_video_call">Fausse vidéo</string>
+    <string name="fake_message">Faux message</string>
+    <string name="fake_call">Faux appel</string>
+    <string name="add_new">Ajouter nouveau</string>
+    <string name="set_video_call">Définir appel vidéo</string>
+    <string name="incoming_">Appel entrant</string>
+    <string name="calling">Appel en cours</string>
+    <string name="set_time">Définir l\'heure</string>
+    <string name="video_call">Appel vidéo</string>
+    <string name="Accept">Accepter</string>
+    <string name="Decline">Refuser</string>
+    <string name="Call_ended">Appel terminé</string>
+    <string name="how_was_the_qulaity_of_call">Comment était la qualité de l\'appel ?</string>
+    <string name="call_again">Rappeler</string>
+    <string name="return_is">Retour</string>
+    <string name="set_time_delay">Définir le délai</string>
+    <string name="save">Enregistrer</string>
+    <string name="cancle">Annuler</string>
+    <string name="add_new_character">Ajouter un nouveau personnage</string>
+    <string name="character_name">Nom du personnage</string>
+    <string name="upload_videos">Télécharger des vidéos</string>
+    <string name="name_contact">Nom du contact</string>
+    <string name="set_fake_message">Définir un faux message</string>
+    <string name="friend">Ami</string>
+    <string name="Famous_peole">Personnes célèbres</string>
+    <string name="set_call">Définir l\'appel</string>
+    <string name="sound">Son</string>
+    <string name="vibration">Vibration</string>
+    <string name="flash">Flash</string>
+    <string name="call">Appeler</string>
+    <string name="language">Langue</string>
+    <string name="fake_video_call_chat">Fausse vidéo et discussion</string>
+    <string name="now">Maintenant</string>
+    <string name="more">Plus</string>
+
+
+    <string name="thanks_for_using">Merci d\'utiliser Prank App</string>
+    <string name="please_rate_us">Nous apprécierions grandement que vous nous évaluiez</string>
+    <string name="rate_now">Évaluer maintenant</string>
+
+    <string name="call_delay_message">Nous passerons un appel après %1$d secondes, veuillez ne pas éteindre votre téléphone</string>
+    <string name="got_it">Compris</string>
+    <string name="double_tap_exit">Appuyez deux fois pour quitter</string>
+
+
+</resources>

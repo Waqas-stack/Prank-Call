@@ -9,6 +9,20 @@ import java.io.FileOutputStream
 import androidx.core.net.toUri
 
 object AppConstant {
+
+
+//    App ID:
+//    ca-app-pub-5065264690609103~5732501923
+//    Banner AD ID:
+//    ca-app-pub-5065264690609103/1533402461
+//    Interstitial AD ID:
+//    ca-app-pub-5065264690609103/8167093576
+
+
+
+    const val BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/9214589741"
+    const val Interstitial_AD_UNIT_ID = "ca-app-pub-5065264690609103/8167093576"
+
     const val Dummy_ID = ""
 
     fun getVideoPathFromAssets(context: Context, videoFileName: String): String {

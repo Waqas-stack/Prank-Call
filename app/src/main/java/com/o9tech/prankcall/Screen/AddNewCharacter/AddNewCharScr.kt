@@ -41,6 +41,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -75,15 +76,19 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.google.android.gms.ads.AdSize
 import com.huhx.picker.model.AssetInfo
 import com.huhx.picker.model.AssetPickerConfig
 import com.huhx.picker.model.RequestType
 import com.huhx.picker.support.PickerPermissions
 import com.huhx.picker.view.AssetPicker
+import com.o9tech.prankcall.Add.BannerAds.BannersAds
+import com.o9tech.prankcall.ui.theme.white
 import com.o9tech.prankcall.viewModel.MainViewModel
 
 import kotlinx.coroutines.launch
@@ -134,7 +139,8 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                 },
                 title = {
                     Text(
-                        "Add New Character",
+//                        "Add New Character",
+                        text = stringResource(R.string.add_new_character),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
@@ -142,19 +148,25 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                         color = Orange40
                     )
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = white
+                ),
             )
         },
         content = {
             Surface(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize().background(Color.White)
                     .padding(it)
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxSize().background(Color.White)
                         .padding(16.dp)
                 ) {
+                    Spacer(modifier = Modifier.height(5.dp))
+                    BannersAds(modifier = Modifier.fillMaxWidth(), adSize =  AdSize.LARGE_BANNER)
+                    Spacer(modifier = Modifier.height(15.dp))
                    Row (
                        modifier = Modifier
                            .fillMaxWidth()
@@ -217,7 +229,8 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                        }
                    }
                     Text(
-                        "Character's name",
+//                        "Character's name",
+                        text = stringResource(R.string.character_name),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
@@ -247,12 +260,14 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                         onValueChange = {
                             charname=it
                         },
-                        placeholder = { Text("Character Name") },
+//                        placeholder = { Text("Character Name") },
+                        placeholder = { Text(text = stringResource(R.string.character_name),) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        "Video call ",
+//                        "Video call ",
+                        text = stringResource(R.string.video_call),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 6.dp),
@@ -308,7 +323,8 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                                     tint = Color.Gray
                                 )
                                 Text(
-                                    text = "Upload Videos",
+//                                    text = "Upload Videos",
+                                    text = stringResource(R.string.upload_videos),
                                     color = Color.Gray,
                                     style = MaterialTheme.typography.bodySmall
                                 )
@@ -343,7 +359,8 @@ fun AddCharacterSCreen(navController: NavHostController?, mainViewModel: MainVie
                         border = BorderStroke(1.dp, Color.Red),
 
                     ) {
-                        Text(text = "Save",color = Color.Red)
+//                        Text(text = "Save",color = Color.Red)
+                        Text(text = stringResource(R.string.save),color = Color.Red)
 
                     }
                 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -31,18 +32,30 @@ import com.o9tech.prankcall.AppNavigation.Routes
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.o9tech.prankcall.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun VideoCallingScreen(
     navController: NavHostController?,
     callerImage: String,
     callerName: String,
+    videoPath: String,
     onToggleVideo: () -> Unit,
     onToggleMic: () -> Unit,
     onToggleSpeaker: () -> Unit,
     onEndCall: () -> Unit,
 ) {
     val safeNavController = navController ?: rememberNavController()
+
+    LaunchedEffect(Unit) {
+        val encodedPicPath = Uri.encode(callerImage)
+        val videospath = Uri.encode(videoPath)
+        delay(5000) // 5 seconds delay
+//        safeNavController.navigate("IncommingCallScreen/$callerName/$encodedPicPath/$videospath")
+        safeNavController.popBackStack()
+        safeNavController.navigate("FakeVideoCall/$videospath/$encodedPicPath")
+
+    }
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -128,7 +141,8 @@ fun VideoCallingScreen(
                             color = Color.White
                         )
                         Text(
-                            text = "Calling...",
+//                            text = "Calling...",
+                            text = stringResource(R.string.calling),
                             fontSize = 14.sp,
                             color = Color.White.copy(alpha = 0.7f)
                         )

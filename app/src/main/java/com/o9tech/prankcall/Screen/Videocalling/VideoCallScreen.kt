@@ -105,6 +105,7 @@ fun FakeVideoCallScreen(
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
+            repeatMode = Player.REPEAT_MODE_ALL
             val file = File(videoPath)
             if (file.exists()) {
                 val uri = Uri.fromFile(file)

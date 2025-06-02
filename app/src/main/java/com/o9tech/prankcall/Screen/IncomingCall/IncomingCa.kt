@@ -121,7 +121,8 @@ fun IncommingCallScreen(
                                 color = Color.White
                             )
                             Text(
-                                text = "Incoming call..",
+//                                text = "Incoming call..",
+                                text = stringResource(R.string.incoming_),
                                 fontSize = 16.sp,
                                 color = Color.White.copy(alpha = 0.7f)
                             )
@@ -132,7 +133,8 @@ fun IncommingCallScreen(
                         ) {
                             CircularButton(
                                 icon = R.drawable.baseline_call_end_24,
-                                text = "Decline",
+//                                text = "Decline",
+                                text = stringResource(R.string.Decline),
                                 backgroundColor = Color.Red,
                                 onClick = {
                                     safeNavController.popBackStack()
@@ -141,7 +143,8 @@ fun IncommingCallScreen(
                             )
                             CircularButton(
                                 icon = R.drawable.call,
-                                text = "Accept",
+//                                text = "Accept",
+                                text = stringResource(R.string.Accept),
                                 backgroundColor = Color(0xFF4CAF50),
                                 onClick = {
                                     Log.d("callpathh", "IncommingCallScreen: ${videoPath}")
